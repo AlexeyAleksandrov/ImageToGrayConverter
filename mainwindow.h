@@ -20,8 +20,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_choseInputImage_clicked();
-
     void on_pushButton_choseImageOriginal_clicked();
 
     void on_pushButton_choseImageObject_clicked();
@@ -36,9 +34,15 @@ private slots:
 
     void on_pushButton_saveResult_clicked();
 
+    void on_horizontalSlider_clippingNoiseValue_valueChanged(int value);
+
+    void on_horizontalSlider_blackEnchancementValue_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 
+    QImage imageOriginal;
+    QImage imageObject;
     QImage resultImage;
 };
 #endif // MAINWINDOW_H

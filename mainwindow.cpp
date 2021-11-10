@@ -25,66 +25,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_choseInputImage_clicked()
-{
-    QString imageOriginalDir = ui->lineEdit_imageOriginal->text();
-    QString imageObjectDir = ui->lineEdit_imageObject->text();
-
-    if(imageOriginalDir == "")
-    {
-        QMessageBox::warning(this, "Ошибка", "Выберите изображение оригинала!");
-        return;
-    }
-    if(imageObjectDir == "")
-    {
-        QMessageBox::warning(this, "Ошибка", "Выберите изображение объекта!");
-        return;
-    }
-
-    QImage imageOriginal = QImage(imageOriginalDir);
-    QImage imageObject = QImage(imageObjectDir);
-
-//    imageOriginal.invertPixels();
-
-    for (int i=0; i<imageOriginal.width(); i++)
-    {
-        for (int j=0; j<imageOriginal.height(); j++)
-        {
-            int blackOriginal = imageOriginal.pixelColor(i, j).black();
-            int blackObject = imageObject.pixelColor(i, j).black();
-            int blackSub = blackObject - blackOriginal;
-            imageOriginal.setPixelColor(i, j, QColor(blackSub, blackSub, blackSub));
-        }
-    }
-
-//    image.convertTo(QImage::Format_Grayscale16);
-//    image.invertPixels();
-
-    int widht = ui->label_image->width();
-    int height = ui->label_image->height();
-
-    ui->label_image->setMaximumWidth(widht);
-    ui->label_image->setMaximumHeight(height);
-
-    ui->label_image->setScaledContents(true);
-    ui->label_image->setPixmap(QPixmap::fromImage(imageOriginal));
-
-//    QFile file("pixels.txt");
-//    file.open(QIODevice::WriteOnly);
-//    for (int i=0; i<image.width(); i++)
-//    {
-//        for (int j=0; j<image.height(); j++)
-//        {
-//            QColor color = image.pixel(i, j);
-//            file.write(QString(QString::number(color.black()) + "\t").toUtf8());
-//        }
-//        file.write("\r\n");
-//    }
-//    file.close();
-//    qDebug() << "Готово!";
-}
-
 void MainWindow::on_pushButton_choseImageOriginal_clicked()
 {
     QString imageDir = QFileDialog::getOpenFileName(this, "Выбор картинки");
@@ -115,27 +55,39 @@ void MainWindow::on_pushButton_calculate_clicked()
         return;
     }
 
-    QImage imageOriginal = QImage(imageOriginalDir);
-    QImage imageObject = QImage(imageObjectDir);
+    imageOriginal = QImage(imageOriginalDir);
+    imageObject = QImage(imageObjectDir);
 
-    imageOriginal.convertTo(QImage::Format_Grayscale16);
-    imageObject.convertTo(QImage::Format_Grayscale16);
+    imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
+    imageObject.convertTo(QImage::Format_Grayscale16);  // конвертируем в ч/б изображение
 
     resultImage = imageOriginal;
 
-//    imageOriginal.invertPixels();
+    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
+    int blackEnchancement = ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
-    for (int i=0; i<imageOriginal.width(); i++)
+    for (int i=0; i<imageOriginal.width(); i++) // проходим по ширине
     {
-        for (int j=0; j<imageOriginal.height(); j++)
+        for (int j=0; j<imageOriginal.height(); j++)    // проходим по высоте
         {
-            int blackOriginal = imageOriginal.pixelColor(i, j).black();
-            int blackObject = imageObject.pixelColor(i, j).black();
-            int blackSub = abs(blackOriginal - blackObject);
-            QColor color = QColor(blackSub, blackSub, blackSub);
+            int blackOriginal = imageOriginal.pixelColor(i, j).black(); // уровень черного в оригинале
+            int blackObject = imageObject.pixelColor(i, j).black(); // уровень черного в объекте
+
+            int blackSub = abs(blackOriginal - blackObject);    // вычитаем фон
+            if(blackSub < clippingNoiseValue)   // обрезаем шумы
+            {
+                blackSub = 0;
+            }
+
+            if(blackSub > blackEnchancement)    // усиливаем черный цвет
+            {
+                blackSub = 255;
+            }
+
+            QColor color = QColor(blackSub, blackSub, blackSub);    // формируем новый цвет пикселя
             if(color.isValid())
             {
-                resultImage.setPixelColor(i, j, color);
+                resultImage.setPixelColor(i, j, color); // устанавливаем нвоый цвет
             }
             else
             {
@@ -144,11 +96,9 @@ void MainWindow::on_pushButton_calculate_clicked()
         }
     }
 
-    resultImage.invertPixels();
+    resultImage.invertPixels(); // инфвертируем цвет, т.к. при вычитании получается негатив
 
-//    image.convertTo(QImage::Format_Grayscale16);
-//    image.invertPixels();
-
+    // устанавливаем границы для Label
     int widht = ui->label_image->width();
     int height = ui->label_image->height();
 
@@ -158,6 +108,7 @@ void MainWindow::on_pushButton_calculate_clicked()
     ui->label_image->setScaledContents(true);
     ui->label_image->setPixmap(QPixmap::fromImage(resultImage));
 
+    // переводим radioButton
     ui->radioButton_result->setChecked(true);
 
 }
@@ -165,27 +116,28 @@ void MainWindow::on_pushButton_calculate_clicked()
 
 void MainWindow::on_radioButton_original_clicked()
 {
-    QString imageDir = ui->lineEdit_imageOriginal->text();
-    if(imageDir != "")
+    if(!imageOriginal.isNull())
     {
-        ui->label_image->setPixmap(QPixmap::fromImage(QImage(imageDir)));
+        ui->label_image->setPixmap(QPixmap::fromImage(QImage(imageOriginal)));
     }
 }
 
 
 void MainWindow::on_radioButton_object_clicked()
 {
-    QString imageDir = ui->lineEdit_imageObject->text();
-    if(imageDir != "")
+    if(!imageObject.isNull())
     {
-        ui->label_image->setPixmap(QPixmap::fromImage(QImage(imageDir)));
+        ui->label_image->setPixmap(QPixmap::fromImage(QImage(imageObject)));
     }
 }
 
 
 void MainWindow::on_radioButton_result_clicked()
 {
-    ui->label_image->setPixmap(QPixmap::fromImage(QImage(resultImage)));
+    if(!resultImage.isNull())
+    {
+        ui->label_image->setPixmap(QPixmap::fromImage(QImage(resultImage)));
+    }
 }
 
 
@@ -196,5 +148,17 @@ void MainWindow::on_pushButton_saveResult_clicked()
     {
         resultImage.save(saveDir);
     }
+}
+
+
+void MainWindow::on_horizontalSlider_clippingNoiseValue_valueChanged(int value)
+{
+    ui->label_clippingNoiseValue->setNum(value);
+}
+
+
+void MainWindow::on_horizontalSlider_blackEnchancementValue_valueChanged(int value)
+{
+    ui->label_blackEnchancementValue->setNum(value);
 }
 

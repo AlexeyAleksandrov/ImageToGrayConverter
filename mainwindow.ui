@@ -29,7 +29,7 @@
        <item row="0" column="1">
         <widget class="QLineEdit" name="lineEdit_imageOriginal">
          <property name="text">
-          <string>C:/Users/ASUS/Pictures/Снимки фигур/Screenshot_10.jpg</string>
+          <string>C:/Users/ASUS/Pictures/Снимки фигур/Эксперимент-1_фон.jpg</string>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -60,7 +60,7 @@
        <item row="1" column="1">
         <widget class="QLineEdit" name="lineEdit_imageObject">
          <property name="text">
-          <string>C:/Users/ASUS/Pictures/Снимки фигур/Screenshot_9.jpg</string>
+          <string>C:/Users/ASUS/Pictures/Снимки фигур/Эксперимент-1_объект.jpg</string>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -147,6 +147,12 @@
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="0">
            <widget class="QLabel" name="label_image">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Изображение</string>
             </property>
@@ -198,8 +204,8 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
-     <spacer name="verticalSpacer">
+    <item row="2" column="2">
+     <spacer name="verticalSpacer_4">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -211,8 +217,71 @@
       </property>
      </spacer>
     </item>
-    <item row="2" column="2">
-     <spacer name="verticalSpacer_4">
+    <item row="1" column="1">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Параметры</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="1">
+        <widget class="QSlider" name="horizontalSlider_clippingNoiseValue">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_clippingNoiseValue">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_clippingNoise">
+         <property name="text">
+          <string>Отсечение шумов:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_blackEnchancement">
+         <property name="text">
+          <string>Усиление чёрного:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSlider" name="horizontalSlider_blackEnchancementValue">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+         <property name="value">
+          <number>255</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="invertedControls">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_blackEnchancementValue">
+         <property name="text">
+          <string>255</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="2">
+     <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
