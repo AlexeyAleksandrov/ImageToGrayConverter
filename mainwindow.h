@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <qdebug.h>
 #include <QRgb>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,7 +22,23 @@ public:
 private slots:
     void on_pushButton_choseInputImage_clicked();
 
+    void on_pushButton_choseImageOriginal_clicked();
+
+    void on_pushButton_choseImageObject_clicked();
+
+    void on_pushButton_calculate_clicked();
+
+    void on_radioButton_original_clicked();
+
+    void on_radioButton_object_clicked();
+
+    void on_radioButton_result_clicked();
+
+    void on_pushButton_saveResult_clicked();
+
 private:
     Ui::MainWindow *ui;
+
+    QImage resultImage;
 };
 #endif // MAINWINDOW_H
