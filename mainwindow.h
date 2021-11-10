@@ -6,6 +6,7 @@
 #include <qdebug.h>
 #include <QRgb>
 #include <QMessageBox>
+#include "uidatasaver.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -44,5 +45,7 @@ private:
     QImage imageOriginal;
     QImage imageObject;
     QImage resultImage;
+
+    UiDataSaver uiDataSaver;
 };
 #endif // MAINWINDOW_H

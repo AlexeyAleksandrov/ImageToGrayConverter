@@ -29,7 +29,7 @@
        <item row="0" column="1">
         <widget class="QLineEdit" name="lineEdit_imageOriginal">
          <property name="text">
-          <string>C:/Users/ASUS/Pictures/Снимки фигур/Эксперимент-1_фон.jpg</string>
+          <string/>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -60,7 +60,7 @@
        <item row="1" column="1">
         <widget class="QLineEdit" name="lineEdit_imageObject">
          <property name="text">
-          <string>C:/Users/ASUS/Pictures/Снимки фигур/Эксперимент-1_объект.jpg</string>
+          <string/>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -260,7 +260,7 @@
           <number>255</number>
          </property>
          <property name="value">
-          <number>255</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>

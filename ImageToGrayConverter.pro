@@ -10,10 +10,12 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    uidatasaver.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    uidatasaver.h
 
 FORMS += \
     mainwindow.ui

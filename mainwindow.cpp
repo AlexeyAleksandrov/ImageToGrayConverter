@@ -7,21 +7,25 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-//    QImage image = QImage("C:/Users/ASUS/Downloads/cat.jpg");
-//    image.convertTo(QImage::Format_Grayscale16);
-//    ui->label_image->setPixmap(QPixmap::fromImage(image));
-//    ui->label_image->setScaledContents(true);
+    uiDataSaver.add(ui->lineEdit_imageOriginal);
+    uiDataSaver.add(ui->lineEdit_imageObject);
 
-    QColor color = Qt::red;
-    int blackValue = color.black();
-    color.setRgb(blackValue, blackValue, blackValue);
-    QPalette palette = ui->label_image->palette();
-    palette.setColor(QPalette::WindowText, color);
-    ui->label_image->setPalette(palette);
+    uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
+    uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
+
+    uiDataSaver.add(ui->radioButton_original);
+    uiDataSaver.add(ui->radioButton_object);
+    uiDataSaver.add(ui->radioButton_result);
+
+    uiDataSaver.loadProgramData();
+
+    on_horizontalSlider_blackEnchancementValue_valueChanged(ui->horizontalSlider_blackEnchancementValue->value());
+    on_horizontalSlider_clippingNoiseValue_valueChanged(ui->horizontalSlider_clippingNoiseValue->value());
 }
 
 MainWindow::~MainWindow()
 {
+    uiDataSaver.saveProgramData();
     delete ui;
 }
 
@@ -64,7 +68,7 @@ void MainWindow::on_pushButton_calculate_clicked()
     resultImage = imageOriginal;
 
     int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
-    int blackEnchancement = ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
+    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
     for (int i=0; i<imageOriginal.width(); i++) // проходим по ширине
     {
