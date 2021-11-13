@@ -100,7 +100,10 @@ void MainWindow::on_pushButton_calculate_clicked()
         }
     }
 
-    resultImage.invertPixels(); // инфвертируем цвет, т.к. при вычитании получается негатив
+    if(ui->checkBox_colorInversion->isChecked())
+    {
+       resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+    }
 
     // устанавливаем границы для Label
     int widht = ui->label_image->width();
