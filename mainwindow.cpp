@@ -70,40 +70,20 @@ void MainWindow::on_pushButton_calculate_clicked()
     int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
     int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
-    for (int i=0; i<imageOriginal.width(); i++) // проходим по ширине
-    {
-        for (int j=0; j<imageOriginal.height(); j++)    // проходим по высоте
-        {
-            int blackOriginal = imageOriginal.pixelColor(i, j).black(); // уровень черного в оригинале
-            int blackObject = imageObject.pixelColor(i, j).black(); // уровень черного в объекте
+    ImageCorrector imageCorrecor;
+    imageCorrecor.setImageOriginal(imageOriginal);
+    imageCorrecor.setImageObject(imageObject);
 
-            int blackSub = abs(blackOriginal - blackObject);    // вычитаем фон
-            if(blackSub < clippingNoiseValue)   // обрезаем шумы
-            {
-                blackSub = 0;
-            }
-
-            if(blackSub > blackEnchancement)    // усиливаем черный цвет
-            {
-                blackSub = 255;
-            }
-
-            QColor color = QColor(blackSub, blackSub, blackSub);    // формируем новый цвет пикселя
-            if(color.isValid())
-            {
-                resultImage.setPixelColor(i, j, color); // устанавливаем нвоый цвет
-            }
-            else
-            {
-                qDebug() << "Not Valid Color: " << color << blackSub;
-            }
-        }
-    }
+    imageCorrecor.subtractObjectImage();    // вычитаем изображение
+    imageCorrecor.clipNoise(clippingNoiseValue);    // простое удаление шума
+    imageCorrecor.enchanceBlackColor(blackEnchancement);    // усиление черного цвета
 
     if(ui->checkBox_colorInversion->isChecked())
     {
-       resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+       imageCorrecor.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
     }
+
+    resultImage = imageCorrecor.getResultImage();   // получаем обработанное изображение
 
     // устанавливаем границы для Label
     int widht = ui->label_image->width();

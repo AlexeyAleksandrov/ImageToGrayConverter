@@ -20,64 +20,20 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QGroupBox" name="groupBox_choseFiles">
-      <property name="title">
-       <string>Выбор изображения</string>
+    <item row="3" column="2">
+     <spacer name="verticalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit_imageOriginal">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="pushButton_choseImageOriginal">
-         <property name="text">
-          <string>Выбрать</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_imageOriginal">
-         <property name="text">
-          <string>Изображение оригинала:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_imageObject">
-         <property name="text">
-          <string>Изображение объекта:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_imageObject">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="pushButton_choseImageObject">
-         <property name="text">
-          <string>Выбрать</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
-    <item row="2" column="1">
+    <item row="3" column="1">
      <widget class="QGroupBox" name="groupBox_results">
       <property name="title">
        <string>Результат</string>
@@ -204,8 +160,65 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="2">
-     <spacer name="verticalSpacer_4">
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBox_choseFiles">
+      <property name="title">
+       <string>Выбор изображения</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lineEdit_imageOriginal">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="pushButton_choseImageOriginal">
+         <property name="text">
+          <string>Выбрать</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_imageOriginal">
+         <property name="text">
+          <string>Изображение оригинала:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_imageObject">
+         <property name="text">
+          <string>Изображение объекта:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_imageObject">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="pushButton_choseImageObject">
+         <property name="text">
+          <string>Выбрать</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="3">
+     <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -223,6 +236,34 @@
        <string>Параметры</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_blackEnchancementValue">
+         <property name="text">
+          <string>255</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_blackEnchancement">
+         <property name="text">
+          <string>Усиление чёрного:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_clippingNoise">
+         <property name="text">
+          <string>Отсечение шумов:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_clippingNoiseValue">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
         <widget class="QSlider" name="horizontalSlider_blackEnchancementValue">
          <property name="maximum">
@@ -239,24 +280,10 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_clippingNoiseValue">
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="checkBox_deleteNoise">
          <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_clippingNoise">
-         <property name="text">
-          <string>Отсечение шумов:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_blackEnchancement">
-         <property name="text">
-          <string>Усиление чёрного:</string>
+          <string>Удаление шума</string>
          </property>
         </widget>
        </item>
@@ -270,14 +297,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_blackEnchancementValue">
-         <property name="text">
-          <string>255</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
+       <item row="2" column="0">
         <widget class="QCheckBox" name="checkBox_colorInversion">
          <property name="text">
           <string>Инверсия цветов на выходе</string>
@@ -286,19 +306,6 @@
        </item>
       </layout>
      </widget>
-    </item>
-    <item row="1" column="0" rowspan="2">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>
