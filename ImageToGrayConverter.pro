@@ -10,12 +10,14 @@ CONFIG += c++11
 
 SOURCES += \
     imagecorrector.cpp \
+    imagetransformer.cpp \
     main.cpp \
     mainwindow.cpp \
     uidatasaver.cpp
 
 HEADERS += \
     imagecorrector.h \
+    imagetransformer.h \
     mainwindow.h \
     uidatasaver.h
 

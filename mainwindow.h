@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include "uidatasaver.h"
 #include "imagecorrector.h"
+#include "imagetransformer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,6 +42,9 @@ private slots:
     void on_horizontalSlider_blackEnchancementValue_valueChanged(int value);
 
     void on_horizontalSlider_deleteNoise_valueChanged(int value);
+
+private:
+    void setImageToOutputLabel(QImage image);  // вывести картинку
 
 private:
     Ui::MainWindow *ui;

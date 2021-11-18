@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->checkBox_colorInversion);
     uiDataSaver.add(ui->checkBox_deleteNoise);
 
+    uiDataSaver.add(ui->comboBox_deleteType);
+
     uiDataSaver.loadProgramData();
 
     on_horizontalSlider_blackEnchancementValue_valueChanged(ui->horizontalSlider_blackEnchancementValue->value());
@@ -99,15 +101,8 @@ void MainWindow::on_pushButton_calculate_clicked()
 
     resultImage = imageCorrecor.getResultImage();   // получаем обработанное изображение
 
-    // устанавливаем границы для Label
-    int widht = ui->label_image->width();
-    int height = ui->label_image->height();
-
-    ui->label_image->setMaximumWidth(widht);
-    ui->label_image->setMaximumHeight(height);
-
-    ui->label_image->setScaledContents(true);
-    ui->label_image->setPixmap(QPixmap::fromImage(resultImage));
+    // выводим картинку
+    setImageToOutputLabel(resultImage);
 
     // переводим radioButton
     ui->radioButton_result->setChecked(true);
@@ -119,7 +114,7 @@ void MainWindow::on_radioButton_original_clicked()
 {
     if(!imageOriginal.isNull())
     {
-        ui->label_image->setPixmap(QPixmap::fromImage(QImage(imageOriginal)));
+        setImageToOutputLabel(imageOriginal);
     }
 }
 
@@ -128,7 +123,7 @@ void MainWindow::on_radioButton_object_clicked()
 {
     if(!imageObject.isNull())
     {
-        ui->label_image->setPixmap(QPixmap::fromImage(QImage(imageObject)));
+        setImageToOutputLabel(imageObject);
     }
 }
 
@@ -167,5 +162,32 @@ void MainWindow::on_horizontalSlider_blackEnchancementValue_valueChanged(int val
 void MainWindow::on_horizontalSlider_deleteNoise_valueChanged(int value)
 {
     ui->label_deleteNoise_value->setNum(value);
+}
+
+void MainWindow::setImageToOutputLabel(QImage image)
+{
+    int labelWidht = ui->label_image->width();
+    int labelHeight = ui->label_image->height();
+
+    double imgWidht = image.width();
+    double imgHeight = image.height();
+
+    double widthFactor = labelWidht/imgWidht;
+    double heightFactor = labelHeight/imgHeight;
+
+    if(widthFactor < heightFactor)
+    {
+        imgWidht *= widthFactor;
+        imgHeight *= widthFactor;
+    }
+    else
+    {
+        imgWidht *= heightFactor;
+        imgHeight *= heightFactor;
+    }
+
+    image = ImageTransformer::getTransformedImage(image, imgWidht, imgHeight);
+//    ui->label_image->setScaledContents(true);
+    ui->label_image->setPixmap(QPixmap::fromImage(image));
 }
 
