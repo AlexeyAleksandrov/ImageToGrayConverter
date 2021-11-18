@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>753</height>
+    <width>1287</width>
+    <height>901</height>
    </rect>
   </property>
   <property name="font">
@@ -52,6 +52,63 @@
        <string>Параметры</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox_choseFiles">
+         <property name="title">
+          <string>Выбор изображения</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_imageObject">
+            <property name="text">
+             <string>Изображение объекта:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pushButton_choseImageOriginal">
+            <property name="text">
+             <string>Выбрать</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="lineEdit_imageOriginal">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_imageOriginal">
+            <property name="text">
+             <string>Изображение оригинала:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLineEdit" name="lineEdit_imageObject">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="pushButton_choseImageObject">
+            <property name="text">
+             <string>Выбрать</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
        <item row="1" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
@@ -117,72 +174,6 @@
             <property name="text">
              <string>Усиление чёрного:</string>
             </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>Расчёт</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pushButton_saveResult">
-            <property name="text">
-             <string>Сохранить результат</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pushButton_calculate">
-            <property name="text">
-             <string>Расчёт</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QGroupBox" name="groupBox_imageTypes">
-            <property name="title">
-             <string>Тип изображения</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_4">
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton_original">
-               <property name="text">
-                <string>Оригинал</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QRadioButton" name="radioButton_object">
-               <property name="text">
-                <string>Объект</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QRadioButton" name="radioButton_result">
-               <property name="text">
-                <string>Результат</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
            </widget>
           </item>
          </layout>
@@ -254,57 +245,123 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBox_choseFiles">
+       <item row="4" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
-          <string>Выбор изображения</string>
+          <string>Расчёт</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_3">
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="1" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_imageTypes">
+            <property name="title">
+             <string>Тип изображения</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="radioButton_original">
+               <property name="text">
+                <string>Оригинал</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="radioButton_object">
+               <property name="text">
+                <string>Объект</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QRadioButton" name="radioButton_result">
+               <property name="text">
+                <string>Результат</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_imageObject">
+           <widget class="QPushButton" name="pushButton_calculate">
             <property name="text">
-             <string>Изображение объекта:</string>
+             <string>Расчёт</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="pushButton_choseImageOriginal">
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pushButton_saveResult">
             <property name="text">
-             <string>Выбрать</string>
+             <string>Сохранить результат</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_imageOriginal">
+         </layout>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>Пресеты</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="5" column="0">
+           <widget class="QPushButton" name="pushButton_2">
             <property name="text">
-             <string/>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_imageOriginal">
-            <property name="text">
-             <string>Изображение оригинала:</string>
+             <string>Добавить новый</string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLineEdit" name="lineEdit_imageObject">
+           <widget class="QLabel" name="label_4">
             <property name="text">
-             <string/>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
+             <string>Название:</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="2">
-           <widget class="QPushButton" name="pushButton_choseImageObject">
+          <item row="1" column="0" colspan="2">
+           <widget class="QComboBox" name="comboBox"/>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QPushButton" name="pushButton_3">
             <property name="text">
-             <string>Выбрать</string>
+             <string>Удалить выбранный</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Выбор пресета</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Применить</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="text">
+             <string>Обновить текущий</string>
             </property>
            </widget>
           </item>
@@ -359,7 +416,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
+     <width>1287</width>
      <height>26</height>
     </rect>
    </property>
