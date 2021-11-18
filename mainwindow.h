@@ -40,6 +40,8 @@ private slots:
 
     void on_horizontalSlider_blackEnchancementValue_valueChanged(int value);
 
+    void on_horizontalSlider_deleteNoise_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 

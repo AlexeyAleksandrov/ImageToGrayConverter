@@ -12,10 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
     uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
+    uiDataSaver.add(ui->horizontalSlider_deleteNoise);
 
     uiDataSaver.add(ui->radioButton_original);
     uiDataSaver.add(ui->radioButton_object);
     uiDataSaver.add(ui->radioButton_result);
+
+    uiDataSaver.add(ui->checkBox_colorInversion);
+    uiDataSaver.add(ui->checkBox_deleteNoise);
 
     uiDataSaver.loadProgramData();
 
@@ -76,6 +80,16 @@ void MainWindow::on_pushButton_calculate_clicked()
 
     imageCorrecor.subtractObjectImage();    // вычитаем изображение
     imageCorrecor.clipNoise(clippingNoiseValue);    // простое удаление шума
+
+    if(ui->checkBox_deleteNoise->isChecked())
+    {
+        int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
+        int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
+        ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+
+        imageCorrecor.hardClipNoise(deleteNoiseBorder, type); // продвинутое удаление шумов
+    }
+
     imageCorrecor.enchanceBlackColor(blackEnchancement);    // усиление черного цвета
 
     if(ui->checkBox_colorInversion->isChecked())
@@ -147,5 +161,11 @@ void MainWindow::on_horizontalSlider_clippingNoiseValue_valueChanged(int value)
 void MainWindow::on_horizontalSlider_blackEnchancementValue_valueChanged(int value)
 {
     ui->label_blackEnchancementValue->setNum(value);
+}
+
+
+void MainWindow::on_horizontalSlider_deleteNoise_valueChanged(int value)
+{
+    ui->label_deleteNoise_value->setNum(value);
 }
 

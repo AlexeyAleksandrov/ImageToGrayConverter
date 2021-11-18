@@ -61,7 +61,7 @@ void ImageCorrector::invertPixels()
     resultImage.invertPixels();
 }
 
-void ImageCorrector::hardClipNoise(int border)
+void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type)
 {
     for (int i=1; i<imageOriginal.width()-1; i++) // проходим по ширине
     {
@@ -73,12 +73,51 @@ void ImageCorrector::hardClipNoise(int border)
             {
                 auto correctMatrix = getCorrectDataAroundPixels(resultImage, i, j, border); // получаем матрицу коорректности
 
-                bool isCorrect = false; // флаг корректности
+                // слабое удаление (8 пикселей, белый)
+                if(type == LOW)
+                {
+                    if(correctMatrix[0][0] && correctMatrix[0][1] && correctMatrix[0][2]
+                             && correctMatrix[1][0]  && correctMatrix[1][2]
+                             && correctMatrix[2][0] && correctMatrix[2][1] && correctMatrix[2][2])  // если под условия подходят все значения вокруг
+                    {
+                        setPixelColor(resultImage, i, j, blackColor(WHITE_GRAY_LEVEL));    // устанавливаем белый цвет пикселю
+                    }
+                }
 
+                // среднее удаление (4 пикселя, белый)
+                if(type == MEDIUM)
+                {
+                    // крестом
+                    if(correctMatrix[0][0] && correctMatrix[0][2]
+                             && correctMatrix[2][0] && correctMatrix[2][2])  // если под условия подходят все значения вокруг, расположенные по диагонале
+                    {
+                        setPixelColor(resultImage, i, j, blackColor(WHITE_GRAY_LEVEL));    // устанавливаем белый цвет пикселю
+                    }
+                    // плюсом
+                    if(correctMatrix[0][1]
+                             && correctMatrix[1][0]  && correctMatrix[1][2]
+                             && correctMatrix[2][1])  // если под условия подходят все значения вокруг, расположенные слева, справа, сверху и снизу
+                    {
+                        setPixelColor(resultImage, i, j, blackColor(WHITE_GRAY_LEVEL));    // устанавливаем белый цвет пикселю
+                    }
+                }
+
+
+                // сильное удаление (2 пикселя, белый)
+                if(type == HIGH)
+                {
+                    // горизонталь
+                    if(correctMatrix[1][0] && correctMatrix[1][2])  // если под условия подходят все значения, расположенные слева и справа
+                    {
+                        setPixelColor(resultImage, i, j, blackColor(WHITE_GRAY_LEVEL));    // устанавливаем белый цвет пикселю
+                    }
+                    // вертикаль
+                    if(correctMatrix[0][1] && correctMatrix[2][1])  // если под условия подходят все значения, расположенные сверху и снизу
+                    {
+                        setPixelColor(resultImage, i, j, blackColor(WHITE_GRAY_LEVEL));    // устанавливаем белый цвет пикселю
+                    }
+                }
             }
-
-            QColor color = blackColor(black);    // формируем новый цвет пикселя
-            setPixelColor(resultImage, i, j, color);    // устанавливаем цвет пикселя
         }
     }
 }
@@ -114,13 +153,13 @@ QVector<QVector<bool>> ImageCorrector::getCorrectDataAroundPixels(QImage &image,
         item.resize(3); // задаем кол-во столбцов
     }
 
-    for(int k=0; k<image.width(); k++)
+    for(int k=0; k<3; k++)
     {
-        for(int h=0; h<image.height(); h++)
+        for(int h=0; h<3; h++)
         {
             // i + (h-1) даст нам значения -1 0 +1
             int black = getPixelBlackValue(image, i + (k-1), j + (h-1));    // берем информацию о пикселях вокруг
-            bool isCorrect =(black <= border);  // результат корректности
+            bool isCorrect = (black <= border);  // результат корректности
             matrix[k][h] = isCorrect;   // заносим данные в матрицу
         }
     }

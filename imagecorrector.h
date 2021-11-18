@@ -5,17 +5,30 @@
 #include <QImage>
 #include <QDebug>
 
+#define BLACK_GRAY_LEVEL 0
+#define WHITE_GRAY_LEVEL 255
+
 class ImageCorrector : public QObject
 {
     Q_OBJECT
 public:
     explicit ImageCorrector(QObject *parent = nullptr);
 
+public:
+    enum NoiseDeleteTypes
+    {
+        LOW,
+        MEDIUM,
+        HIGH
+    };
+
+public:
+
     void subtractObjectImage();     // вычесть изображение объекта
     void clipNoise(int clippingNoiseValue);     // простое удаление шума
     void enchanceBlackColor(int blackEnchancement);     // усилить чёрный цвет
     void invertPixels();    // инвертировать цвет пикселей выходного изобраения
-    void hardClipNoise(int border);   // усиленное удаление шума
+    void hardClipNoise(int border, NoiseDeleteTypes type);   // усиленное удаление шума
 
     void setImageOriginal(const QImage &value); // задать изображение фона
     void setImageObject(const QImage &value);   // задать изображение объекта
