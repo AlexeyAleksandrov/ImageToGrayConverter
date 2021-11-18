@@ -22,13 +22,19 @@ public:
         HIGH
     };
 
+    enum NoiseDeleteColors
+    {
+        WHITE,
+        BLACK
+    };
+
 public:
 
     void subtractObjectImage();     // вычесть изображение объекта
     void clipNoise(int clippingNoiseValue);     // простое удаление шума
     void enchanceBlackColor(int blackEnchancement);     // усилить чёрный цвет
     void invertPixels();    // инвертировать цвет пикселей выходного изобраения
-    void hardClipNoise(int border, NoiseDeleteTypes type);   // усиленное удаление шума
+    void hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType);   // усиленное удаление шума
 
     void setImageOriginal(const QImage &value); // задать изображение фона
     void setImageObject(const QImage &value);   // задать изображение объекта
@@ -38,7 +44,7 @@ private:
     void setPixelColor(QImage &image, int i, int j, QColor color);     // установить цвет пикселя для выходного изображения
     int getPixelBlackValue(QImage &image, int i, int j); // получить составляющую черного цвета пискселя
     QColor blackColor(int grayValue);   // возвращает цвет, соответствующий уровню серого
-    QVector<QVector<bool>> getCorrectDataAroundPixels(QImage &image, int i, int j, int border);    // возвращает матрицу 3*3, в которой содержится информация о соответствии пикселей вокруг данного, заданой границе
+    QVector<QVector<bool>> getCorrectDataAroundPixels(QImage &image, int i, int j, int border, bool (*comare)(int comapredValue, int borderValue));    // возвращает матрицу 3*3, в которой содержится информация о соответствии пикселей вокруг данного, заданой границе
 
 signals:
 

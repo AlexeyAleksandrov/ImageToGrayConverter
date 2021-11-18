@@ -89,7 +89,8 @@ void MainWindow::on_pushButton_calculate_clicked()
         int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
         ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
 
-        imageCorrecor.hardClipNoise(deleteNoiseBorder, type); // продвинутое удаление шумов
+        imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+        imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
     }
 
     imageCorrecor.enchanceBlackColor(blackEnchancement);    // усиление черного цвета
