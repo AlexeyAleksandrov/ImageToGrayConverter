@@ -295,10 +295,6 @@ void UiDataSaver::setCheckBoxState(QCheckBox *checkBox, QString state)
 void UiDataSaver::setComboBoxState(QComboBox *comboBox, QString state)
 {
     comboBox->setCurrentIndex(state.toInt());
-    for (int i=0; i<comboBox->count(); i++)
-    {
-        comboBox->setItemData(i, QBrush(QColor(170, 255, 255)), Qt::TextColorRole);
-    }
 }
 
 void UiDataSaver::setSpinBoxState(QSpinBox *spinBox, QString state)
