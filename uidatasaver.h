@@ -1,4 +1,4 @@
-#ifndef UIDATASAVER_H
+﻿#ifndef UIDATASAVER_H
 #define UIDATASAVER_H
 
 #include <QString>
@@ -40,8 +40,18 @@ public:
 
     bool loaded = false;
 
-    void saveProgramData(QString fileName = ""); // сохранить данные о настройках программы
-    void loadProgramData(QString fileName = ""); // загрузить данные о настройках программы
+    void saveProgramData(); // сохранить данные о настройках программы
+    void loadProgramData(/*QString fileName = ""*/); // загрузить данные о настройках программы
+
+    void saveToFile(QString fileName);
+    void loadFromFile(QString fileName);
+
+    void loadPresets(); // загрузить список пресетов
+    void applyPreset(QString presetName);   // применить пресет
+    void savePreset(QString presetName); // сохранить (обновить) пресет
+    void removePreset(QString presetName);  // удалить пресет
+
+
 
     void add(QCheckBox *checkBox); // добавляет checkBox в список
     void add(QLineEdit *lineEdit); // добавляет checkBox в список
@@ -65,6 +75,10 @@ public:
 
     void saveActivated(int i); // просто оболочка над saveProgramData, чтобы сделать коннект
 
+    const QStringList &getPresets() const;
+
+    void setPresetsDir(const QString &newPresetsDir);
+
 signals:
     //    void acceptCurrentIndexSignComboBox(); // сигнал о том, что форме надо применить подпись по текущему выбранному состоянию из comboBox
 
@@ -85,6 +99,10 @@ private:
     QString lastCert;
 
     QString saveFile = "/settings.ini"; // файл, где находятся сохранения
+
+    // === пресеты ===
+    QStringList presets;    // список пресетов
+    QString presetsDir;     // директория, в которой лежат пресеты
 
     // =======================
 

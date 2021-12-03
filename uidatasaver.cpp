@@ -14,7 +14,19 @@ UiDataSaver::~UiDataSaver()
 //    saveProgramData(); // при выходе обязательно сохраняем данные
 }
 
-void UiDataSaver::saveProgramData(QString fileName)
+void UiDataSaver::saveProgramData()
+{
+    QString fileDir = QDir::currentPath() + saveFile;
+    saveToFile(fileDir);    // выполняем сохранение
+}
+
+void UiDataSaver::loadProgramData()
+{
+    QString fileDir = QDir::currentPath() + saveFile;
+    loadFromFile(fileDir);
+}
+
+void UiDataSaver::saveToFile(QString fileName)
 {
     if(!loaded)
     {
@@ -55,12 +67,12 @@ void UiDataSaver::saveProgramData(QString fileName)
 #endif
 
     // записываем данные в файл
-    QString fileDir = QDir::currentPath() + saveFile;
-    if(fileName != "")
-    {
-        fileDir = fileName;
-    }
-    QFile file(fileDir);
+//    QString fileDir = QDir::currentPath() + saveFile;
+//    if(fileName != "")
+//    {
+//        fileDir = fileName;
+//    }
+    QFile file(fileName);
 //    //log.addToLog("Начата запись параметров в файл");
 #ifdef DEBUGGING
     qDebug() << "open savefile" << file.fileName();
@@ -75,21 +87,20 @@ void UiDataSaver::saveProgramData(QString fileName)
     {
         //log.addToLog("Ошибка записи в файл " + file.fileName());
     }
-
 }
 
-void UiDataSaver::loadProgramData(QString fileName)
+void UiDataSaver::loadFromFile(QString fileName)
 {
 #ifdef DEBUGGING
     qDebug() << "LOAD вызвана функция загрузки данных из файла";
 #endif
     // открываем файл для чтения
-    QString fileDir = QDir::currentPath() + saveFile;
-    if(fileName != "")
-    {
-        fileDir = fileName;
-    }
-    QFile file(fileDir);
+//    QString fileDir = QDir::currentPath() + saveFile;
+//    if(fileName != "")
+//    {
+//        fileDir = fileName;
+//    }
+    QFile file(fileName);
     //log.addToLog("Открываем файл параметров");
 #ifdef DEBUGGING
     qDebug() << "open loadfile" << file.fileName();
@@ -146,6 +157,11 @@ void UiDataSaver::loadProgramData(QString fileName)
         //log.addToLog("Параметры установлены");
     }
     loaded = true;
+}
+
+void UiDataSaver::loadPresets()
+{
+
 }
 
 void UiDataSaver::add(QCheckBox *checkBox) // добавление checkBox в список
@@ -224,6 +240,16 @@ void UiDataSaver::saveActivated(int i)
 {
     Q_UNUSED(i);
     saveProgramData();
+}
+
+const QStringList &UiDataSaver::getPresets() const
+{
+    return presets;
+}
+
+void UiDataSaver::setPresetsDir(const QString &newPresetsDir)
+{
+    presetsDir = newPresetsDir;
 }
 
 //preset *UiDataSaver::getPres() const
