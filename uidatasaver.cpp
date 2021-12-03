@@ -14,7 +14,7 @@ UiDataSaver::~UiDataSaver()
 //    saveProgramData(); // при выходе обязательно сохраняем данные
 }
 
-void UiDataSaver::saveProgramData()
+void UiDataSaver::saveProgramData(QString fileName)
 {
     if(!loaded)
     {
@@ -56,6 +56,10 @@ void UiDataSaver::saveProgramData()
 
     // записываем данные в файл
     QString fileDir = QDir::currentPath() + saveFile;
+    if(fileName != "")
+    {
+        fileDir = fileName;
+    }
     QFile file(fileDir);
 //    //log.addToLog("Начата запись параметров в файл");
 #ifdef DEBUGGING
@@ -74,13 +78,18 @@ void UiDataSaver::saveProgramData()
 
 }
 
-void UiDataSaver::loadProgramData()
+void UiDataSaver::loadProgramData(QString fileName)
 {
 #ifdef DEBUGGING
     qDebug() << "LOAD вызвана функция загрузки данных из файла";
 #endif
     // открываем файл для чтения
-    QFile file(QDir::currentPath() + saveFile);
+    QString fileDir = QDir::currentPath() + saveFile;
+    if(fileName != "")
+    {
+        fileDir = fileName;
+    }
+    QFile file(fileDir);
     //log.addToLog("Открываем файл параметров");
 #ifdef DEBUGGING
     qDebug() << "open loadfile" << file.fileName();

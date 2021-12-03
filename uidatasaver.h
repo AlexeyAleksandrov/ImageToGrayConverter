@@ -40,8 +40,8 @@ public:
 
     bool loaded = false;
 
-    void saveProgramData(); // сохранить данные о настройках программы
-    void loadProgramData(); // загрузить данные о настройках программы
+    void saveProgramData(QString fileName = ""); // сохранить данные о настройках программы
+    void loadProgramData(QString fileName = ""); // загрузить данные о настройках программы
 
     void add(QCheckBox *checkBox); // добавляет checkBox в список
     void add(QLineEdit *lineEdit); // добавляет checkBox в список
