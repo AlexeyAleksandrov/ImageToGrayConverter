@@ -6,6 +6,7 @@
 UiDataSaver::UiDataSaver(QObject *parent)  : QObject(parent)
 {
 //    //log.writter = "UiDataSaver";
+    setPresetsDir(QDir::currentPath() + "/presents/");
 }
 
 UiDataSaver::~UiDataSaver()
@@ -161,7 +162,59 @@ void UiDataSaver::loadFromFile(QString fileName)
 
 void UiDataSaver::loadPresets()
 {
+//    QDirIterator filesInDir(presetsDir, QDir::Files);
+//    while (filesInDir.hasNext())
+//    {
+//        QFile file("filesInDir.next()");               //файл-источник, который находится по адресу ItR
+//        QString fileDir = file.fileName();
+//        QString fileName = QFileInfo(fileDir).fileName();
+//        presets.append(fileName);
+//    }
 
+    QDirIterator ligIter(presetsDir,{"*.ini"},QDir::Files);
+    while (ligIter.hasNext())
+    {
+        // Берем следующий файл в списке, подходящий по параметрам
+        QFile logFile(ligIter.next());
+        QFileInfo inf(logFile); // Эта переменная нужна для возвращения имени файла без полного пути
+        QString logFileName = inf.baseName(); // Сохраняем только имя файла без расширения
+        presets.append(logFileName);
+    }
+    presets.sort(); // сортируем пресеты
+}
+
+void UiDataSaver::applyPreset(QString presetName)
+{
+    QString presetFile = getPresetFileName(presetName);
+    loadFromFile(presetFile);   // загружаем программу из файла
+}
+
+void UiDataSaver::savePreset(QString presetName)
+{
+    QDir presetsDirectory(presetsDir);
+    if(!presetsDirectory.exists())  // если директория не создана
+    {
+        presetsDirectory.mkdir(presetsDir);   // создаём директоию для сохранения
+    }
+    if(!presets.contains(presetName))
+    {
+        presets.append(presetName);
+    }
+    QString presetFile = getPresetFileName(presetName);
+    saveToFile(presetFile); // сохраняем текущее состояние в файл
+}
+
+void UiDataSaver::removePreset(QString presetName)
+{
+    QString presetFile = getPresetFileName(presetName);
+    QFile(presetFile).remove(); // удаляем файл пресета
+    presets.removeAll(presetName);  // удаляем из списка
+}
+
+QString UiDataSaver::getPresetFileName(QString presetName)
+{
+    QString presetFile = presetsDir + presetName + ".ini";  // генерируем строку с путём к файлу
+    return presetFile;
 }
 
 void UiDataSaver::add(QCheckBox *checkBox) // добавление checkBox в список

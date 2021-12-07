@@ -318,48 +318,48 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="5" column="0">
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="pushButton_presets_addNew">
             <property name="text">
              <string>Добавить новый</string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="label_presets_name">
             <property name="text">
              <string>Название:</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0" colspan="2">
-           <widget class="QComboBox" name="comboBox"/>
+           <widget class="QComboBox" name="comboBox_presets"/>
           </item>
           <item row="4" column="0" colspan="2">
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="lineEdit_presets_name"/>
           </item>
           <item row="5" column="1">
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="pushButton_presets_deleteChosed">
             <property name="text">
              <string>Удалить выбранный</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="label_preset_chose">
             <property name="text">
              <string>Выбор пресета</string>
             </property>
            </widget>
           </item>
           <item row="2" column="0" colspan="2">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pushButton_presets_accept">
             <property name="text">
              <string>Применить</string>
             </property>
            </widget>
           </item>
           <item row="6" column="0" colspan="2">
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QPushButton" name="pushButton_presets_updateCurrent">
             <property name="text">
              <string>Обновить текущий</string>
             </property>

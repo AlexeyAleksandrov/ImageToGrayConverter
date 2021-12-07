@@ -16,6 +16,7 @@
 #include <QMainWindow>
 #include <QRadioButton>
 #include <QDir>
+#include <QDirIterator>
 
 #define NEW_SPLIT
 #ifdef NEW_SPLIT
@@ -51,8 +52,10 @@ public:
     void savePreset(QString presetName); // сохранить (обновить) пресет
     void removePreset(QString presetName);  // удалить пресет
 
+private:
+    QString getPresetFileName(QString presetName);  // сформировать путь к файлу пресета по его названию
 
-
+public:
     void add(QCheckBox *checkBox); // добавляет checkBox в список
     void add(QLineEdit *lineEdit); // добавляет checkBox в список
     void add(QComboBox *comboBox); // добавляет checkBox в список

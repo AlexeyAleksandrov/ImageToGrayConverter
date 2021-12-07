@@ -43,6 +43,14 @@ private slots:
 
     void on_horizontalSlider_deleteNoise_valueChanged(int value);
 
+    void on_pushButton_presets_accept_clicked();
+
+    void on_pushButton_presets_addNew_clicked();
+
+    void on_pushButton_presets_updateCurrent_clicked();
+
+    void on_pushButton_presets_deleteChosed_clicked();
+
 private:
     void setImageToOutputLabel(QImage image);  // вывести картинку
 

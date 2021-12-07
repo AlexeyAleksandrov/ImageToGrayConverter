@@ -24,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->comboBox_deleteType);
 
     uiDataSaver.loadProgramData();
+    uiDataSaver.loadPresets();
+
+    QStringList presets = uiDataSaver.getPresets();
+    ui->comboBox_presets->addItems(presets);    // выводим пресеты
 
     on_horizontalSlider_blackEnchancementValue_valueChanged(ui->horizontalSlider_blackEnchancementValue->value());
     on_horizontalSlider_clippingNoiseValue_valueChanged(ui->horizontalSlider_clippingNoiseValue->value());
@@ -133,7 +137,8 @@ void MainWindow::on_radioButton_result_clicked()
 {
     if(!resultImage.isNull())
     {
-        ui->label_image->setPixmap(QPixmap::fromImage(QImage(resultImage)));
+//        ui->label_image->setPixmap(QPixmap::fromImage(QImage(resultImage)));
+        setImageToOutputLabel(resultImage);
     }
 }
 
@@ -192,3 +197,41 @@ void MainWindow::setImageToOutputLabel(QImage image)
     ui->label_image->setPixmap(QPixmap::fromImage(image));
 }
 
+
+void MainWindow::on_pushButton_presets_accept_clicked()
+{
+    QString currentPresetName = ui->comboBox_presets->currentText(); // получаем название выбранного пресета
+    uiDataSaver.applyPreset(currentPresetName); // применяем пресет
+    ui->lineEdit_presets_name->setText(currentPresetName);  // выводим название
+}
+
+void MainWindow::on_pushButton_presets_addNew_clicked()
+{
+    QString presetName = ui->lineEdit_presets_name->text(); // получаем название пресета
+    uiDataSaver.savePreset(presetName); // сохряняем
+    ui->comboBox_presets->addItem(presetName);  // добавляем в список
+    int index = ui->comboBox_presets->count() - 1;  // получаем номер последнего элемента
+    ui->comboBox_presets->setCurrentIndex(index);   // прокручиваем но нового
+}
+
+void MainWindow::on_pushButton_presets_updateCurrent_clicked()
+{
+    QString presetName = ui->lineEdit_presets_name->text(); // получаем название пресета
+    uiDataSaver.savePreset(presetName); // сохряняем
+    QString lastPresetName = ui->comboBox_presets->currentText();   // получаем текущее название пресета
+    if(presetName != lastPresetName)    // если название изменилось
+    {
+        uiDataSaver.removePreset(lastPresetName);   // старый пресет удаляем
+        int currentIndex = ui->comboBox_presets->currentIndex();    // получаем текущий индекс
+        ui->comboBox_presets->removeItem(currentIndex); // удаляем старый элемент
+        ui->comboBox_presets->addItem(presetName);  // добавляем новое название
+    }
+}
+
+void MainWindow::on_pushButton_presets_deleteChosed_clicked()
+{
+    QString presetName = ui->comboBox_presets->currentText(); // получаем название пресета
+    uiDataSaver.removePreset(presetName);   // удаляем пресет
+    int currentIndex = ui->comboBox_presets->currentIndex();    // получаем текущий индекс
+    ui->comboBox_presets->removeItem(currentIndex); // удаляем элемент
+}
