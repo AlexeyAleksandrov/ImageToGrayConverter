@@ -9,20 +9,23 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    imagecorrector.cpp \
-    imagetransformer.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    uidatasaver.cpp
+    src/ImageHandlers/imagecorrector.cpp \
+    src/ImageHandlers/imagetransformer.cpp \
+    src/MainWindow/mainwindow.cpp \
+    src/UiHandlers/uidatasaver.cpp \
+    src/main.cpp
+
 
 HEADERS += \
-    imagecorrector.h \
-    imagetransformer.h \
-    mainwindow.h \
-    uidatasaver.h
+    src/ImageHandlers/imagecorrector.h \
+    src/ImageHandlers/imagetransformer.h \
+    src/MainWindow/mainwindow.h \
+    src/UiHandlers/uidatasaver.h
+
 
 FORMS += \
-    mainwindow.ui
+    src/MainWindow/mainwindow.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

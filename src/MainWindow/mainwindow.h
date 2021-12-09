@@ -6,9 +6,9 @@
 #include <qdebug.h>
 #include <QRgb>
 #include <QMessageBox>
-#include "uidatasaver.h"
-#include "imagecorrector.h"
-#include "imagetransformer.h"
+#include "src/UiHandlers/uidatasaver.h"
+#include "src/ImageHandlers/imagecorrector.h"
+#include "src/ImageHandlers/imagetransformer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

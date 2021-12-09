@@ -63,29 +63,30 @@ void ImageCorrector::invertPixels()
 
 void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType)
 {
+    QImage startResultImage = resultImage; // сохраняем
     for (int i=1; i<imageOriginal.width()-1; i++) // проходим по ширине
     {
         for (int j=1; j<imageOriginal.height()-1; j++)    // проходим по высоте
         {
-            int black = getPixelBlackValue(resultImage, i, j);   // получаем уровень черного
+            int black = getPixelBlackValue(startResultImage, i, j);   // получаем уровень черного
 
             if(black <= border) // если цвет попадает под границу для сглаживания шума
             {
-                bool (*copmarator)(int capparedValue, int borderValue) = nullptr;   // функция сравнения значения с границей
+                bool (*copmarator)(int comparedValue, int borderValue) = nullptr;   // функция сравнения значения с границей
                 int replasePixelColorGrayLevel = 0; // цвет, на который будет заменён цвет пикселя в случае сглаживания
                 if(colorType == WHITE)  // условие для белового цвета
                 {
-                    copmarator = [](int capparedValue, int borderValue)
+                    copmarator = [](int comparedValue, int borderValue)
                     {
-                        return capparedValue <= borderValue;    // значение сранивается на <=
+                        return comparedValue <= borderValue;    // значение сранивается на <=
                     };
                     replasePixelColorGrayLevel = WHITE_GRAY_LEVEL;
                 }
                 else // условие сравнения для чёрного цвета
                 {
-                    copmarator = [](int capparedValue, int borderValue)
+                    copmarator = [](int comparedValue, int borderValue)
                     {
-                        return capparedValue > borderValue; // значения сравниваются в большую сторону
+                        return comparedValue > borderValue; // значения сравниваются в большую сторону
                     };
                     replasePixelColorGrayLevel = BLACK_GRAY_LEVEL;
                 }

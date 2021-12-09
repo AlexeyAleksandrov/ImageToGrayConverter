@@ -1,4 +1,5 @@
-#include "uidatasaver.h"
+//#include "uidatasaver.h"
+#include "src/UiHandlers/uidatasaver.h"
 
 #define appendToList(widget, list) if(widget) { list.append(widget); }
 #define setStateFromString(type, list, setStateFunc) if(seletedFileLine.startsWith(QString(type))) { seletedFileLine = seletedFileLine.remove(QString(type) + lineDataSeparator); loadFromSaveString(seletedFileLine, list, setStateFunc);}
