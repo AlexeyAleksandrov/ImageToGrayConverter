@@ -84,7 +84,7 @@ void MainWindow::on_pushButton_calculate_clicked()
     imageCorrecor.setImageOriginal(imageOriginal);
     imageCorrecor.setImageObject(imageObject);
 
-    imageCorrecor.subtractObjectImage();    // вычитаем изображение
+    imageCorrecor.substractObjectImage();    // вычитаем изображение
     imageCorrecor.clipNoise(clippingNoiseValue);    // простое удаление шума
 
     if(ui->checkBox_deleteNoise->isChecked())
@@ -98,6 +98,12 @@ void MainWindow::on_pushButton_calculate_clicked()
     }
 
     imageCorrecor.enchanceBlackColor(blackEnchancement);    // усиление черного цвета
+
+    if(ui->checkBox_medianFilter->isChecked())
+    {
+        imageCorrecor.medianFilter();
+    }
+//    imageCorrecor.medianFilter();   // применение медианного фильтра
 
     if(ui->checkBox_colorInversion->isChecked())
     {
