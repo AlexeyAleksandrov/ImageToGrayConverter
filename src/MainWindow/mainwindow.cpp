@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QScreen>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 //    qDebug() << "PixelRatio: " << QGuiApplication::primaryScreen()->devicePixelRatio();
+    QThread th; // класс потоков, для получения кол-ва возможных, для использования
+    int maxThreadsCount = th.idealThreadCount();    // получаем максимальное кол-во потоков
+    for(int i=1; i<=maxThreadsCount; i++)
+    {
+        ui->comboBox_threadsCount->addItem(QString::number(i)); // добавлем цифру кол-ва потов в список
+    }
+//    qDebug() << "Threads Count = " << th.idealThreadCount();
     screen = QGuiApplication::primaryScreen();  // получаем указатель на главный экран
     ui->radioButton_imageEmitter_imageFromFile->setChecked(true);
     on_radioButton_imageEmitter_imageFromFile_clicked();    // применяем выбор
@@ -95,7 +103,10 @@ void MainWindow::on_pushButton_calculate_clicked()
     int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
     int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
+    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
+
     ImageCorrector imageCorrecor;
+    imageCorrecor.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
     imageCorrecor.setImageOriginal(imageOriginal);
     imageCorrecor.setImageObject(imageObject);
 

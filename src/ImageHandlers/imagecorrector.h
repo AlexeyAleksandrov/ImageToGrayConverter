@@ -43,6 +43,8 @@ public:
     void setImageObject(const QImage &value);   // задать изображение объекта
     QImage getResultImage() const;  // получить результирующее изображение
 
+    void setThreadsCount(int newThreadsCount);  // установить кол-во потоков
+
 private:
     void setPixelColor(QImage &image, int i, int j, QColor color);     // установить цвет пикселя для выходного изображения
     int getPixelBlackValue(QImage &image, int i, int j); // получить составляющую черного цвета пискселя
@@ -61,7 +63,7 @@ private:    // изображения
 
 private:    // работа с потоками
 //    QThread *threads = nullptr; // потоки для обработки данных в многопотоном режиме
-    int threadsCount = 6;   // кол-во задействованных потоков
+    int threadsCount = 1;   // кол-во задействованных потоков
 
     void distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int i, int j)> function);
 };

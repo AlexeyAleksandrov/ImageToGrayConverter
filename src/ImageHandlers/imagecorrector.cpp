@@ -399,6 +399,11 @@ bool **ImageCorrector::getMatrixAroundPixel(int **grayScaleMatrix, int i, int j)
     return matrix;
 }
 
+void ImageCorrector::setThreadsCount(int newThreadsCount)
+{
+    threadsCount = newThreadsCount;
+}
+
 void ImageCorrector::distributeToThreads(int startI, int endI, int startJ, int endJ, /*void (*function)(int, int)*/ std::function<void(int, int)> function)
 {
     int countI = endI - startI; // считаем кол-во значений для i, если начальное значение не 0

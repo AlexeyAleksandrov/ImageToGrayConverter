@@ -434,6 +434,13 @@
           <string>Расчёт</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
+          <item row="3" column="1">
+           <widget class="QPushButton" name="pushButton_saveResult">
+            <property name="text">
+             <string>Сохранить результат</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_imageTypes">
             <property name="title">
@@ -477,7 +484,7 @@
             </layout>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QPushButton" name="pushButton_calculate">
             <property name="text">
              <string>Расчёт</string>
@@ -485,9 +492,12 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QPushButton" name="pushButton_saveResult">
+           <widget class="QComboBox" name="comboBox_threadsCount"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_threadsCount">
             <property name="text">
-             <string>Сохранить результат</string>
+             <string>Количество потоков:</string>
             </property>
            </widget>
           </item>
