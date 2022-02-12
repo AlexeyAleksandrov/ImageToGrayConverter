@@ -15,17 +15,10 @@ void ImageCorrector::substractObjectImage()
     {
         for (int j=0; j<imageOriginal.getHeight(); j++)    // проходим по высоте
         {
-//            int blackOriginal = getPixelBlackValue(imageOriginal, i, j); // уровень черного в оригинале
-//            int blackObject = getPixelBlackValue(imageObject, i, j); // уровень черного в объекте
-
             int blackOriginal = imageOriginalMatrix[i][j];  // уровень черного в оригинале
             int blackObject = imageObjectMatrix[i][j];  // уровень черного в объекте
 
             int blackSub = abs(blackOriginal - blackObject);    // вычитаем фон
-
-//            QColor color = blackColor(blackSub);    // формируем новый цвет пикселя
-//            setPixelColor(resultImage, i, j, color);    // устанавливаем цвет пикселя
-
             imageResultMatrix[i][j] = blackSub; // устанавливаем цвет пикселя
         }
     }
@@ -33,53 +26,65 @@ void ImageCorrector::substractObjectImage()
 
 void ImageCorrector::clipNoise(int clippingNoiseValue)
 {
-//    auto imageOriginalMatrix = imageOriginal.getGrayScaleMatrix();  // матрица пикселей исходного изображения
-//    auto imageObjectMatrix = imageObject.getGrayScaleMatrix();  // матрица пикселей изображения объекта
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
+    std::function<void(int i, int j)> function = [&](int i, int j)
     {
-        for (int j=0; j<imageOriginal.getHeight(); j++)    // проходим по высоте
+        int black = imageResultMatrix[i][j];   // получаем уровень черного
+        if(black < clippingNoiseValue)   // обрезаем шумы в соответсвии с указанным уровнем
         {
-            int black = imageResultMatrix[i][j];   // получаем уровень черного
-//            if(i >= 230 && i <= 240)
-//            {
-//                int a = black;
-//                resultImage.printLine(i);
-//            }
-            if(black < clippingNoiseValue)   // обрезаем шумы в соответсвии с указанным уровнем
-            {
-                black = 0;
-            }
-
-            imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
-
-//            QColor color = blackColor(black);    // формируем новый цвет пикселя
-//            setPixelColor(resultImage, i, j, color);    // устанавливаем цвет пикселя
+            black = 0;
         }
-    }
+
+        imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
+    };
+    distributeToThreads(0, imageOriginal.getWidth(), 0, imageOriginal.getHeight(), function);
+
+//    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
+//    {
+//        for (int j=0; j<imageOriginal.getHeight(); j++)    // проходим по высоте
+//        {
+//            int black = imageResultMatrix[i][j];   // получаем уровень черного
+//            if(black < clippingNoiseValue)   // обрезаем шумы в соответсвии с указанным уровнем
+//            {
+//                black = 0;
+//            }
+
+//            imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
+//        }
+//    }
 }
 
 void ImageCorrector::enchanceBlackColor(int blackEnchancement)
 {
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
+    std::function<void(int i, int j)> function = [&](int i, int j)
     {
-        for (int j=0; j<imageOriginal.getHeight(); j++)    // проходим по высоте
+        int black = imageResultMatrix[i][j];   // получаем уровень черного
+        if(black > blackEnchancement)    // усиливаем черный цвет
         {
-            int black = imageResultMatrix[i][j];   // получаем уровень черного
-            if(black > blackEnchancement)    // усиливаем черный цвет
-            {
-                black = 255;
-            }
-
-//            QColor color = blackColor(black);    // формируем новый цвет пикселя
-//            setPixelColor(resultImage, i, j, color);    // устанавливаем цвет пикселя
-
-            imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
+            black = 255;
         }
-    }
+
+        imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
+    };
+
+    distributeToThreads(0, imageOriginal.getWidth(), 0, imageOriginal.getHeight(), function);   // распределяем по потокам
+
+//    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
+//    {
+//        for (int j=0; j<imageOriginal.getHeight(); j++)    // проходим по высоте
+//        {
+//            int black = imageResultMatrix[i][j];   // получаем уровень черного
+//            if(black > blackEnchancement)    // усиливаем черный цвет
+//            {
+//                black = 255;
+//            }
+
+//            imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
+//        }
+//    }
 }
 
 void ImageCorrector::invertPixels()
@@ -87,99 +92,164 @@ void ImageCorrector::invertPixels()
     QImage img = resultImage.getImage();
     img.invertPixels();
     resultImage.setImage(img);
-
-//    resultImage.invertPixels();
 }
 
 void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType)
 {
-//    QImage startResultImage = resultImage; // сохраняем
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    for (int i=1; i<imageOriginal.getWidth()-1; i++) // проходим по ширине
+    std::function<void(int i, int j)> function = [&](int i, int j)
     {
-        for (int j=1; j<imageOriginal.getHeight()-1; j++)    // проходим по высоте
+        int black = imageResultMatrix[i][j];    // получаем уровень черного
+
+        if(black <= border) // если цвет попадает под границу для сглаживания шума
         {
-//            int black = getPixelBlackValue(startResultImage, i, j);   // получаем уровень черного
-            int black = imageResultMatrix[i][j];    // получаем уровень черного
-
-            if(black <= border) // если цвет попадает под границу для сглаживания шума
+            bool (*copmarator)(int comparedValue, int borderValue) = nullptr;   // функция сравнения значения с границей
+            int replasePixelColorGrayLevel = 0; // цвет, на который будет заменён цвет пикселя в случае сглаживания
+            if(colorType == WHITE)  // условие для белового цвета
             {
-                bool (*copmarator)(int comparedValue, int borderValue) = nullptr;   // функция сравнения значения с границей
-                int replasePixelColorGrayLevel = 0; // цвет, на который будет заменён цвет пикселя в случае сглаживания
-                if(colorType == WHITE)  // условие для белового цвета
+                copmarator = [](int comparedValue, int borderValue)
                 {
-                    copmarator = [](int comparedValue, int borderValue)
-                    {
-                        return comparedValue <= borderValue;    // значение сранивается на <=
-                    };
+                    return comparedValue <= borderValue;    // значение сранивается на <=
+                };
 //                    replasePixelColorGrayLevel = WHITE_GRAY_LEVEL;
-                    replasePixelColorGrayLevel = BLACK_GRAY_LEVEL;
-                }
-                else // условие сравнения для чёрного цвета
+                replasePixelColorGrayLevel = BLACK_GRAY_LEVEL;
+            }
+            else // условие сравнения для чёрного цвета
+            {
+                copmarator = [](int comparedValue, int borderValue)
                 {
-                    copmarator = [](int comparedValue, int borderValue)
-                    {
-                        return comparedValue > borderValue; // значения сравниваются в большую сторону
-                    };
+                    return comparedValue > borderValue; // значения сравниваются в большую сторону
+                };
 //                    replasePixelColorGrayLevel = BLACK_GRAY_LEVEL;
-                    replasePixelColorGrayLevel = WHITE_GRAY_LEVEL;
-                }
-//                auto correctMatrix = getCorrectDataAroundPixels(resultImage, i, j, border, copmarator); // получаем матрицу коорректности
-                auto correctMatrix = getCorrectDataAroundPixels(imageResultMatrix, i, j, border, copmarator);   // получаем матрицу коорректности
+                replasePixelColorGrayLevel = WHITE_GRAY_LEVEL;
+            }
+            auto correctMatrix = getCorrectDataAroundPixels(imageResultMatrix, i, j, border, copmarator);   // получаем матрицу коорректности
 
-                // слабое удаление (8 пикселей, белый)
-                if(type == LOW)
+            // слабое удаление (8 пикселей, белый)
+            if(type == LOW)
+            {
+                if(correctMatrix[0][0] && correctMatrix[0][1] && correctMatrix[0][2]
+                         && correctMatrix[1][0]  && correctMatrix[1][2]
+                         && correctMatrix[2][0] && correctMatrix[2][1] && correctMatrix[2][2])  // если под условия подходят все значения вокруг
                 {
-                    if(correctMatrix[0][0] && correctMatrix[0][1] && correctMatrix[0][2]
-                             && correctMatrix[1][0]  && correctMatrix[1][2]
-                             && correctMatrix[2][0] && correctMatrix[2][1] && correctMatrix[2][2])  // если под условия подходят все значения вокруг
-                    {
-//                        setPixelColor(resultImage, i, j, blackColor(replasePixelColorGrayLevel));    // устанавливаем белый цвет пикселю
-                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
-                    }
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
                 }
+            }
 
-                // среднее удаление (4 пикселя, белый)
-                if(type == MEDIUM)
+            // среднее удаление (4 пикселя, белый)
+            if(type == MEDIUM)
+            {
+                // крестом
+                if(correctMatrix[0][0] && correctMatrix[0][2]
+                         && correctMatrix[2][0] && correctMatrix[2][2])  // если под условия подходят все значения вокруг, расположенные по диагонале
                 {
-                    // крестом
-                    if(correctMatrix[0][0] && correctMatrix[0][2]
-                             && correctMatrix[2][0] && correctMatrix[2][2])  // если под условия подходят все значения вокруг, расположенные по диагонале
-                    {
-//                        setPixelColor(resultImage, i, j, blackColor(replasePixelColorGrayLevel));    // устанавливаем белый цвет пикселю
-                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
-                    }
-                    // плюсом
-                    if(correctMatrix[0][1]
-                             && correctMatrix[1][0]  && correctMatrix[1][2]
-                             && correctMatrix[2][1])  // если под условия подходят все значения вокруг, расположенные слева, справа, сверху и снизу
-                    {
-//                        setPixelColor(resultImage, i, j, blackColor(replasePixelColorGrayLevel));    // устанавливаем белый цвет пикселю
-                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
-                    }
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
                 }
-
-
-                // сильное удаление (2 пикселя, белый)
-                if(type == HIGH)
+                // плюсом
+                if(correctMatrix[0][1]
+                         && correctMatrix[1][0]  && correctMatrix[1][2]
+                         && correctMatrix[2][1])  // если под условия подходят все значения вокруг, расположенные слева, справа, сверху и снизу
                 {
-                    // горизонталь
-                    if(correctMatrix[1][0] && correctMatrix[1][2])  // если под условия подходят все значения, расположенные слева и справа
-                    {
-//                        setPixelColor(resultImage, i, j, blackColor(replasePixelColorGrayLevel));    // устанавливаем белый цвет пикселю
-                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
-                    }
-                    // вертикаль
-                    if(correctMatrix[0][1] && correctMatrix[2][1])  // если под условия подходят все значения, расположенные сверху и снизу
-                    {
-//                        setPixelColor(resultImage, i, j, blackColor(replasePixelColorGrayLevel));    // устанавливаем белый цвет пикселю
-                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
-                    }
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                }
+            }
+
+            // сильное удаление (2 пикселя, белый)
+            if(type == HIGH)
+            {
+                // горизонталь
+                if(correctMatrix[1][0] && correctMatrix[1][2])  // если под условия подходят все значения, расположенные слева и справа
+                {
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                }
+                // вертикаль
+                if(correctMatrix[0][1] && correctMatrix[2][1])  // если под условия подходят все значения, расположенные сверху и снизу
+                {
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
                 }
             }
         }
-    }
+    };
+
+    distributeToThreads(1, imageOriginal.getWidth()-1, 1, imageOriginal.getHeight()-1, function);   // распределяем по потокам
+
+//    for (int i=1; i<imageOriginal.getWidth()-1; i++) // проходим по ширине
+//    {
+//        for (int j=1; j<imageOriginal.getHeight()-1; j++)    // проходим по высоте
+//        {
+//            int black = imageResultMatrix[i][j];    // получаем уровень черного
+
+//            if(black <= border) // если цвет попадает под границу для сглаживания шума
+//            {
+//                bool (*copmarator)(int comparedValue, int borderValue) = nullptr;   // функция сравнения значения с границей
+//                int replasePixelColorGrayLevel = 0; // цвет, на который будет заменён цвет пикселя в случае сглаживания
+//                if(colorType == WHITE)  // условие для белового цвета
+//                {
+//                    copmarator = [](int comparedValue, int borderValue)
+//                    {
+//                        return comparedValue <= borderValue;    // значение сранивается на <=
+//                    };
+////                    replasePixelColorGrayLevel = WHITE_GRAY_LEVEL;
+//                    replasePixelColorGrayLevel = BLACK_GRAY_LEVEL;
+//                }
+//                else // условие сравнения для чёрного цвета
+//                {
+//                    copmarator = [](int comparedValue, int borderValue)
+//                    {
+//                        return comparedValue > borderValue; // значения сравниваются в большую сторону
+//                    };
+////                    replasePixelColorGrayLevel = BLACK_GRAY_LEVEL;
+//                    replasePixelColorGrayLevel = WHITE_GRAY_LEVEL;
+//                }
+//                auto correctMatrix = getCorrectDataAroundPixels(imageResultMatrix, i, j, border, copmarator);   // получаем матрицу коорректности
+
+//                // слабое удаление (8 пикселей, белый)
+//                if(type == LOW)
+//                {
+//                    if(correctMatrix[0][0] && correctMatrix[0][1] && correctMatrix[0][2]
+//                             && correctMatrix[1][0]  && correctMatrix[1][2]
+//                             && correctMatrix[2][0] && correctMatrix[2][1] && correctMatrix[2][2])  // если под условия подходят все значения вокруг
+//                    {
+//                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+//                    }
+//                }
+
+//                // среднее удаление (4 пикселя, белый)
+//                if(type == MEDIUM)
+//                {
+//                    // крестом
+//                    if(correctMatrix[0][0] && correctMatrix[0][2]
+//                             && correctMatrix[2][0] && correctMatrix[2][2])  // если под условия подходят все значения вокруг, расположенные по диагонале
+//                    {
+//                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+//                    }
+//                    // плюсом
+//                    if(correctMatrix[0][1]
+//                             && correctMatrix[1][0]  && correctMatrix[1][2]
+//                             && correctMatrix[2][1])  // если под условия подходят все значения вокруг, расположенные слева, справа, сверху и снизу
+//                    {
+//                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+//                    }
+//                }
+
+//                // сильное удаление (2 пикселя, белый)
+//                if(type == HIGH)
+//                {
+//                    // горизонталь
+//                    if(correctMatrix[1][0] && correctMatrix[1][2])  // если под условия подходят все значения, расположенные слева и справа
+//                    {
+//                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+//                    }
+//                    // вертикаль
+//                    if(correctMatrix[0][1] && correctMatrix[2][1])  // если под условия подходят все значения, расположенные сверху и снизу
+//                    {
+//                        imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 void ImageCorrector::medianFilter()
@@ -191,7 +261,6 @@ void ImageCorrector::medianFilter()
     {
         for(int j=1; j<resultImage.getHeight()-1; j++)
         {
-//            auto pixels = getMatrixAroundPixel(sourseImage, i, j);  // получаем матрицу интенсивности 3х3 вокруг пикселя
             auto pixels = getMatrixAroundPixel(sourseImageMatrix, i, j);    // получаем матрицу интенсивности 3х3 вокруг пикселя
             QList<int> sortedPixelsList;  // одномерный список для сортировки массива
             for(int k=0; k<3; k++)
@@ -207,7 +276,6 @@ void ImageCorrector::medianFilter()
             int mid = ((size - 1) / 2); //  9 -1 = 8 ; 8 / 2 = 4 ; 4 - серединный элемент
             int medianBlackValue = 255 - sortedPixelsVector[mid]; // получаем медианное значение
 
-//            setPixelColor(resultImage, i, j, medianBlackValue); // устанавливаем цвет
             sourseImageMatrix[i][j] = medianBlackValue;   // устанавливаем белый цвет пикселю
         }
     }
@@ -329,6 +397,69 @@ bool **ImageCorrector::getMatrixAroundPixel(int **grayScaleMatrix, int i, int j)
         }
     }
     return matrix;
+}
+
+void ImageCorrector::distributeToThreads(int startI, int endI, int startJ, int endJ, /*void (*function)(int, int)*/ std::function<void(int, int)> function)
+{
+    int countI = endI - startI; // считаем кол-во значений для i, если начальное значение не 0
+    int countJ = endJ - startJ; // считаем кол-во значений для j, если начальное значение не 0
+
+    if(threadsCount <= 1 || countI < threadsCount || countJ < threadsCount)   // если требуется всего 1 поток
+    {
+        for(int i=startI; i<endI; i++)  // делаем обычный вложенный цикл
+        {
+            for(int j=startJ; j<endJ; j++)
+            {
+                function(i, j); // и выполняем действие, которое нужно сделать
+            }
+        }
+    }
+    else    // если требуется несколько потоков
+    {
+        int intervalI = countI / threadsCount;  // считаем интервал между i для ровного разделения на циклы
+        int intervalJ = countJ / threadsCount;  // считаем интервал между j для ровного разделения на циклы
+
+        int *masStartI = new int [threadsCount];    // массив хранения стартовых значений i для каждого потока
+        int *masStartJ = new int [threadsCount];    // массив хранения стартовых значений j для каждого потока
+        int *masEndI = new int [threadsCount];    // массив хранения конечных значений i для каждого потока
+        int *masEndJ = new int [threadsCount];    // массив хранения конечных значений j для каждого потока
+
+        for(int p=0; p<threadsCount; p++)   // заполняем стартовые значения
+        {
+            masStartI[p] = startI + intervalI * p;  // стартовое значение (константа) + интервал, умноженный на текущую позицию
+            masStartJ[p] = startJ + intervalJ * p;  // стартовое значение (константа) + интервал, умноженный на текущую позицию
+            masEndI[p] = startI + intervalI * (p+1);    // конечное значение равно следующему стартовому
+            masEndJ[p] = startJ + intervalJ * (p+1);    // конечное значение равно следующему стартовому
+        }
+
+        masEndI[threadsCount-1] = endI; // последнее значение i равно максимальному
+        masEndJ[threadsCount-1] = endJ; // последнее значение j равно максимальному
+
+        std::thread *threads = new std::thread [threadsCount];  // создаём потоки
+        for(int k=0; k<threadsCount; k++)   // заполняем действиями потоки
+        {
+            threads[k] = std::thread([masStartI, masStartJ, masEndI, masEndJ, function, k, startJ, endJ]()    // передаём потоку действие, которое нужно выполнить
+            {
+                for(int i=masStartI[k]; i<masEndI[k]; i++)  // делаем проход по i
+                {
+//                    for(int j=masStartJ[k]; j<masEndJ[k]; j++)  // делаем проход по j
+                    for(int j=startJ; j<endJ; j++)
+                    {
+                        function(i, j); // и выполняем действие, которое нужно сделать
+                    }
+                }
+            });
+        }
+
+        for(int i=threadsCount-1; i>=0; i--)    // идём в обратном порядке и дожидаемся завершения всех потоков
+        {
+            threads[i].join();
+        }
+
+        // удалить память !!!
+        delete [] threads;
+        threads = nullptr;
+    }
 }
 
 QImage ImageCorrector::getResultImage() const

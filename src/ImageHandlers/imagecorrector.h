@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QDebug>
 #include "imagedata.h"
+#include "thread"
 
 #define BLACK_GRAY_LEVEL 0
 #define WHITE_GRAY_LEVEL 255
@@ -53,16 +54,16 @@ private:
 
 signals:
 
-private:
-//    QImage imageOriginal;   // изображение без фона
-//    QImage imageObject; // изображение с объектом
-//    QImage resultImage; // результирующее изображение
-
-//    ImageData resultImageData;  // информация об результирующем изображении
+private:    // изображения
     ImageData imageOriginal; // изображение без фона
     ImageData imageObject; // изображение с объектом
     ImageData resultImage; // результирующее изображение
 
+private:    // работа с потоками
+//    QThread *threads = nullptr; // потоки для обработки данных в многопотоном режиме
+    int threadsCount = 6;   // кол-во задействованных потоков
+
+    void distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int i, int j)> function);
 };
 
 #endif // IMAGECORRECTOR_H
