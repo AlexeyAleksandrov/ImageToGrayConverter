@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QImage>
 #include <QDebug>
+#include "imagedata.h"
 
 #define BLACK_GRAY_LEVEL 0
 #define WHITE_GRAY_LEVEL 255
@@ -46,14 +47,22 @@ private:
     int getPixelBlackValue(QImage &image, int i, int j); // получить составляющую черного цвета пискселя
     QColor blackColor(int grayValue);   // возвращает цвет, соответствующий уровню серого
     QVector<QVector<bool>> getCorrectDataAroundPixels(QImage &image, int i, int j, int border, bool (*compare)(int comapredValue, int borderValue));    // возвращает матрицу 3*3, в которой содержится информация о соответствии пикселей вокруг данного, заданой границе
+    bool** getCorrectDataAroundPixels(int **grayScaleMatrix, int i, int j, int border, bool (*compare)(int, int));
     QVector<QVector<int>> getMatrixAroundPixel(QImage &image, int i, int j);   // получить матрицу пикселей вокруг данного пикселя
+    bool** getMatrixAroundPixel(int **grayScaleMatrix, int i, int j);   // получить матрицу пикселей вокруг данного пикселя
 
 signals:
 
 private:
-    QImage imageOriginal;   // изображение без фона
-    QImage imageObject; // изображение с объектом
-    QImage resultImage; // результирующее изображение
+//    QImage imageOriginal;   // изображение без фона
+//    QImage imageObject; // изображение с объектом
+//    QImage resultImage; // результирующее изображение
+
+//    ImageData resultImageData;  // информация об результирующем изображении
+    ImageData imageOriginal; // изображение без фона
+    ImageData imageObject; // изображение с объектом
+    ImageData resultImage; // результирующее изображение
+
 };
 
 #endif // IMAGECORRECTOR_H

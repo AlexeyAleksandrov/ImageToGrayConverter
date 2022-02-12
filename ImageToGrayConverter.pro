@@ -10,6 +10,8 @@ CONFIG += c++11
 
 SOURCES += \
     src/ImageHandlers/imagecorrector.cpp \
+    src/ImageHandlers/imagedata.cpp \
+    src/ImageHandlers/imagedataexception.cpp \
     src/ImageHandlers/imagetransformer.cpp \
     src/MainWindow/mainwindow.cpp \
     src/UiHandlers/uidatasaver.cpp \
@@ -18,6 +20,8 @@ SOURCES += \
 
 HEADERS += \
     src/ImageHandlers/imagecorrector.h \
+    src/ImageHandlers/imagedata.h \
+    src/ImageHandlers/imagedataexception.h \
     src/ImageHandlers/imagetransformer.h \
     src/MainWindow/mainwindow.h \
     src/UiHandlers/uidatasaver.h

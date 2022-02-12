@@ -112,6 +112,11 @@ void MainWindow::on_pushButton_calculate_clicked()
 
     resultImage = imageCorrecor.getResultImage();   // получаем обработанное изображение
 
+    if(ui->checkBox_colorInversion->isChecked())
+    {
+       resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+    }
+
     // выводим картинку
     setImageToOutputLabel(resultImage);
 
