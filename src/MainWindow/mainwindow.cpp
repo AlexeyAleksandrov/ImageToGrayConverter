@@ -1,11 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QScreen>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    qDebug() << "PixelRatio: " << QGuiApplication::primaryScreen()->devicePixelRatio();
 
     uiDataSaver.add(ui->lineEdit_imageOriginal);
     uiDataSaver.add(ui->lineEdit_imageObject);
@@ -249,3 +252,14 @@ void MainWindow::on_pushButton_presets_deleteChosed_clicked()
     int currentIndex = ui->comboBox_presets->currentIndex();    // получаем текущий индекс
     ui->comboBox_presets->removeItem(currentIndex); // удаляем элемент
 }
+
+void MainWindow::on_pushButton_screen_clicked()
+{
+    // получить изображение экрана
+    QScreen *screen = QGuiApplication::primaryScreen();
+
+    QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
+    pixmap = screen->grabWindow (0); // Снимок экрана
+    pixmap.save("C:/Users/ASUS/Pictures/qtscreen.jpg");
+}
+

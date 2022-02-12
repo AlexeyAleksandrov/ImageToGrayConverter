@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1287</width>
-    <height>901</height>
+    <height>977</height>
    </rect>
   </property>
   <property name="font">
@@ -414,6 +414,13 @@
         </widget>
        </item>
       </layout>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="pushButton_screen">
+      <property name="text">
+       <string>Screen</string>
+      </property>
      </widget>
     </item>
    </layout>

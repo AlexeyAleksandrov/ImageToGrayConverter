@@ -51,6 +51,8 @@ private slots:
 
     void on_pushButton_presets_deleteChosed_clicked();
 
+    void on_pushButton_screen_clicked();
+
 private:
     void setImageToOutputLabel(QImage image);  // вывести картинку
 
