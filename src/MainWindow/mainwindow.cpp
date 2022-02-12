@@ -8,7 +8,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    qDebug() << "PixelRatio: " << QGuiApplication::primaryScreen()->devicePixelRatio();
+//    qDebug() << "PixelRatio: " << QGuiApplication::primaryScreen()->devicePixelRatio();
+    screen = QGuiApplication::primaryScreen();  // получаем указатель на главный экран
+    ui->radioButton_imageEmitter_imageFromFile->setChecked(true);
+    on_radioButton_imageEmitter_imageFromFile_clicked();    // применяем выбор
+
+    auto screens = QGuiApplication::screens();  // поулчаем список экранов, подключенных к ПК
+    for(QScreen *screenItem : qAsConst(screens))
+    {
+        ui->comboBox_choseScreen->addItem(screenItem->name());  // добавляем каждый дисплей в список
+    }
 
     uiDataSaver.add(ui->lineEdit_imageOriginal);
     uiDataSaver.add(ui->lineEdit_imageObject);
@@ -261,5 +270,19 @@ void MainWindow::on_pushButton_screen_clicked()
     QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
     pixmap = screen->grabWindow (0); // Снимок экрана
     pixmap.save("C:/Users/ASUS/Pictures/qtscreen.jpg");
+}
+
+
+void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked()
+{
+    ui->groupBox_imageEmitter_imageFromFile->show();
+    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
+}
+
+
+void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked()
+{
+    ui->groupBox_imageEmitter_imageFromFile->hide();
+    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
 }
 

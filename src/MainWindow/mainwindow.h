@@ -53,6 +53,10 @@ private slots:
 
     void on_pushButton_screen_clicked();
 
+    void on_radioButton_imageEmitter_imageFromFile_clicked();
+
+    void on_radioButton_imageEmitter_videoCaptureFromScreen_clicked();
+
 private:
     void setImageToOutputLabel(QImage image);  // вывести картинку
 
@@ -64,5 +68,7 @@ private:
     QImage resultImage;
 
     UiDataSaver uiDataSaver;
+
+    QScreen *screen = nullptr;  // экран, с которого мы будем брать изображение
 };
 #endif // MAINWINDOW_H
