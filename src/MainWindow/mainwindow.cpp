@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     uiDataSaver.add(ui->lineEdit_imageOriginal);
     uiDataSaver.add(ui->lineEdit_imageObject);
+    uiDataSaver.add(ui->lineEdit_presets_name);
 
     uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
     uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
@@ -22,12 +23,14 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->checkBox_deleteNoise);
 
     uiDataSaver.add(ui->comboBox_deleteType);
+    uiDataSaver.add(ui->comboBox_presets);
 
-    uiDataSaver.loadProgramData();
     uiDataSaver.loadPresets();
 
     QStringList presets = uiDataSaver.getPresets();
     ui->comboBox_presets->addItems(presets);    // выводим пресеты
+
+    uiDataSaver.loadProgramData();
 
     on_horizontalSlider_blackEnchancementValue_valueChanged(ui->horizontalSlider_blackEnchancementValue->value());
     on_horizontalSlider_clippingNoiseValue_valueChanged(ui->horizontalSlider_clippingNoiseValue->value());
