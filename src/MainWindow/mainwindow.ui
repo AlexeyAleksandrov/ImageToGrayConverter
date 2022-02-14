@@ -20,6 +20,107 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="2">
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="title">
+       <string>Пресеты</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="5" column="0">
+        <widget class="QPushButton" name="pushButton_presets_addNew">
+         <property name="text">
+          <string>Добавить новый</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_presets_name">
+         <property name="text">
+          <string>Название:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QComboBox" name="comboBox_presets"/>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QLineEdit" name="lineEdit_presets_name"/>
+       </item>
+       <item row="5" column="1">
+        <widget class="QPushButton" name="pushButton_presets_deleteChosed">
+         <property name="text">
+          <string>Удалить выбранный</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_preset_chose">
+         <property name="text">
+          <string>Выбор пресета</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButton_presets_accept">
+         <property name="text">
+          <string>Применить</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButton_presets_updateCurrent">
+         <property name="text">
+          <string>Обновить текущий</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QPushButton" name="pushButton_screen">
+      <property name="text">
+       <string>Screen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3" rowspan="5">
+     <widget class="QGroupBox" name="groupBox_imageDemo">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Изображение</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_image">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Изображение</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="1" column="2">
      <widget class="QGroupBox" name="groupBox_6">
       <property name="title">
@@ -159,63 +260,6 @@
       </layout>
      </widget>
     </item>
-    <item row="3" column="2">
-     <widget class="QGroupBox" name="groupBox_5">
-      <property name="title">
-       <string>Пресеты</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="5" column="0">
-        <widget class="QPushButton" name="pushButton_presets_addNew">
-         <property name="text">
-          <string>Добавить новый</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_presets_name">
-         <property name="text">
-          <string>Название:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QComboBox" name="comboBox_presets"/>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QLineEdit" name="lineEdit_presets_name"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QPushButton" name="pushButton_presets_deleteChosed">
-         <property name="text">
-          <string>Удалить выбранный</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_preset_chose">
-         <property name="text">
-          <string>Выбор пресета</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButton_presets_accept">
-         <property name="text">
-          <string>Применить</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButton_presets_updateCurrent">
-         <property name="text">
-          <string>Обновить текущий</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="0" column="4" rowspan="5">
      <spacer name="verticalSpacer_4">
       <property name="orientation">
@@ -241,43 +285,6 @@
        </size>
       </property>
      </spacer>
-    </item>
-    <item row="0" column="3" rowspan="5">
-     <widget class="QGroupBox" name="groupBox_imageDemo">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>Изображение</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_image">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Изображение</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </item>
     <item row="2" column="2">
      <widget class="QGroupBox" name="groupBox_2">
@@ -507,10 +514,10 @@
       </layout>
      </widget>
     </item>
-    <item row="7" column="2">
-     <widget class="QPushButton" name="pushButton_screen">
+    <item row="8" column="2">
+     <widget class="QPushButton" name="pushButton_runVideo">
       <property name="text">
-       <string>Screen</string>
+       <string>RunVideo</string>
       </property>
      </widget>
     </item>

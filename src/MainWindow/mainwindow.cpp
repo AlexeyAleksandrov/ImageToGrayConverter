@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     {
         ui->comboBox_threadsCount->addItem(QString::number(i)); // добавлем цифру кол-ва потов в список
     }
+    ui->comboBox_threadsCount->setCurrentIndex(maxThreadsCount-1);  // по умолчанию ставим, что выбрано максимальное кол-во потоков
 //    qDebug() << "Threads Count = " << th.idealThreadCount();
     screen = QGuiApplication::primaryScreen();  // получаем указатель на главный экран
     ui->radioButton_imageEmitter_imageFromFile->setChecked(true);
@@ -280,7 +281,8 @@ void MainWindow::on_pushButton_screen_clicked()
 
     QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
     pixmap = screen->grabWindow (0); // Снимок экрана
-    pixmap.save("C:/Users/ASUS/Pictures/qtscreen.jpg");
+//    pixmap.save("C:/Users/ASUS/Pictures/qtscreen.jpg");
+    setImageToOutputLabel(pixmap.toImage());    // выводим скриншот на экран
 }
 
 
@@ -295,5 +297,29 @@ void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked()
 {
     ui->groupBox_imageEmitter_imageFromFile->hide();
     ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
+}
+
+
+void MainWindow::on_pushButton_runVideo_clicked()
+{
+    isRunning = !isRunning; // инвертируем значение
+    if(isRunning)
+    {
+        ui->pushButton_runVideo->setText("Stop Video");
+    }
+    else
+    {
+        ui->pushButton_runVideo->setText("Run Video");
+    }
+    while(isRunning)    // запускаем бесконечный цикл, пока не будет сигнал остановки
+    {
+        // получить изображение экрана
+        QScreen *screen = QGuiApplication::primaryScreen(); // получаем главный экран
+        QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
+        int currentScreenNumber = ui->comboBox_choseScreen->currentIndex(); // получаем номер дисплея, с которого будем получать изображение
+        pixmap = screen->grabWindow(currentScreenNumber); // снимок экрана
+        setImageToOutputLabel(pixmap.toImage());    // выводим скриншот на экран
+        QApplication::processEvents();
+    }
 }
 
