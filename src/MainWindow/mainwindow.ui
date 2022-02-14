@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1523</width>
-    <height>1127</height>
+    <height>1167</height>
    </rect>
   </property>
   <property name="font">
@@ -218,7 +218,7 @@
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QLineEdit" name="lineEdit_imageObject_video">
+              <widget class="QLineEdit" name="lineEdit_imageOriginal_video">
                <property name="text">
                 <string/>
                </property>
@@ -448,6 +448,16 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="comboBox_threadsCount"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_threadsCount">
+            <property name="text">
+             <string>Количество потоков:</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_imageTypes">
             <property name="title">
@@ -498,13 +508,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_threadsCount"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_threadsCount">
+          <item row="4" column="0">
+           <widget class="QPushButton" name="pushButton_runVideo">
             <property name="text">
-             <string>Количество потоков:</string>
+             <string>RunVideo</string>
             </property>
            </widget>
           </item>
@@ -512,13 +519,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item row="8" column="2">
-     <widget class="QPushButton" name="pushButton_runVideo">
-      <property name="text">
-       <string>RunVideo</string>
-      </property>
      </widget>
     </item>
    </layout>

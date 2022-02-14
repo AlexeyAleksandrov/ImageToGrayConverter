@@ -59,6 +59,8 @@ private slots:
 
     void on_pushButton_runVideo_clicked();
 
+    void on_pushButton_choseImageObject_video_clicked();
+
 private:
     void setImageToOutputLabel(QImage image);  // вывести картинку
 

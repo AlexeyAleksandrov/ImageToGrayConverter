@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->lineEdit_imageOriginal);
     uiDataSaver.add(ui->lineEdit_imageObject);
     uiDataSaver.add(ui->lineEdit_presets_name);
+    uiDataSaver.add(ui->lineEdit_imageOriginal_video);
 
     uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
     uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
@@ -303,23 +304,105 @@ void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked()
 void MainWindow::on_pushButton_runVideo_clicked()
 {
     isRunning = !isRunning; // инвертируем значение
-    if(isRunning)
-    {
-        ui->pushButton_runVideo->setText("Stop Video");
-    }
-    else
+    if(!isRunning)
     {
         ui->pushButton_runVideo->setText("Run Video");
     }
-    while(isRunning)    // запускаем бесконечный цикл, пока не будет сигнал остановки
+    if(isRunning)
     {
-        // получить изображение экрана
-        QScreen *screen = QGuiApplication::primaryScreen(); // получаем главный экран
-        QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
-        int currentScreenNumber = ui->comboBox_choseScreen->currentIndex(); // получаем номер дисплея, с которого будем получать изображение
-        pixmap = screen->grabWindow(currentScreenNumber); // снимок экрана
-        setImageToOutputLabel(pixmap.toImage());    // выводим скриншот на экран
-        QApplication::processEvents();
+        QString imageOriginalDir = ui->lineEdit_imageOriginal_video->text();
+//        QString imageObjectDir = ui->lineEdit_imageObject->text();
+
+        if(imageOriginalDir == "")
+        {
+            QMessageBox::warning(this, "Ошибка", "Выберите изображение оригинала!");
+            return;
+        }
+//        if(imageObjectDir == "")
+//        {
+//            QMessageBox::warning(this, "Ошибка", "Выберите изображение объекта!");
+//            return;
+//        }
+
+        imageOriginal = QImage(imageOriginalDir);
+
+
+        imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
+//        imageObject.convertTo(QImage::Format_Grayscale16);  // конвертируем в ч/б изображение
+
+        resultImage = imageOriginal;
+
+        int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
+        int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
+
+        int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
+
+        ui->pushButton_runVideo->setText("Stop Video");
+
+        while(isRunning)    // запускаем бесконечный цикл, пока не будет сигнал остановки
+        {
+            // получить изображение экрана
+            QScreen *screen = QGuiApplication::primaryScreen(); // получаем главный экран
+            QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
+            int currentScreenNumber = ui->comboBox_choseScreen->currentIndex(); // получаем номер дисплея, с которого будем получать изображение
+            pixmap = screen->grabWindow(currentScreenNumber); // снимок экрана
+    //        setImageToOutputLabel(pixmap.toImage());    // выводим скриншот на экран
+
+            // обработка изображения
+            imageObject = pixmap.toImage(); // переводим в картинку
+            imageObject.convertTo(QImage::Format_Grayscale16);  // конвертируем в ч/б изображение
+
+            ImageCorrector imageCorrecor;
+            imageCorrecor.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
+            imageCorrecor.setImageOriginal(imageOriginal);
+            imageCorrecor.setImageObject(imageObject);
+
+            imageCorrecor.substractObjectImage();    // вычитаем изображение
+            imageCorrecor.clipNoise(clippingNoiseValue);    // простое удаление шума
+
+            if(ui->checkBox_deleteNoise->isChecked())
+            {
+                int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
+                int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
+                ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+
+                imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+                imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+            }
+
+            imageCorrecor.enchanceBlackColor(blackEnchancement);    // усиление черного цвета
+
+            if(ui->checkBox_medianFilter->isChecked())
+            {
+                imageCorrecor.medianFilter();
+            }
+        //    imageCorrecor.medianFilter();   // применение медианного фильтра
+
+            if(ui->checkBox_colorInversion->isChecked())
+            {
+               imageCorrecor.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+            }
+
+            resultImage = imageCorrecor.getResultImage();   // получаем обработанное изображение
+
+            if(ui->checkBox_colorInversion->isChecked())
+            {
+               resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+            }
+
+            // выводим картинку
+            setImageToOutputLabel(resultImage);
+
+            // обработка интерфейса
+            QApplication::processEvents();
+        }
     }
+}
+
+
+void MainWindow::on_pushButton_choseImageObject_video_clicked()
+{
+    QString imageDir = QFileDialog::getOpenFileName(this, "Выбор картинки");
+    ui->lineEdit_imageOriginal_video->setText(imageDir);
 }
 
