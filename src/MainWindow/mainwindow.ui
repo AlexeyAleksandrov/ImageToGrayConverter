@@ -77,13 +77,6 @@
       </layout>
      </widget>
     </item>
-    <item row="7" column="2">
-     <widget class="QPushButton" name="pushButton_screen">
-      <property name="text">
-       <string>Screen</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="3" rowspan="5">
      <widget class="QGroupBox" name="groupBox_imageDemo">
       <property name="minimumSize">
@@ -130,7 +123,7 @@
        <item row="0" column="1">
         <widget class="QRadioButton" name="radioButton_imageEmitter_videoCaptureFromScreen">
          <property name="text">
-          <string>Видеозахват с экрана</string>
+          <string>Видеозахват (видеопоток)</string>
          </property>
         </widget>
        </item>
@@ -147,6 +140,79 @@
           <string>Параметры источника</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_12">
+          <item row="0" column="1">
+           <widget class="QGroupBox" name="groupBox_imageEmitter_videoCaptureFromScreen">
+            <property name="title">
+             <string>Захват видео</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_11">
+             <item row="4" column="1">
+              <widget class="QPushButton" name="pushButton_choseImageObject_video">
+               <property name="text">
+                <string>Выбрать</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLineEdit" name="lineEdit_imageOriginal_video">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_schoseScreen">
+               <property name="text">
+                <string>Выбор источника:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_imageObject_video">
+               <property name="text">
+                <string>Изображение объекта:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2">
+              <widget class="QGroupBox" name="groupBox_8">
+               <property name="title">
+                <string>Тип захвата</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_13">
+                <item row="0" column="0">
+                 <widget class="QRadioButton" name="radioButton_captureDevice_monitor">
+                  <property name="text">
+                   <string>Монитор</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QRadioButton" name="radioButton_captureDevice_camera">
+                  <property name="text">
+                   <string>Камера</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QComboBox" name="comboBox_choseScreen"/>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="pushButton_choseScreen">
+               <property name="text">
+                <string>Выбрать</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QGroupBox" name="groupBox_imageEmitter_imageFromFile">
             <property name="title">
@@ -196,56 +262,6 @@
              </item>
              <item row="3" column="2">
               <widget class="QPushButton" name="pushButton_choseImageObject">
-               <property name="text">
-                <string>Выбрать</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_imageEmitter_videoCaptureFromScreen">
-            <property name="title">
-             <string>Захват видео</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_11">
-             <item row="3" column="1">
-              <widget class="QPushButton" name="pushButton_choseImageObject_video">
-               <property name="text">
-                <string>Выбрать</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLineEdit" name="lineEdit_imageOriginal_video">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_schoseScreen">
-               <property name="text">
-                <string>Выбор экрана:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QComboBox" name="comboBox_choseScreen"/>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_imageObject_video">
-               <property name="text">
-                <string>Изображение объекта:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pushButton_choseScreen">
                <property name="text">
                 <string>Выбрать</string>
                </property>
@@ -512,6 +528,13 @@
            <widget class="QPushButton" name="pushButton_runVideo">
             <property name="text">
              <string>RunVideo</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QPushButton" name="pushButton_screen">
+            <property name="text">
+             <string>Screen</string>
             </property>
            </widget>
           </item>

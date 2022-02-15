@@ -9,6 +9,11 @@
 #include "src/UiHandlers/uidatasaver.h"
 #include "src/ImageHandlers/imagecorrector.h"
 #include "src/ImageHandlers/imagetransformer.h"
+#include <QCamera>
+#include <QCameraInfo>
+#include <QCameraViewfinder>
+#include <QCameraImageCapture>
+#include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -64,6 +69,30 @@ private slots:
 private:
     void setImageToOutputLabel(QImage image);  // вывести картинку
 
+    void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);
+
+private:
+    // экраны
+    QStringList getScreensList();   // получить список мониторов
+
+    // камера
+    QStringList getCamerasList();   // получить список камер, подключенных к ПК
+
+    QCamera *camera = nullptr;    // объект камеры
+    QCameraViewfinder *viewfinder = nullptr;  // обработчик камеры
+    QCameraImageCapture *imageCapture = nullptr;  // обработчик снимков камеры
+    QList<QCameraInfo> cameras; // список доступных камер
+
+private slots:
+    void cameraImageCaptured(int id, const QImage &preview);    // получаение изображения
+    void cameraReadyForCaptureChanged(bool ready); // готовы дальше получать изображения
+
+    void on_radioButton_captureDevice_monitor_clicked();
+
+    void on_radioButton_captureDevice_camera_clicked();
+
+    void on_pushButton_choseScreen_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -71,9 +100,19 @@ private:
     QImage imageObject;
     QImage resultImage;
 
+    ImageCorrector imageCorrecor;   // обработчик изображений
+
     UiDataSaver uiDataSaver;
 
     QScreen *screen = nullptr;  // экран, с которого мы будем брать изображение
     bool isRunning = false;
+    bool isScreening = false;
+
+    void closeEvent(QCloseEvent *event)
+    {
+        qDebug() << "close";
+        event->accept();
+        this->close();
+    };
 };
 #endif // MAINWINDOW_H

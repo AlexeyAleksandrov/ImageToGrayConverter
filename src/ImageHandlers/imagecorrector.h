@@ -33,8 +33,8 @@ public:
 public:
 
     void substractObjectImage();     // вычесть изображение объекта
-    void clipNoise(int clippingNoiseValue);     // простое удаление шума
-    void enchanceBlackColor(int blackEnchancement);     // усилить чёрный цвет
+    void clipNoise(int clippingNoiseValue = -1);     // простое удаление шума
+    void enchanceBlackColor(int blackEnchancement = -1);     // усилить чёрный цвет
     void invertPixels();    // инвертировать цвет пикселей выходного изобраения
     void hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType);   // усиленное удаление шума
     void medianFilter();    // медианный фильтр по соседним пикселям
@@ -44,6 +44,10 @@ public:
     QImage getResultImage() const;  // получить результирующее изображение
 
     void setThreadsCount(int newThreadsCount);  // установить кол-во потоков
+
+    void setClippingNoiseValue(int newClippingNoiseValue);
+
+    void setBlackEnchancement(int newBlackEnchancement);
 
 private:
     void setPixelColor(QImage &image, int i, int j, QColor color);     // установить цвет пикселя для выходного изображения
@@ -64,6 +68,8 @@ private:    // изображения
 private:    // работа с потоками
 //    QThread *threads = nullptr; // потоки для обработки данных в многопотоном режиме
     int threadsCount = 1;   // кол-во задействованных потоков
+    int clippingNoiseValue = -1;    // значение удаления шумов
+    int blackEnchancement = -1; // значение усиления чёрного
 
     void distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int i, int j)> function);
 };

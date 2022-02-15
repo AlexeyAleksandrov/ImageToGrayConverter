@@ -26,6 +26,10 @@ void ImageCorrector::substractObjectImage()
 
 void ImageCorrector::clipNoise(int clippingNoiseValue)
 {
+    if(clippingNoiseValue == -1)
+    {
+        clippingNoiseValue = this->clippingNoiseValue;
+    }
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
     std::function<void(int i, int j)> function = [&](int i, int j)
@@ -57,6 +61,10 @@ void ImageCorrector::clipNoise(int clippingNoiseValue)
 
 void ImageCorrector::enchanceBlackColor(int blackEnchancement)
 {
+    if(blackEnchancement == -1)
+    {
+        blackEnchancement = this->blackEnchancement;
+    }
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
     std::function<void(int i, int j)> function = [&](int i, int j)
@@ -397,6 +405,16 @@ bool **ImageCorrector::getMatrixAroundPixel(int **grayScaleMatrix, int i, int j)
         }
     }
     return matrix;
+}
+
+void ImageCorrector::setBlackEnchancement(int newBlackEnchancement)
+{
+    blackEnchancement = newBlackEnchancement;
+}
+
+void ImageCorrector::setClippingNoiseValue(int newClippingNoiseValue)
+{
+    clippingNoiseValue = newClippingNoiseValue;
 }
 
 void ImageCorrector::setThreadsCount(int newThreadsCount)
