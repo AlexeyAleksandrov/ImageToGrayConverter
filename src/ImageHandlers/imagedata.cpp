@@ -52,17 +52,17 @@ int **ImageData::getGrayScaleMatrix() const
     return grayScaleMatrix;
 }
 
-const QImage &ImageData::getImage() const
+const QImage ImageData::getImage() const
 {
-    QImage *image = new QImage(width, height, QImage::Format_ARGB32_Premultiplied);
+    QImage image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
     for(int i=0; i<width; i++)
     {
         for(int j=0; j<height; j++)
         {
-            image->setPixelColor(i, j, blackColor(grayScaleMatrix[i][j]));
+            image.setPixelColor(i, j, blackColor(grayScaleMatrix[i][j]));
         }
     }
-    return *image;
+    return image;
 }
 
 int ImageData::getHeight() const

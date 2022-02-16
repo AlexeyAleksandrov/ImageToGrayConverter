@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+//    int *mas = new int [100000];
+//    int mas2 = *mas;
+//    gmas = &mas2;
+
 //    qDebug() << "PixelRatio: " << QGuiApplication::primaryScreen()->devicePixelRatio();
     QThread th; // класс потоков, для получения кол-ва возможных, для использования
     int maxThreadsCount = th.idealThreadCount();    // получаем максимальное кол-во потоков
@@ -340,9 +344,11 @@ void MainWindow::cameraImageCaptured(int id, const QImage &preview)
 
     if(isScreening) // если делаем скриншот для фона
     {
+//        imageOriginal = preview.convertToFormat(QImage::Format_Grayscale16);
         imageOriginal = preview;
         setImageToOutputLabel(imageOriginal);
-        ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().hour() + ":" + QTime().currentTime().minute() + ":" + QTime().currentTime().second());
+//        ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().hour() + ":" + QTime().currentTime().minute() + ":" + QTime().currentTime().second());
+        ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().toString());
         isScreening = false;
         return;
     }
@@ -370,6 +376,12 @@ void MainWindow::cameraReadyForCaptureChanged(bool ready)
     if(ready && isRunning)  // если можно продолжать
     {
 //            qDebug() << "run";
+        // выводим счётчик FPS
+//        int times = frameTime.elapsed();    // получаем сколько прошло времени между кадрами
+//        ui->label_FpsCount->setText(QString::number(times));    // выводим, сколько времени между кадрами прошло
+//        frameTime.restart();    // перезапускаем счётчик
+//        QApplication::processEvents();
+
         // делаем снимок и ожидаем его получения
         camera->searchAndLock();
         imageCapture->capture();
@@ -433,6 +445,11 @@ void MainWindow::on_pushButton_screen_clicked()
     }
     if(ui->radioButton_captureDevice_camera->isChecked())
     {
+        if(camera == nullptr)
+        {
+            QMessageBox::warning(this, "Ошибка!", "Не выбрана камера!");
+            return;
+        }
         isScreening = true;     // указываем, что делаем скрин
 //        int currentCameraIndex = ui->comboBox_choseScreen->currentIndex();  // получаем выбранную камеру
 //        QCameraInfo cameraInfo = cameras[currentCameraIndex];   // получаем камеру, с которой будем производить снятие видео
@@ -492,15 +509,6 @@ void MainWindow::on_pushButton_runVideo_clicked()
 
         resultImage = imageOriginal;
 
-//        int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
-//        int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
-
-//        imageCorrecor.setClippingNoiseValue(clippingNoiseValue);
-//        imageCorrecor.setBlackEnchancement(blackEnchancement);
-
-//        int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
-//        imageCorrecor.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
-
         ui->pushButton_runVideo->setText("Stop Video");
 
         if(ui->radioButton_captureDevice_monitor->isChecked())  // если выполняется обработка изображения с монитора
@@ -518,7 +526,6 @@ void MainWindow::on_pushButton_runVideo_clicked()
                 imageObject = pixmap.toImage(); // переводим в картинку
                 imageObject.convertTo(QImage::Format_Grayscale16);  // конвертируем в ч/б изображение
 
-    //            ImageCorrector imageCorrecor;
                 processImageFilters(imageOriginal, imageObject, resultImage);   // применяем фильтры
 
                 // выводим картинку
@@ -530,22 +537,10 @@ void MainWindow::on_pushButton_runVideo_clicked()
         }
         else if(ui->radioButton_captureDevice_camera->isChecked())
         {
-//            int currentCameraIndex = ui->comboBox_choseScreen->currentIndex();  // получаем выбранную камеру
-//            QCameraInfo cameraInfo = cameras[currentCameraIndex];   // получаем камеру, с которой будем производить снятие видео
-//            camera = new QCamera(cameraInfo);
-//            viewfinder = new QCameraViewfinder;
-//            camera->setViewfinder(viewfinder);
-//            viewfinder->show();
-
-//            imageCapture = new QCameraImageCapture(camera);
-//            imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);  // буферизируем
-//            connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &MainWindow::cameraImageCaptured);
             connect(imageCapture, &QCameraImageCapture::readyForCaptureChanged, this, &MainWindow::cameraReadyForCaptureChanged);
 
-//            camera->setCaptureMode(QCamera::CaptureStillImage);
-//            camera->start();
-
             // делаем снимок и ожидаем его получения
+//            frameTime.restart();
             camera->searchAndLock();
             imageCapture->capture();
             camera->unlock();

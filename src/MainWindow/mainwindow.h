@@ -14,6 +14,7 @@
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
 #include <QCloseEvent>
+#include <QTime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -82,6 +83,8 @@ private:
     QCameraViewfinder *viewfinder = nullptr;  // обработчик камеры
     QCameraImageCapture *imageCapture = nullptr;  // обработчик снимков камеры
     QList<QCameraInfo> cameras; // список доступных камер
+//    int *gmas = nullptr;
+//    QTime frameTime;
 
 private slots:
     void cameraImageCaptured(int id, const QImage &preview);    // получаение изображения

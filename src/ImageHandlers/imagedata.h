@@ -19,7 +19,7 @@ public:
 
     int **getGrayScaleMatrix() const;
 
-    const QImage &getImage() const;
+    const QImage getImage() const;
 
     int getHeight() const;
 

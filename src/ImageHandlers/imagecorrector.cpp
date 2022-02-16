@@ -177,6 +177,8 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
                     imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
                 }
             }
+
+            memoryDoubleArrayFree(correctMatrix, 3);    // очищаем память
         }
     };
 
@@ -285,6 +287,7 @@ void ImageCorrector::medianFilter()
             int medianBlackValue = 255 - sortedPixelsVector[mid]; // получаем медианное значение
 
             sourseImageMatrix[i][j] = medianBlackValue;   // устанавливаем белый цвет пикселю
+            memoryDoubleArrayFree(pixels, 3);   // очищаем память
         }
     }
 }
@@ -359,6 +362,9 @@ bool **ImageCorrector::getCorrectDataAroundPixels(int **grayScaleMatrix, int i, 
             correctMatrix[k][h] = isCorrect;    // заносим данные в матрицу
         }
     }
+
+    memoryDoubleArrayFree(pixsels, 3);
+
     return correctMatrix;
 }
 
@@ -482,7 +488,31 @@ void ImageCorrector::distributeToThreads(int startI, int endI, int startJ, int e
         // удалить память !!!
         delete [] threads;
         threads = nullptr;
+
+        delete [] masStartI;
+        masStartI = nullptr;
+
+        delete [] masStartJ;
+        masStartJ = nullptr;
+
+        delete [] masEndI;
+        masEndI = nullptr;
+
+        delete [] masEndJ;
+        masEndJ = nullptr;
     }
+}
+
+template<typename T>
+void ImageCorrector::memoryDoubleArrayFree(T **&array, int count1)
+{
+    for(int i=0; i<count1; i++)
+    {
+        delete [] array [i];
+        array[i] = nullptr;
+    }
+    delete [] array;
+    array = nullptr;
 }
 
 QImage ImageCorrector::getResultImage() const
