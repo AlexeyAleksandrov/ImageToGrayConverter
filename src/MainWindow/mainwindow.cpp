@@ -128,53 +128,7 @@ void MainWindow::on_pushButton_calculate_clicked()
 
     resultImage = imageOriginal;
 
-//    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
-//    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
-
-//    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
-
-//    imageCorrecor.setClippingNoiseValue(clippingNoiseValue);
-//    imageCorrecor.setBlackEnchancement(blackEnchancement);
-//    imageCorrecor.setThreadsCount(threadsCount);
-
-    processImageFilters(imageOriginal, imageObject, resultImage);
-//    ImageCorrector imageCorrecor;
-//    imageCorrecor.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
-//    imageCorrecor.setImageOriginal(imageOriginal);
-//    imageCorrecor.setImageObject(imageObject);
-
-//    imageCorrecor.substractObjectImage();    // вычитаем изображение
-//    imageCorrecor.clipNoise(clippingNoiseValue);    // простое удаление шума
-
-//    if(ui->checkBox_deleteNoise->isChecked())
-//    {
-//        int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
-//        int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-//        ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
-
-//        imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
-//        imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
-//    }
-
-//    imageCorrecor.enchanceBlackColor(blackEnchancement);    // усиление черного цвета
-
-//    if(ui->checkBox_medianFilter->isChecked())
-//    {
-//        imageCorrecor.medianFilter();
-//    }
-////    imageCorrecor.medianFilter();   // применение медианного фильтра
-
-//    if(ui->checkBox_colorInversion->isChecked())
-//    {
-//       imageCorrecor.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
-//    }
-
-//    resultImage = imageCorrecor.getResultImage();   // получаем обработанное изображение
-
-//    if(ui->checkBox_colorInversion->isChecked())
-//    {
-//       resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
-//    }
+    processImageFilters(imageOriginal, imageObject, resultImage);   // применяем фильтры
 
     // выводим картинку
     setImageToOutputLabel(resultImage);
@@ -346,6 +300,7 @@ void MainWindow::cameraImageCaptured(int id, const QImage &preview)
     {
 //        imageOriginal = preview.convertToFormat(QImage::Format_Grayscale16);
         imageOriginal = preview;
+        imageOriginal = imageOriginal.convertToFormat(QImage::Format_Grayscale16);
         setImageToOutputLabel(imageOriginal);
 //        ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().hour() + ":" + QTime().currentTime().minute() + ":" + QTime().currentTime().second());
         ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().toString());
