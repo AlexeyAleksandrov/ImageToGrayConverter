@@ -6,15 +6,18 @@
 #include <qdebug.h>
 #include <QRgb>
 #include <QMessageBox>
-#include "src/UiHandlers/uidatasaver.h"
-#include "src/ImageHandlers/imagecorrector.h"
-#include "src/ImageHandlers/imagetransformer.h"
 #include <QCamera>
 #include <QCameraInfo>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
 #include <QCloseEvent>
 #include <QTime>
+
+
+#include "src/UiHandlers/uidatasaver.h"
+#include "src/ImageHandlers/imagecorrector.h"
+#include "src/ImageHandlers/imagetransformer.h"
+#include "src/FiltersManager/filtersmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -85,6 +88,7 @@ private:
     QList<QCameraInfo> cameras; // список доступных камер
 //    int *gmas = nullptr;
 //    QTime frameTime;
+    FiltersManager filtersManager;  // управление фильтрами
 
 private slots:
     void cameraImageCaptured(int id, const QImage &preview);    // получаение изображения
