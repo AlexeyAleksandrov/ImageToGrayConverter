@@ -18,6 +18,10 @@
 #include "src/ImageHandlers/imagecorrector.h"
 #include "src/ImageHandlers/imagetransformer.h"
 #include "src/FiltersManager/filtersmanager.h"
+#include "src/FiltersManager/FiltersEntities/clipnoisefilter.h"
+#include "src/FiltersManager/FiltersEntities/enchanceblackcolorfilter.h"
+#include "src/FiltersManager/FiltersEntities/hardclipnoisefilter.h"
+#include "src/FiltersManager/FiltersEntities/substructimagefilter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -107,7 +111,7 @@ private:
     QImage imageObject;
     QImage resultImage;
 
-    ImageCorrector imageCorrecor;   // обработчик изображений
+    ImageCorrector imageCorrector;   // обработчик изображений
 
     UiDataSaver uiDataSaver;
 

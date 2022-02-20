@@ -2,7 +2,7 @@
 #define FILTERSMANAGER_H
 
 #include <QObject>
-#include "filter.h"
+#include "ifilter.h"
 
 class FiltersManager : public QObject
 {
@@ -11,7 +11,7 @@ public:
     explicit FiltersManager(QObject *parent = nullptr);
 
     const QStringList getFiltersNames() const;  // получить названия фильтров
-    const QList<Filter> &getFilters() const;
+    QList<IFilter> *getFilters();
 
     const QVector<std::function<void()>> &getCurrentFiltersFunctionsList() const; // получить список функций, для применения фильтра
 
@@ -20,7 +20,7 @@ public:
 signals:
 
 private:
-    QList<Filter> filters;   // список фильтров, которые надо применить
+    QList<IFilter> filters;   // список фильтров, которые надо применить
     QVector<std::function<void()>> currentFiltersFunctionsList;   // список функций, применяемых для текукщего набора фильтров
 
 };

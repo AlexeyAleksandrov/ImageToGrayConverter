@@ -16,9 +16,9 @@ const QStringList FiltersManager::getFiltersNames() const
     return names;
 }
 
-const QList<Filter> &FiltersManager::getFilters() const
+QList<IFilter> *FiltersManager::getFilters()
 {
-    return filters;
+    return &filters;
 }
 
 const QVector<std::function<void()>> &FiltersManager::getCurrentFiltersFunctionsList() const

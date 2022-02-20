@@ -35,6 +35,32 @@ MainWindow::MainWindow(QWidget *parent)
 //        ui->comboBox_choseScreen->addItem(screenItem->name());  // добавляем каждый дисплей в список
 //    }
 
+//    // FiltersManager
+
+//    SubstructImageFilter substructImageFilter;
+//    substructImageFilter.setImageCorrector(&imageCorrector);
+
+//    ClipNoiseFilter clipNoiseFilter;
+//    clipNoiseFilter.setImageCorrector(&imageCorrector);
+//    clipNoiseFilter.setSlider(ui->horizontalSlider_clippingNoiseValue);
+
+//    EnchanceBlackColorFilter enchanceBlackColorFilter;
+//    enchanceBlackColorFilter.setImageCorrector(&imageCorrector);
+//    enchanceBlackColorFilter.setSlider(ui->horizontalSlider_blackEnchancementValue);
+
+//    HardClipNoiseFilter hardClipNoiseFilter;
+//    hardClipNoiseFilter.setImageCorrector(&imageCorrector);
+//    hardClipNoiseFilter.setSlider(ui->horizontalSlider_deleteNoise);
+//    hardClipNoiseFilter.setComboBox(ui->comboBox_deleteType);
+
+//    QList<IFilter> *filtersList = filtersManager.getFilters();
+//    filtersList->append(substructImageFilter);
+//    filtersList->append(clipNoiseFilter);
+//    filtersList->append(enchanceBlackColorFilter);
+////    filtersList->append(hardClipNoiseFilter);
+
+    // ==
+
     uiDataSaver.add(ui->lineEdit_imageOriginal);
     uiDataSaver.add(ui->lineEdit_imageObject);
     uiDataSaver.add(ui->lineEdit_presets_name);
@@ -223,20 +249,28 @@ void MainWindow::setImageToOutputLabel(QImage image)
 
 void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage)
 {
-    imageCorrecor.setImageOriginal(imageOriginal);
-    imageCorrecor.setImageObject(imageObject);
+    imageCorrector.setImageOriginal(imageOriginal);
+    imageCorrector.setImageObject(imageObject);
+
+//    filtersManager.updateCurrentFilterFunctionsList();
+//    auto funcs = filtersManager.getCurrentFiltersFunctionsList();
+//    for(auto func : funcs)
+//    {
+//        func();
+//    }
 
     int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
     int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
-    imageCorrecor.setClippingNoiseValue(clippingNoiseValue);
-    imageCorrecor.setBlackEnchancement(blackEnchancement);
+    imageCorrector.setClippingNoiseValue(clippingNoiseValue);
+    imageCorrector.setBlackEnchancement(blackEnchancement);
 
     int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
-    imageCorrecor.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
+    imageCorrector.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
 
-    imageCorrecor.substractObjectImage();    // вычитаем изображение
-    imageCorrecor.clipNoise();    // простое удаление шума
+    imageCorrector.substractObjectImage();    // вычитаем изображение
+//    imageCorrector.clipNoise();    // простое удаление шума
+//    imageCorrector.enchanceBlackColor();    // усиление черного цвета
 
     if(ui->checkBox_deleteNoise->isChecked())
     {
@@ -244,23 +278,26 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
         int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
         ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
 
-        imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
-        imageCorrecor.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+        imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+        imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+        qDebug() << "Удаление выполнено!";
     }
 
-    imageCorrecor.enchanceBlackColor();    // усиление черного цвета
+//    imageCorrector.enchanceBlackColor();    // усиление черного цвета
+    imageCorrector.clipNoise();    // простое удаление шума
+    imageCorrector.enchanceBlackColor();    // усиление черного цвета
 
     if(ui->checkBox_medianFilter->isChecked())
     {
-        imageCorrecor.medianFilter();
+        imageCorrector.medianFilter();
     }
 
 //    if(ui->checkBox_colorInversion->isChecked())
 //    {
-//       imageCorrecor.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+//       imageCorrector.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
 //    }
 
-    resultImage = imageCorrecor.getResultImage();   // получаем обработанное изображение
+    resultImage = imageCorrector.getResultImage();   // получаем обработанное изображение
 
     if(ui->checkBox_colorInversion->isChecked())
     {
