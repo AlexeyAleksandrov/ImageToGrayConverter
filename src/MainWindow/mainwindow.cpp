@@ -35,28 +35,28 @@ MainWindow::MainWindow(QWidget *parent)
 //        ui->comboBox_choseScreen->addItem(screenItem->name());  // добавляем каждый дисплей в список
 //    }
 
-//    // FiltersManager
+    // FiltersManager
 
-//    SubstructImageFilter substructImageFilter;
-//    substructImageFilter.setImageCorrector(&imageCorrector);
+//    SubstructImageFilter *substructImageFilter = new SubstructImageFilter;
+//    substructImageFilter->setImageCorrector(&imageCorrector);
 
-//    ClipNoiseFilter clipNoiseFilter;
-//    clipNoiseFilter.setImageCorrector(&imageCorrector);
-//    clipNoiseFilter.setSlider(ui->horizontalSlider_clippingNoiseValue);
+//    ClipNoiseFilter *clipNoiseFilter = new ClipNoiseFilter;
+//    clipNoiseFilter->setImageCorrector(&imageCorrector);
+//    clipNoiseFilter->setSlider(ui->horizontalSlider_clippingNoiseValue);
 
-//    EnchanceBlackColorFilter enchanceBlackColorFilter;
-//    enchanceBlackColorFilter.setImageCorrector(&imageCorrector);
-//    enchanceBlackColorFilter.setSlider(ui->horizontalSlider_blackEnchancementValue);
+//    EnchanceBlackColorFilter *enchanceBlackColorFilter = new EnchanceBlackColorFilter;
+//    enchanceBlackColorFilter->setImageCorrector(&imageCorrector);
+//    enchanceBlackColorFilter->setSlider(ui->horizontalSlider_blackEnchancementValue);
 
-//    HardClipNoiseFilter hardClipNoiseFilter;
-//    hardClipNoiseFilter.setImageCorrector(&imageCorrector);
-//    hardClipNoiseFilter.setSlider(ui->horizontalSlider_deleteNoise);
-//    hardClipNoiseFilter.setComboBox(ui->comboBox_deleteType);
+//    HardClipNoiseFilter *hardClipNoiseFilter = new HardClipNoiseFilter;
+//    hardClipNoiseFilter->setImageCorrector(&imageCorrector);
+//    hardClipNoiseFilter->setSlider(ui->horizontalSlider_deleteNoise);
+//    hardClipNoiseFilter->setComboBox(ui->comboBox_deleteType);
 
 //    QList<IFilter> *filtersList = filtersManager.getFilters();
-//    filtersList->append(substructImageFilter);
-//    filtersList->append(clipNoiseFilter);
-//    filtersList->append(enchanceBlackColorFilter);
+//    filtersList->append(*substructImageFilter);
+//    filtersList->append(*clipNoiseFilter);
+//    filtersList->append(*enchanceBlackColorFilter);
 ////    filtersList->append(hardClipNoiseFilter);
 
     // ==
@@ -93,6 +93,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     on_horizontalSlider_blackEnchancementValue_valueChanged(ui->horizontalSlider_blackEnchancementValue->value());
     on_horizontalSlider_clippingNoiseValue_valueChanged(ui->horizontalSlider_clippingNoiseValue->value());
+
+    QTableWidgetItem *imageItem = new QTableWidgetItem; // создаем item для вывода изображения
+    ui->tableWidget_image->setRowCount(1);
+    ui->tableWidget_image->setColumnCount(1);
+    ui->tableWidget_image->setItem(0, 0, imageItem);    // устанавливаем item
+
+//    QRect tableGeometry = ui->tableWidget_image->geometry();
+//    ui->tableWidget_image->setColumnWidth(0, tableGeometry.width());
+//    ui->tableWidget_image->setRowHeight(0, tableGeometry.height());
+
+    imageLabel = new QLabel;
+    ui->tableWidget_image->setCellWidget(0, 0, imageLabel); // выводим label в tableWidget
+    imageLabel->setText("Изображение");
 }
 
 MainWindow::~MainWindow()
@@ -222,8 +235,11 @@ void MainWindow::on_horizontalSlider_deleteNoise_valueChanged(int value)
 
 void MainWindow::setImageToOutputLabel(QImage image)
 {
-    int labelWidht = ui->label_image->width();
-    int labelHeight = ui->label_image->height();
+//    int labelWidht = ui->label_image->width();
+//    int labelHeight = ui->label_image->height();
+
+    int labelWidht = imageLabel->width();
+    int labelHeight = imageLabel->height();
 
     double imgWidht = image.width();
     double imgHeight = image.height();
@@ -244,7 +260,30 @@ void MainWindow::setImageToOutputLabel(QImage image)
 
     image = ImageTransformer::getTransformedImage(image, imgWidht, imgHeight);
 //    ui->label_image->setScaledContents(true);
-    ui->label_image->setPixmap(QPixmap::fromImage(image));
+//    ui->label_image->setPixmap(QPixmap::fromImage(image));
+    imageLabel->setPixmap(QPixmap::fromImage(image));
+}
+
+void MainWindow::updateLabelImageSize()
+{
+    // подгоняем размеры item
+    QRect tableGeometry = ui->tableWidget_image->geometry();
+    ui->tableWidget_image->setColumnWidth(0, tableGeometry.width());
+    ui->tableWidget_image->setRowHeight(0, tableGeometry.height());
+
+    // выводим соответсвующее отмасштабирвоанное изображение
+    if(ui->radioButton_original->isChecked())
+    {
+        setImageToOutputLabel(imageOriginal);
+    }
+    else if(ui->radioButton_object->isChecked())
+    {
+        setImageToOutputLabel(imageObject);
+    }
+    else if(ui->radioButton_result->isChecked())
+    {
+        setImageToOutputLabel(resultImage);
+    }
 }
 
 void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage)
@@ -341,6 +380,7 @@ void MainWindow::cameraImageCaptured(int id, const QImage &preview)
         setImageToOutputLabel(imageOriginal);
 //        ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().hour() + ":" + QTime().currentTime().minute() + ":" + QTime().currentTime().second());
         ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().toString());
+        ui->radioButton_original->setChecked(true);
         isScreening = false;
         return;
     }
@@ -468,15 +508,31 @@ void MainWindow::on_pushButton_screen_clicked()
 
 void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked()
 {
-    ui->groupBox_imageEmitter_imageFromFile->show();
-    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
+//    ui->groupBox_imageEmitter_imageFromFile->show();
+//    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
+
+    ui->groupBox_imageEmitter_imageFromFile->setEnabled(true);
+    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(false);
+
+    ui->pushButton_calculate->setEnabled(true);
+    ui->pushButton_saveResult->setEnabled(true);
+    ui->pushButton_runVideo->setEnabled(false);
+    ui->pushButton_screen->setEnabled(false);
 }
 
 
 void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked()
 {
-    ui->groupBox_imageEmitter_imageFromFile->hide();
-    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
+//    ui->groupBox_imageEmitter_imageFromFile->hide();
+//    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
+
+    ui->groupBox_imageEmitter_imageFromFile->setEnabled(false);
+    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(true);
+
+    ui->pushButton_calculate->setEnabled(false);
+    ui->pushButton_saveResult->setEnabled(false);
+    ui->pushButton_runVideo->setEnabled(true);
+    ui->pushButton_screen->setEnabled(true);
 }
 
 
@@ -583,5 +639,11 @@ void MainWindow::on_pushButton_choseScreen_clicked()
         camera->setCaptureMode(QCamera::CaptureStillImage);
         camera->start();
     }
+}
+
+
+void MainWindow::on_checkBox_deleteNoise_stateChanged(int arg1)
+{
+    ui->groupBox_hardNoiseDeletingParams->setEnabled(arg1);
 }
 

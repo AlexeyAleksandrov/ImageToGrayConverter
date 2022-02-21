@@ -12,6 +12,8 @@
 #include <QCameraImageCapture>
 #include <QCloseEvent>
 #include <QTime>
+#include <QTableWidgetItem>
+#include <QResizeEvent>
 
 
 #include "src/UiHandlers/uidatasaver.h"
@@ -74,9 +76,9 @@ private slots:
 
     void on_pushButton_choseImageObject_video_clicked();
 
-private:
+public:
     void setImageToOutputLabel(QImage image);  // вывести картинку
-
+    void updateLabelImageSize();    // перерасчитать азмеры label с изображением
     void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);
 
 private:
@@ -104,12 +106,16 @@ private slots:
 
     void on_pushButton_choseScreen_clicked();
 
+    void on_checkBox_deleteNoise_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
 
     QImage imageOriginal;
     QImage imageObject;
     QImage resultImage;
+
+    QLabel *imageLabel= nullptr;    // label, в который будет выводиться изображение
 
     ImageCorrector imageCorrector;   // обработчик изображений
 
@@ -124,6 +130,13 @@ private:
         qDebug() << "close";
         event->accept();
         this->close();
+    };
+
+    void resizeEvent(QResizeEvent *event)
+    {
+//        qDebug() << "resize";
+        updateLabelImageSize();
+        event->accept();
     };
 };
 #endif // MAINWINDOW_H
