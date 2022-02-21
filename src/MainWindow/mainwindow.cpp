@@ -106,6 +106,8 @@ MainWindow::MainWindow(QWidget *parent)
     imageLabel = new QLabel;
     ui->tableWidget_image->setCellWidget(0, 0, imageLabel); // выводим label в tableWidget
     imageLabel->setText("Изображение");
+
+//    ui->groupBox_medianFilter->setVisible(false);   // отключаем отображение медианного фильтра
 }
 
 MainWindow::~MainWindow()
@@ -326,10 +328,10 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     imageCorrector.clipNoise();    // простое удаление шума
     imageCorrector.enchanceBlackColor();    // усиление черного цвета
 
-    if(ui->checkBox_medianFilter->isChecked())
-    {
-        imageCorrector.medianFilter();
-    }
+//    if(ui->checkBox_medianFilter->isChecked())
+//    {
+//        imageCorrector.medianFilter();
+//    }
 
 //    if(ui->checkBox_colorInversion->isChecked())
 //    {
