@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     QStringList presets = uiDataSaver.getPresets();
     ui->comboBox_presets->addItems(presets);    // выводим пресеты
 
-    uiDataSaver.loadProgramData();
+//    uiDataSaver.loadProgramData();
 
     on_horizontalSlider_blackEnchancementValue_valueChanged(ui->horizontalSlider_blackEnchancementValue->value());
     on_horizontalSlider_clippingNoiseValue_valueChanged(ui->horizontalSlider_clippingNoiseValue->value());
@@ -108,6 +108,8 @@ MainWindow::MainWindow(QWidget *parent)
     imageLabel->setText("Изображение");
 
 //    ui->groupBox_medianFilter->setVisible(false);   // отключаем отображение медианного фильтра
+
+    uiDataSaver.loadProgramData();
 }
 
 MainWindow::~MainWindow()
@@ -510,31 +512,31 @@ void MainWindow::on_pushButton_screen_clicked()
 
 void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked()
 {
-//    ui->groupBox_imageEmitter_imageFromFile->show();
-//    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
+////    ui->groupBox_imageEmitter_imageFromFile->show();
+////    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
 
-    ui->groupBox_imageEmitter_imageFromFile->setEnabled(true);
-    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(false);
+//    ui->groupBox_imageEmitter_imageFromFile->setEnabled(true);
+//    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(false);
 
-    ui->pushButton_calculate->setEnabled(true);
-    ui->pushButton_saveResult->setEnabled(true);
-    ui->pushButton_runVideo->setEnabled(false);
-    ui->pushButton_screen->setEnabled(false);
+//    ui->pushButton_calculate->setEnabled(true);
+//    ui->pushButton_saveResult->setEnabled(true);
+//    ui->pushButton_runVideo->setEnabled(false);
+//    ui->pushButton_screen->setEnabled(false);
 }
 
 
 void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked()
 {
-//    ui->groupBox_imageEmitter_imageFromFile->hide();
-//    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
+////    ui->groupBox_imageEmitter_imageFromFile->hide();
+////    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
 
-    ui->groupBox_imageEmitter_imageFromFile->setEnabled(false);
-    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(true);
+//    ui->groupBox_imageEmitter_imageFromFile->setEnabled(false);
+//    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(true);
 
-    ui->pushButton_calculate->setEnabled(false);
-    ui->pushButton_saveResult->setEnabled(false);
-    ui->pushButton_runVideo->setEnabled(true);
-    ui->pushButton_screen->setEnabled(true);
+//    ui->pushButton_calculate->setEnabled(false);
+//    ui->pushButton_saveResult->setEnabled(false);
+//    ui->pushButton_runVideo->setEnabled(true);
+//    ui->pushButton_screen->setEnabled(true);
 }
 
 
@@ -647,5 +649,41 @@ void MainWindow::on_pushButton_choseScreen_clicked()
 void MainWindow::on_checkBox_deleteNoise_stateChanged(int arg1)
 {
     ui->groupBox_hardNoiseDeletingParams->setEnabled(arg1);
+}
+
+
+void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked(bool checked)
+{
+    if(checked)
+    {
+        //    ui->groupBox_imageEmitter_imageFromFile->hide();
+        //    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
+
+        ui->groupBox_imageEmitter_imageFromFile->setEnabled(false);
+        ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(true);
+
+        ui->pushButton_calculate->setEnabled(false);
+        ui->pushButton_saveResult->setEnabled(false);
+        ui->pushButton_runVideo->setEnabled(true);
+        ui->pushButton_screen->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked(bool checked)
+{
+    if(checked)
+    {
+        //    ui->groupBox_imageEmitter_imageFromFile->show();
+        //    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
+
+        ui->groupBox_imageEmitter_imageFromFile->setEnabled(true);
+        ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(false);
+
+        ui->pushButton_calculate->setEnabled(true);
+        ui->pushButton_saveResult->setEnabled(true);
+        ui->pushButton_runVideo->setEnabled(false);
+        ui->pushButton_screen->setEnabled(false);
+    }
 }
 

@@ -108,6 +108,10 @@ private slots:
 
     void on_checkBox_deleteNoise_stateChanged(int arg1);
 
+    void on_radioButton_imageEmitter_videoCaptureFromScreen_clicked(bool checked);
+
+    void on_radioButton_imageEmitter_imageFromFile_clicked(bool checked);
+
 private:
     Ui::MainWindow *ui;
 
