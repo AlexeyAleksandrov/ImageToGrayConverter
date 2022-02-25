@@ -19,11 +19,11 @@
 #include "src/UiHandlers/uidatasaver.h"
 #include "src/ImageHandlers/imagecorrector.h"
 #include "src/ImageHandlers/imagetransformer.h"
-#include "src/FiltersManager/filtersmanager.h"
-#include "src/FiltersManager/FiltersEntities/clipnoisefilter.h"
-#include "src/FiltersManager/FiltersEntities/enchanceblackcolorfilter.h"
-#include "src/FiltersManager/FiltersEntities/hardclipnoisefilter.h"
-#include "src/FiltersManager/FiltersEntities/substructimagefilter.h"
+//#include "src/FiltersManager/filtersmanager.h"
+//#include "src/FiltersManager/FiltersEntities/clipnoisefilter.h"
+//#include "src/FiltersManager/FiltersEntities/enchanceblackcolorfilter.h"
+//#include "src/FiltersManager/FiltersEntities/hardclipnoisefilter.h"
+//#include "src/FiltersManager/FiltersEntities/substructimagefilter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -94,7 +94,7 @@ private:
     QList<QCameraInfo> cameras; // список доступных камер
 //    int *gmas = nullptr;
 //    QTime frameTime;
-    FiltersManager filtersManager;  // управление фильтрами
+//    FiltersManager filtersManager;  // управление фильтрами
 
 private slots:
     void cameraImageCaptured(int id, const QImage &preview);    // получаение изображения
@@ -111,6 +111,8 @@ private slots:
     void on_radioButton_imageEmitter_videoCaptureFromScreen_clicked(bool checked);
 
     void on_radioButton_imageEmitter_imageFromFile_clicked(bool checked);
+
+    void on_checkBox_aliasing_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -132,8 +134,10 @@ private:
     void closeEvent(QCloseEvent *event)
     {
         qDebug() << "close";
+        onExit();
+        std::exit(EXIT_SUCCESS);
         event->accept();
-        this->close();
+//        this->close();
     };
 
     void resizeEvent(QResizeEvent *event)
@@ -142,5 +146,7 @@ private:
         updateLabelImageSize();
         event->accept();
     };
+
+    void onExit();  // выполняется при выходе
 };
 #endif // MAINWINDOW_H

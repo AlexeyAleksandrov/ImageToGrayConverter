@@ -3,6 +3,8 @@
 #include <QScreen>
 #include <QThread>
 #include <QTime>
+#include "thread"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -73,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
     uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
     uiDataSaver.add(ui->horizontalSlider_deleteNoise);
+    uiDataSaver.add(ui->horizontalSlider_aliasingBorder);
 
     uiDataSaver.add(ui->radioButton_original);
     uiDataSaver.add(ui->radioButton_object);
@@ -80,9 +83,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     uiDataSaver.add(ui->checkBox_colorInversion);
     uiDataSaver.add(ui->checkBox_deleteNoise);
+    uiDataSaver.add(ui->checkBox_aliasing);
 
     uiDataSaver.add(ui->comboBox_deleteType);
     uiDataSaver.add(ui->comboBox_presets);
+
+    uiDataSaver.add(ui->spinBox_aliasingRadius);
 
     uiDataSaver.loadPresets();
 
@@ -114,23 +120,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    qDebug() << "exit";
-    uiDataSaver.saveProgramData();
-    if(camera != nullptr)
-    {
-        camera->stop();
-        delete camera;
-    }
-    if(viewfinder != nullptr)
-    {
-        viewfinder->close();
-        delete viewfinder;
-    }
-    if(imageCapture != nullptr)
-    {
-        delete imageCapture;
-    }
+
     delete ui;
+
 }
 
 void MainWindow::on_pushButton_choseImageOriginal_clicked()
@@ -329,6 +321,14 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
     imageCorrector.clipNoise();    // простое удаление шума
     imageCorrector.enchanceBlackColor();    // усиление черного цвета
+
+    if(ui->checkBox_aliasing->isChecked())
+    {
+        int aliasingRadius = ui->spinBox_aliasingRadius->value();
+        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
+        imageCorrector.aliasing(aliasingRadius, aliasingBorder);
+    }
+
 
 //    if(ui->checkBox_medianFilter->isChecked())
 //    {
@@ -685,5 +685,34 @@ void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked(bool checked)
         ui->pushButton_runVideo->setEnabled(false);
         ui->pushButton_screen->setEnabled(false);
     }
+}
+
+void MainWindow::onExit()
+{
+    qDebug() << "exit";
+    uiDataSaver.saveProgramData();
+    if(camera != nullptr)
+    {
+        camera->stop();
+        delete camera;
+    }
+    if(viewfinder != nullptr)
+    {
+        viewfinder->close();
+        delete viewfinder;
+    }
+    if(imageCapture != nullptr)
+    {
+        delete imageCapture;
+    }
+}
+
+
+void MainWindow::on_checkBox_aliasing_stateChanged(int arg1)
+{
+    ui->label_aliasingBorder->setEnabled(arg1);
+    ui->label_aliasingRadius->setEnabled(arg1);
+    ui->spinBox_aliasingRadius->setEnabled(arg1);
+    ui->horizontalSlider_aliasingBorder->setEnabled(arg1);
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1580</width>
-    <height>861</height>
+    <width>1584</width>
+    <height>919</height>
    </rect>
   </property>
   <property name="font">
@@ -421,7 +421,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="invertedControls">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -608,6 +608,62 @@
             </layout>
            </widget>
           </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_aliasing">
+            <property name="title">
+             <string>Медианный фильтр</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_20">
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="spinBox_aliasingRadius">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>200</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSlider" name="horizontalSlider_aliasingBorder">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_aliasingBorder">
+               <property name="text">
+                <string>Граница</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2">
+              <widget class="QCheckBox" name="checkBox_aliasing">
+               <property name="text">
+                <string>Медианный фильтр</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_aliasingRadius">
+               <property name="text">
+                <string>Радиус</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -621,7 +677,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1580</width>
+     <width>1584</width>
      <height>26</height>
     </rect>
    </property>

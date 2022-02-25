@@ -292,6 +292,83 @@ void ImageCorrector::medianFilter()
     }
 }
 
+void ImageCorrector::aliasing(int radius, int border)
+{
+//    auto imageOriginalMatrix = imageOriginal.getGrayScaleMatrix();  // матрица пикселей исходного изображения
+//    auto imageObjectMatrix = imageObject.getGrayScaleMatrix();  // матрица пикселей изображения объекта
+    auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
+
+    for (int i=radius; i<imageOriginal.getWidth()-radius; i += radius*2) // проходим по ширине
+    {
+        for (int j=radius; j<imageOriginal.getHeight()-radius; j += radius*2)    // проходим по высоте
+        {
+            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+            {
+                int countBiggerBorder = 0;
+
+                for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+                {
+                    for(int g=j-radius; g<j+radius; g++)
+                    {
+                        if(imageResultMatrix[k][g] >= border)   // если значение пикселя больше, чем граница
+                        {
+                            countBiggerBorder++;
+                        }
+                    }
+                }
+
+                int maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
+                if(countBiggerBorder > (maxPixels/2))   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+                {
+                    for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+                    {
+                        for(int g=j-radius; g<j+radius; g++)
+                        {
+                            imageResultMatrix[k][g] = BLACK_GRAY_LEVEL;
+                        }
+                    }
+                }
+                else
+                {
+                    for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+                    {
+                        for(int g=j-radius; g<j+radius; g++)
+                        {
+                            imageResultMatrix[k][g] = WHITE_GRAY_LEVEL;
+                        }
+                    }
+                }
+
+//                int matrixSize = radius*2 + 1; // считаем размер матрицы
+//                int **matrixAround = new int* [matrixSize]; // выделяем память под матрицу
+//                for(int k=0; k<radius*2 + 1; k++)
+//                {
+//                    matrixAround[k] = new int [matrixSize];
+//                }
+
+//                matrixAround[radius][radius] = imageResultMatrix[i][j];
+
+//                for(int k=1; k<matrixSize; k++)
+//                {
+//                    for(int g=1; g<matrixSize; g++)
+//                    {
+//                        matrixAround[k][g] = imageResultMatrix[i-k][j-g];
+//                        matrixAround[radius+k][radius+g] = imageResultMatrix[i+k][j+g];
+//                    }
+//                }
+
+
+
+            }
+//            int blackOriginal = imageOriginalMatrix[i][j];  // уровень черного в оригинале
+//            int blackObject = imageObjectMatrix[i][j];  // уровень черного в объекте
+
+//            int blackSub = abs(blackOriginal - blackObject);    // вычитаем фон
+//            imageResultMatrix[i][j] = blackSub; // устанавливаем цвет пикселя
+        }
+    }
+}
+
 void ImageCorrector::setPixelColor(QImage &image, int i, int j, QColor color)
 {
     if(color.isValid())
