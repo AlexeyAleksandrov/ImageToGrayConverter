@@ -318,7 +318,7 @@ void ImageCorrector::aliasing(int radius, int border)
                 }
 
                 int maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
-                if(countBiggerBorder > (maxPixels/2))   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+                if(countBiggerBorder < (maxPixels/2))   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
                 {
                     for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                     {
