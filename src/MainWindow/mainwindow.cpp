@@ -429,8 +429,10 @@ void MainWindow::cameraReadyForCaptureChanged(bool ready)
 void MainWindow::on_pushButton_presets_accept_clicked()
 {
     QString currentPresetName = ui->comboBox_presets->currentText(); // получаем название выбранного пресета
+    int index = ui->comboBox_presets->currentIndex();   // получаем индекс выбранного пресета
     uiDataSaver.applyPreset(currentPresetName); // применяем пресет
     ui->lineEdit_presets_name->setText(currentPresetName);  // выводим название
+    ui->comboBox_presets->setCurrentIndex(index);   // применяем индекс пресета, чтобы данные не съезжали
 }
 
 void MainWindow::on_pushButton_presets_addNew_clicked()
@@ -551,7 +553,7 @@ void MainWindow::on_pushButton_runVideo_clicked()
     {
         QString imageOriginalDir = ui->lineEdit_imageOriginal_video->text();    // получаем изображение фона
 
-        if(imageOriginalDir == "")
+        if(imageOriginalDir == "" || imageOriginal.width() == 0 || imageOriginal.height() == 0)
         {
             QMessageBox::warning(this, "Ошибка", "Выберите изображение оригинала!");
             return;
