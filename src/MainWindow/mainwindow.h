@@ -14,6 +14,7 @@
 #include <QTime>
 #include <QTableWidgetItem>
 #include <QResizeEvent>
+#include <QPainter>
 
 
 #include "src/UiHandlers/uidatasaver.h"

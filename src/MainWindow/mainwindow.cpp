@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->lineEdit_imageObject);
     uiDataSaver.add(ui->lineEdit_presets_name);
     uiDataSaver.add(ui->lineEdit_imageOriginal_video);
+
     uiDataSaver.add(ui->radioButton_imageEmitter_imageFromFile);
     uiDataSaver.add(ui->radioButton_imageEmitter_videoCaptureFromScreen);
     uiDataSaver.add(ui->radioButton_captureDevice_monitor);
@@ -84,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->checkBox_colorInversion);
     uiDataSaver.add(ui->checkBox_deleteNoise);
     uiDataSaver.add(ui->checkBox_aliasing);
+    uiDataSaver.add(ui->checkBox_aliasingVisualisation);
 
     uiDataSaver.add(ui->comboBox_deleteType);
     uiDataSaver.add(ui->comboBox_presets);
@@ -327,6 +329,7 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
         int aliasingRadius = ui->spinBox_aliasingRadius->value();
         int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
         imageCorrector.aliasing(aliasingRadius, aliasingBorder);
+//        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
     }
 
 
@@ -345,6 +348,29 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     if(ui->checkBox_colorInversion->isChecked())
     {
        resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+    }
+
+    if(ui->checkBox_aliasingVisualisation->isChecked())
+    {
+        QPainter *painter = new QPainter(&resultImage);
+        QPen *pen = new QPen;
+        pen->setWidth(1);
+        pen->setColor(Qt::red);
+        painter->setPen(*pen);
+
+        int radius = ui->spinBox_aliasingRadius->value();
+        for (int i=radius*2; i<resultImage.width()-radius; i += radius*2) // проходим по ширине
+        {
+            painter->drawLine(i, radius, i, resultImage.height()-radius);
+        }
+
+        for (int j=radius*2; j<resultImage.height()-radius; j += radius*2)    // проходим по высоте
+        {
+            painter->drawLine(radius, j, resultImage.width()-radius, j);
+        }
+
+        delete painter;
+        delete pen;
     }
 }
 

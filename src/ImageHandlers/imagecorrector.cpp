@@ -338,33 +338,7 @@ void ImageCorrector::aliasing(int radius, int border)
                         }
                     }
                 }
-
-//                int matrixSize = radius*2 + 1; // считаем размер матрицы
-//                int **matrixAround = new int* [matrixSize]; // выделяем память под матрицу
-//                for(int k=0; k<radius*2 + 1; k++)
-//                {
-//                    matrixAround[k] = new int [matrixSize];
-//                }
-
-//                matrixAround[radius][radius] = imageResultMatrix[i][j];
-
-//                for(int k=1; k<matrixSize; k++)
-//                {
-//                    for(int g=1; g<matrixSize; g++)
-//                    {
-//                        matrixAround[k][g] = imageResultMatrix[i-k][j-g];
-//                        matrixAround[radius+k][radius+g] = imageResultMatrix[i+k][j+g];
-//                    }
-//                }
-
-
-
             }
-//            int blackOriginal = imageOriginalMatrix[i][j];  // уровень черного в оригинале
-//            int blackObject = imageObjectMatrix[i][j];  // уровень черного в объекте
-
-//            int blackSub = abs(blackOriginal - blackObject);    // вычитаем фон
-//            imageResultMatrix[i][j] = blackSub; // устанавливаем цвет пикселя
         }
     }
 }
@@ -505,16 +479,16 @@ void ImageCorrector::setThreadsCount(int newThreadsCount)
     threadsCount = newThreadsCount;
 }
 
-void ImageCorrector::distributeToThreads(int startI, int endI, int startJ, int endJ, /*void (*function)(int, int)*/ std::function<void(int, int)> function)
+void ImageCorrector::distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int, int)> function, int stepI, int stepJ)
 {
     int countI = endI - startI; // считаем кол-во значений для i, если начальное значение не 0
     int countJ = endJ - startJ; // считаем кол-во значений для j, если начальное значение не 0
 
     if(threadsCount <= 1 || countI < threadsCount || countJ < threadsCount)   // если требуется всего 1 поток
     {
-        for(int i=startI; i<endI; i++)  // делаем обычный вложенный цикл
+        for(int i=startI; i<endI; i += stepI)  // делаем обычный вложенный цикл
         {
-            for(int j=startJ; j<endJ; j++)
+            for(int j=startJ; j<endJ; j += stepJ)
             {
                 function(i, j); // и выполняем действие, которое нужно сделать
             }
