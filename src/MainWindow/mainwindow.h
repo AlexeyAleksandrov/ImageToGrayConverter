@@ -115,6 +115,10 @@ private slots:
 
     void on_checkBox_aliasing_stateChanged(int arg1);
 
+    void on_horizontalSlider_aliasing_blackBorder_valueChanged(int value);
+
+    void on_horizontalSlider_aliasing_whiteBorder_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 

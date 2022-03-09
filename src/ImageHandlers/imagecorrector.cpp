@@ -292,7 +292,7 @@ void ImageCorrector::medianFilter()
     }
 }
 
-void ImageCorrector::aliasing(int radius, int border)
+void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, int whiteBorderPercent)
 {
 //    auto imageOriginalMatrix = imageOriginal.getGrayScaleMatrix();  // матрица пикселей исходного изображения
 //    auto imageObjectMatrix = imageObject.getGrayScaleMatrix();  // матрица пикселей изображения объекта
@@ -317,8 +317,10 @@ void ImageCorrector::aliasing(int radius, int border)
                     }
                 }
 
-                int maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
-                if(countBiggerBorder < (maxPixels/2))   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+                double maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
+                double blackPercent = (((double)countBiggerBorder) / maxPixels) * 100.0;   // считаем процент пикселей
+                double whitePercent = 100.0 - blackPercent; // процент белых пикселей
+                if(blackPercent < (double)whiteBorderPercent)   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
                 {
                     for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                     {
@@ -328,7 +330,8 @@ void ImageCorrector::aliasing(int radius, int border)
                         }
                     }
                 }
-                else
+                /*else */
+                if (whitePercent < (double)blackBorderPercent)
                 {
                     for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                     {

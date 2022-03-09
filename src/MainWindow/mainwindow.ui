@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1584</width>
-    <height>919</height>
+    <width>1583</width>
+    <height>1043</height>
    </rect>
   </property>
   <property name="font">
@@ -141,30 +141,43 @@
          </attribute>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QGroupBox" name="groupBox_imageTypes">
          <property name="title">
           <string>Отображение:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="2">
+          <item row="0" column="4">
            <widget class="QRadioButton" name="radioButton_object">
             <property name="text">
              <string>Объект</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QRadioButton" name="radioButton_result">
-            <property name="text">
-             <string>Результат</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
+          <item row="0" column="2">
            <widget class="QRadioButton" name="radioButton_original">
             <property name="text">
              <string>Оригинал</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="6">
+           <widget class="QRadioButton" name="radioButton_result">
+            <property name="text">
+             <string>Результат</string>
             </property>
            </widget>
           </item>
@@ -181,18 +194,41 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="4">
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="toolButton_saveOriginal">
+            <property name="text">
+             <string>...</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
+            <property name="icon">
+             <iconset>
+              <normalon>:/icons/resources/icon-save.png</normalon>
+             </iconset>
             </property>
-           </spacer>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="toolButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normalon>:/icons/resources/icon-save.png</normalon>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QToolButton" name="toolButton_2">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normalon>:/icons/resources/icon-save.png</normalon>
+             </iconset>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -486,16 +522,6 @@
           <string>Расчёт изображения</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_saveResult">
-            <property name="text">
-             <string>Сохранить результат</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_threadsCount"/>
-          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_threadsCount">
             <property name="text">
@@ -510,17 +536,27 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_runVideo">
+          <item row="2" column="1">
+           <widget class="QComboBox" name="comboBox_threadsCount"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="pushButton_saveResult">
             <property name="text">
-             <string>RunVideo</string>
+             <string>Сохранить результат</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QPushButton" name="pushButton_screen">
+            <property name="text">
+             <string>Screen</string>
             </property>
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QPushButton" name="pushButton_screen">
+           <widget class="QPushButton" name="pushButton_runVideo">
             <property name="text">
-             <string>Screen</string>
+             <string>RunVideo</string>
             </property>
            </widget>
           </item>
@@ -614,6 +650,26 @@
              <string>Среднеарифметический фильтр</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_20">
+             <item row="4" column="0">
+              <widget class="QSlider" name="horizontalSlider_aliasing_whiteBorder">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>50</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_aliasing_blackBorder_value">
+               <property name="text">
+                <string>50%</string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="0" colspan="2">
               <widget class="QCheckBox" name="checkBox_aliasing">
                <property name="text">
@@ -621,14 +677,27 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_aliasingBorder">
+             <item row="6" column="0" colspan="2">
+              <widget class="QCheckBox" name="checkBox_aliasingVisualisation">
                <property name="text">
-                <string>Граница</string>
+                <string>Визуализация сетки</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
+             <item row="2" column="0">
+              <widget class="QSlider" name="horizontalSlider_aliasing_blackBorder">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>50</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
               <widget class="QSpinBox" name="spinBox_aliasingRadius">
                <property name="minimum">
                 <number>1</number>
@@ -638,33 +707,31 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QSlider" name="horizontalSlider_aliasingBorder">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>255</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_aliasingBlackBorder">
+               <property name="text">
+                <string>Граница для черного цвета (n &gt; x)</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_aliasingRadius">
                <property name="text">
                 <string>Радиус</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0" colspan="2">
-              <widget class="QCheckBox" name="checkBox_aliasingVisualisation">
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_aliasingWhiteBorder">
                <property name="text">
-                <string>Визуализация сетки</string>
+                <string>Граница для белого цвета  (n &gt; x)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLabel" name="label_aliasing_whiteBorder_value">
+               <property name="text">
+                <string>50%</string>
                </property>
               </widget>
              </item>
@@ -684,7 +751,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1584</width>
+     <width>1583</width>
      <height>26</height>
     </rect>
    </property>

@@ -76,7 +76,9 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
     uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
     uiDataSaver.add(ui->horizontalSlider_deleteNoise);
-    uiDataSaver.add(ui->horizontalSlider_aliasingBorder);
+//    uiDataSaver.add(ui->horizontalSlider_aliasingBorder);
+    uiDataSaver.add(ui->horizontalSlider_aliasing_blackBorder);
+    uiDataSaver.add(ui->horizontalSlider_aliasing_whiteBorder);
 
     uiDataSaver.add(ui->radioButton_original);
     uiDataSaver.add(ui->radioButton_object);
@@ -327,8 +329,11 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     if(ui->checkBox_aliasing->isChecked())
     {
         int aliasingRadius = ui->spinBox_aliasingRadius->value();
-        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
-        imageCorrector.aliasing(aliasingRadius, aliasingBorder);
+//        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
+        int aliasingBorder = 126; // 255/2
+        int blackBorder = 100 - ui->horizontalSlider_aliasing_blackBorder->value();
+        int whiteBorder = 100 - ui->horizontalSlider_aliasing_whiteBorder->value();
+        imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
 //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
     }
 
@@ -738,9 +743,21 @@ void MainWindow::onExit()
 
 void MainWindow::on_checkBox_aliasing_stateChanged(int arg1)
 {
-    ui->label_aliasingBorder->setEnabled(arg1);
+//    ui->label_aliasingBorder->setEnabled(arg1);
     ui->label_aliasingRadius->setEnabled(arg1);
     ui->spinBox_aliasingRadius->setEnabled(arg1);
-    ui->horizontalSlider_aliasingBorder->setEnabled(arg1);
+//    ui->horizontalSlider_aliasingBorder->setEnabled(arg1);
+}
+
+
+void MainWindow::on_horizontalSlider_aliasing_blackBorder_valueChanged(int value)
+{
+    ui->label_aliasing_blackBorder_value->setText(QString::number(value) + "%");
+}
+
+
+void MainWindow::on_horizontalSlider_aliasing_whiteBorder_valueChanged(int value)
+{
+    ui->label_aliasing_whiteBorder_value->setText(QString::number(value) + "%");
 }
 
