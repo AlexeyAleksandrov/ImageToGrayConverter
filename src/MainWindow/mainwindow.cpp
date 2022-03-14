@@ -337,6 +337,11 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
     }
 
+    if(ui->checkBox_medianFilter->isChecked())
+    {
+        imageCorrector.medianRadiusFilter(2);
+    }
+
 
 //    if(ui->checkBox_medianFilter->isChecked())
 //    {

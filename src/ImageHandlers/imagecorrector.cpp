@@ -262,35 +262,35 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
 //    }
 }
 
-void ImageCorrector::medianFilter()
-{
-    auto sourseImageMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
-//    QImage sourseImage = QImage(resultImage);   // копируем исходную картинку
+//void ImageCorrector::medianFilter()
+//{
+//    auto sourseImageMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
+////    QImage sourseImage = QImage(resultImage);   // копируем исходную картинку
 
-    for(int i=1; i<resultImage.getWidth()-1; i++)
-    {
-        for(int j=1; j<resultImage.getHeight()-1; j++)
-        {
-            auto pixels = getMatrixAroundPixel(sourseImageMatrix, i, j);    // получаем матрицу интенсивности 3х3 вокруг пикселя
-            QList<int> sortedPixelsList;  // одномерный список для сортировки массива
-            for(int k=0; k<3; k++)
-            {
-                for(int h=0; h<3; h++)
-                {
-                    sortedPixelsList.append(pixels[k][h]);  // добавляем значение в список
-                }
-            }
-            QVector<int> sortedPixelsVector = sortedPixelsList.toVector();    // переводим список в вектор для ускорения работы программы
-            qSort(sortedPixelsVector);  // сортируем
-            int size = sortedPixelsVector.size();   // поулчаем кол-во элементов
-            int mid = ((size - 1) / 2); //  9 -1 = 8 ; 8 / 2 = 4 ; 4 - серединный элемент
-            int medianBlackValue = 255 - sortedPixelsVector[mid]; // получаем медианное значение
+//    for(int i=1; i<resultImage.getWidth()-1; i++)
+//    {
+//        for(int j=1; j<resultImage.getHeight()-1; j++)
+//        {
+//            auto pixels = getMatrixAroundPixel(sourseImageMatrix, i, j);    // получаем матрицу интенсивности 3х3 вокруг пикселя
+//            QList<int> sortedPixelsList;  // одномерный список для сортировки массива
+//            for(int k=0; k<3; k++)
+//            {
+//                for(int h=0; h<3; h++)
+//                {
+//                    sortedPixelsList.append(pixels[k][h]);  // добавляем значение в список
+//                }
+//            }
+//            QVector<int> sortedPixelsVector = sortedPixelsList.toVector();    // переводим список в вектор для ускорения работы программы
+//            qSort(sortedPixelsVector);  // сортируем
+//            int size = sortedPixelsVector.size();   // поулчаем кол-во элементов
+//            int mid = ((size - 1) / 2); //  9 -1 = 8 ; 8 / 2 = 4 ; 4 - серединный элемент
+//            int medianBlackValue = 255 - sortedPixelsVector[mid]; // получаем медианное значение
 
-            sourseImageMatrix[i][j] = medianBlackValue;   // устанавливаем белый цвет пикселю
-            memoryDoubleArrayFree(pixels, 3);   // очищаем память
-        }
-    }
-}
+//            sourseImageMatrix[i][j] = medianBlackValue;   // устанавливаем белый цвет пикселю
+//            memoryDoubleArrayFree(pixels, 3);   // очищаем память
+//        }
+//    }
+//}
 
 void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, int whiteBorderPercent)
 {
@@ -344,6 +344,77 @@ void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, in
             }
         }
     }
+}
+
+void ImageCorrector::medianRadiusFilter(int radius)
+{
+    auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
+
+    int i_start = radius;
+    int i_end = imageOriginal.getWidth()-radius;
+    int i_step = radius*2;
+    i_step = 1;
+
+    int j_start = radius;
+    int j_end = imageOriginal.getHeight()-radius;
+    int j_step = radius*2;
+    j_step= 1;
+
+    int **pixelsNewMas = new int* [imageOriginal.getWidth()];
+    for(int i = 0; i<imageOriginal.getWidth(); i++)
+    {
+        pixelsNewMas[i] = new int [imageOriginal.getHeight()];
+    }
+
+    for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
+    {
+        for (int j=j_start; j<j_end; j += j_step)    // проходим по высоте
+        {
+//            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+            {
+//                int pixelsGrayColorSum = 0; // сумма пикселей
+//                int *pixelsMas = new int [(1 + (radius*2)) * 1 + (radius*2)];   // создаем массив длиной радиус * 2 + столбец и строка из центрального пикселя
+                QList<int> pixelsAround;   // массив всех пикселей
+
+                for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+                {
+                    for(int g=j-radius; g<j+radius; g++)
+                    {
+                        pixelsAround.append(imageResultMatrix[k][g]);
+                    }
+                }
+
+                std::sort(pixelsAround.begin(), pixelsAround.end());  // сортируем массив (быстрая сортировка)
+                int medianValue = pixelsAround.size() / 2;  // получаем номер серединного (медианного) элемента
+
+                pixelsNewMas[i][j] = pixelsAround[medianValue]; // сохраняем полученное значение в новый массив, чтобы не затирать старые значения
+
+//                for(int k=i-radius; k<i+radius; k++)    // заполняем все пиксели средним значением
+//                {
+//                    for(int g=j-radius; g<j+radius; g++)
+//                    {
+//                        imageResultMatrix[k][g] = pixelsMas[medianValue];
+//                    }
+//                }
+            }
+        }
+    }
+    for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
+    {
+        for (int j=j_start; j<j_end; j += j_step)    // проходим по высоте
+        {
+//            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+            {
+               imageResultMatrix[i][j] = pixelsNewMas[i][j];
+            }
+        }
+    }
+
+    for(int i=0; i<imageOriginal.getWidth(); i++)
+    {
+        delete [] pixelsNewMas [i];
+    }
+    delete [] pixelsNewMas;
 }
 
 void ImageCorrector::setPixelColor(QImage &image, int i, int j, QColor color)

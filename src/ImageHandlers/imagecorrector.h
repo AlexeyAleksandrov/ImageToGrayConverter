@@ -37,8 +37,9 @@ public:
     void enchanceBlackColor(int blackEnchancement = -1);     // усилить чёрный цвет
     void invertPixels();    // инвертировать цвет пикселей выходного изобраения
     void hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType);   // усиленное удаление шума
-    void medianFilter();    // медианный фильтр по соседним пикселям
+//    void medianFilter();    // медианный фильтр по соседним пикселям
     void aliasing(int radius, int border, int blackBorderPercent = 50, int whiteBorderPercent = 50);  // выравнивание цветов по квадратам
+    void medianRadiusFilter(int radius);  // медианный фильтр, основанный на радиусах
 
     void setImageOriginal(const QImage &value); // задать изображение фона
     void setImageObject(const QImage &value);   // задать изображение объекта
