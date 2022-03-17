@@ -74,7 +74,7 @@ private:    // работа с потоками
     int clippingNoiseValue = -1;    // значение удаления шумов
     int blackEnchancement = -1; // значение усиления чёрного
 
-    void distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int i, int j)> function, int stepI = 0, int stepJ = 0);
+    void distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int i, int j)> function, int stepI = 1, int stepJ = 1);
     template<typename T>
     void memoryDoubleArrayFree(T **&array, int count1);    // очистка памяти двумерного массива
 };
