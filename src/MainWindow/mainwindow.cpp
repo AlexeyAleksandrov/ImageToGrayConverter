@@ -89,11 +89,14 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->checkBox_aliasing);
     uiDataSaver.add(ui->checkBox_aliasingVisualisation);
     uiDataSaver.add(ui->checkBox_medianFilter);
+    uiDataSaver.add(ui->checkBox_averageFilter);
 
     uiDataSaver.add(ui->comboBox_deleteType);
     uiDataSaver.add(ui->comboBox_presets);
 
     uiDataSaver.add(ui->spinBox_aliasingRadius);
+    uiDataSaver.add(ui->spinBox_medianFilter_radius);
+    uiDataSaver.add(ui->spinBox_averageFilter_radiusValue);
 
     uiDataSaver.loadPresets();
 
@@ -823,5 +826,35 @@ void MainWindow::on_toolButton_saveObjectImage_clicked()
 void MainWindow::on_toolButton_saveResultImage_clicked()
 {
     saveImageToFileWithDialog(&resultImage);
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3.jpg");
+    QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_4.jpg");
+
+    QImage *img3 = new QImage(img1.size(), img1.format());
+
+    for(int i=0; i<img1.width(); i++)
+    {
+        for(int j=0; j<img1.height(); j++)
+        {
+            if(img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() < 100)
+            {
+                img3->setPixelColor(i, j, Qt::black);
+                img1.setPixelColor(i, j, Qt::white);
+            }
+            else
+            {
+                img3->setPixelColor(i, j, Qt::white);
+            }
+        }
+    }
+
+//    setImageToOutputLabel(*img3);
+    setImageToOutputLabel(img1);
+    img1.save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_5.jpg");
+
 }
 

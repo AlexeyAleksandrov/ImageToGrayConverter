@@ -129,6 +129,8 @@ private slots:
 
     void on_toolButton_saveResultImage_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1683</width>
-    <height>1231</height>
+    <width>2568</width>
+    <height>1220</height>
    </rect>
   </property>
   <property name="font">
@@ -26,92 +26,6 @@
        <string>Настройки</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_10">
-       <item row="3" column="0">
-        <widget class="QGroupBox" name="groupBox_presets">
-         <property name="title">
-          <string>Пресеты</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="5" column="0">
-           <widget class="QPushButton" name="pushButton_presets_addNew">
-            <property name="text">
-             <string>Добавить новый</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_presets_name">
-            <property name="text">
-             <string>Название:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QComboBox" name="comboBox_presets"/>
-          </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_presets_name"/>
-          </item>
-          <item row="5" column="1">
-           <widget class="QPushButton" name="pushButton_presets_deleteChosed">
-            <property name="text">
-             <string>Удалить выбранный</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0" colspan="2">
-           <widget class="QPushButton" name="pushButton_presets_updateCurrent">
-            <property name="text">
-             <string>Обновить текущий</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QPushButton" name="pushButton_presets_accept">
-            <property name="text">
-             <string>Применить</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLabel" name="label_preset_chose">
-            <property name="text">
-             <string>Выбор пресета</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBox_imageEmitter">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>64</height>
-          </size>
-         </property>
-         <property name="title">
-          <string>Источник изображения</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_14">
-          <item row="0" column="0">
-           <widget class="QRadioButton" name="radioButton_imageEmitter_imageFromFile">
-            <property name="text">
-             <string>Файл</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QRadioButton" name="radioButton_imageEmitter_videoCaptureFromScreen">
-            <property name="text">
-             <string>Видеопоток</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item row="2" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox_imageEmitterParams">
          <property name="title">
@@ -247,6 +161,112 @@
              </item>
             </layout>
            </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox_imageEmitter">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Источник изображения</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_14">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="radioButton_imageEmitter_imageFromFile">
+            <property name="text">
+             <string>Файл</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="radioButton_imageEmitter_videoCaptureFromScreen">
+            <property name="text">
+             <string>Видеопоток</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QGroupBox" name="groupBox_presets">
+         <property name="title">
+          <string>Пресеты</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="5" column="0" colspan="2">
+           <widget class="QLineEdit" name="lineEdit_presets_name"/>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLabel" name="label_preset_chose">
+            <property name="text">
+             <string>Выбор пресета</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_presets_name">
+            <property name="text">
+             <string>Название:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QPushButton" name="pushButton_presets_accept">
+            <property name="text">
+             <string>Применить</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="2">
+           <widget class="QPushButton" name="pushButton_presets_updateCurrent">
+            <property name="text">
+             <string>Обновить текущий</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QPushButton" name="pushButton_presets_addNew">
+            <property name="text">
+             <string>Добавить новый</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QPushButton" name="pushButton_presets_deleteChosed">
+            <property name="text">
+             <string>Удалить выбранный</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QComboBox" name="comboBox_presets"/>
+          </item>
+          <item row="8" column="0">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -575,7 +595,7 @@
           <item row="0" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_aliasing">
             <property name="title">
-             <string>Пикселизация</string>
+             <string>Повышение резкости</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_20">
              <item row="4" column="0">
@@ -601,7 +621,7 @@
              <item row="0" column="0" colspan="2">
               <widget class="QCheckBox" name="checkBox_aliasing">
                <property name="text">
-                <string>Пикселизация</string>
+                <string>Повышение резкости</string>
                </property>
               </widget>
              </item>
@@ -825,7 +845,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1683</width>
+     <width>2568</width>
      <height>26</height>
     </rect>
    </property>
