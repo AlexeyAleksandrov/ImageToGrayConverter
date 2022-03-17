@@ -40,6 +40,7 @@ public:
 //    void medianFilter();    // медианный фильтр по соседним пикселям
     void aliasing(int radius, int border, int blackBorderPercent = 50, int whiteBorderPercent = 50);  // выравнивание цветов по квадратам
     void medianRadiusFilter(int radius);  // медианный фильтр, основанный на радиусах
+    void averageFilter(int radius); // среднеарифметический фильтр
 
     void setImageOriginal(const QImage &value); // задать изображение фона
     void setImageObject(const QImage &value);   // задать изображение объекта

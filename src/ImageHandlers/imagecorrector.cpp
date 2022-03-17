@@ -352,13 +352,11 @@ void ImageCorrector::medianRadiusFilter(int radius)
 
     int i_start = radius;
     int i_end = imageOriginal.getWidth()-radius;
-    int i_step = radius*2;
-    i_step = 1;
+    int i_step = 1;
 
     int j_start = radius;
     int j_end = imageOriginal.getHeight()-radius;
-    int j_step = radius*2;
-    j_step= 1;
+    int j_step = 1;
 
     int **pixelsNewMas = new int* [imageOriginal.getWidth()];
     for(int i = 0; i<imageOriginal.getWidth(); i++)
@@ -370,43 +368,88 @@ void ImageCorrector::medianRadiusFilter(int radius)
     {
         for (int j=j_start; j<j_end; j += j_step)    // проходим по высоте
         {
-//            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+            QList<int> pixelsAround;   // массив всех пикселей
+
+            for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
             {
-//                int pixelsGrayColorSum = 0; // сумма пикселей
-//                int *pixelsMas = new int [(1 + (radius*2)) * 1 + (radius*2)];   // создаем массив длиной радиус * 2 + столбец и строка из центрального пикселя
-                QList<int> pixelsAround;   // массив всех пикселей
-
-                for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+                for(int g=j-radius; g<j+radius; g++)
                 {
-                    for(int g=j-radius; g<j+radius; g++)
-                    {
-                        pixelsAround.append(imageResultMatrix[k][g]);
-                    }
+                    pixelsAround.append(imageResultMatrix[k][g]);
                 }
-
-                std::sort(pixelsAround.begin(), pixelsAround.end());  // сортируем массив (быстрая сортировка)
-                int medianValue = pixelsAround.size() / 2;  // получаем номер серединного (медианного) элемента
-
-                pixelsNewMas[i][j] = pixelsAround[medianValue]; // сохраняем полученное значение в новый массив, чтобы не затирать старые значения
-
-//                for(int k=i-radius; k<i+radius; k++)    // заполняем все пиксели средним значением
-//                {
-//                    for(int g=j-radius; g<j+radius; g++)
-//                    {
-//                        imageResultMatrix[k][g] = pixelsMas[medianValue];
-//                    }
-//                }
             }
+
+            std::sort(pixelsAround.begin(), pixelsAround.end());  // сортируем массив (быстрая сортировка)
+            int medianValue = pixelsAround.size() / 2;  // получаем номер серединного (медианного) элемента
+
+            pixelsNewMas[i][j] = pixelsAround[medianValue]; // сохраняем полученное значение в новый массив, чтобы не затирать старые значения
         }
     }
     for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
     {
         for (int j=j_start; j<j_end; j += j_step)    // проходим по высоте
         {
-//            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+
+            imageResultMatrix[i][j] = pixelsNewMas[i][j];
+        }
+    }
+
+    for(int i=0; i<imageOriginal.getWidth(); i++)
+    {
+        delete [] pixelsNewMas [i];
+    }
+    delete [] pixelsNewMas;
+}
+
+void ImageCorrector::averageFilter(int radius)
+{
+    auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
+
+    int i_start = radius;
+    int i_end = imageOriginal.getWidth()-radius;
+    int i_step = 1;
+
+    int j_start = radius;
+    int j_end = imageOriginal.getHeight()-radius;
+    int j_step = 1;
+
+    int **pixelsNewMas = new int* [imageOriginal.getWidth()];
+    for(int i = 0; i<imageOriginal.getWidth(); i++)
+    {
+        pixelsNewMas[i] = new int [imageOriginal.getHeight()];
+    }
+
+    for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
+    {
+        for (int j=j_start; j<j_end; j += j_step)    // проходим по высоте
+        {
+            QList<int> pixelsAround;   // массив всех пикселей
+
+            for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
             {
-               imageResultMatrix[i][j] = pixelsNewMas[i][j];
+                for(int g=j-radius; g<j+radius; g++)
+                {
+                    pixelsAround.append(imageResultMatrix[k][g]);
+                }
             }
+
+            int sum = 0; // сумма значений пикселей
+            for(int i=0; i<pixelsAround.size(); i++)
+            {
+                sum += pixelsAround[i];
+            }
+            double avg = sum;
+            avg /= (double)pixelsAround.size(); // считаем среднее арифметическое
+            int value = (int)avg;   // приводим к целому значению для изображения
+
+            pixelsNewMas[i][j] = value; // сохраняем полученное значение в новый массив, чтобы не затирать старые значения
+        }
+    }
+    for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
+    {
+        for (int j=j_start; j<j_end; j += j_step)    // проходим по высоте
+        {
+
+            imageResultMatrix[i][j] = pixelsNewMas[i][j];
         }
     }
 

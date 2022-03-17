@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->checkBox_deleteNoise);
     uiDataSaver.add(ui->checkBox_aliasing);
     uiDataSaver.add(ui->checkBox_aliasingVisualisation);
+    uiDataSaver.add(ui->checkBox_medianFilter);
 
     uiDataSaver.add(ui->comboBox_deleteType);
     uiDataSaver.add(ui->comboBox_presets);
@@ -317,14 +318,32 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
         int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
         ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
 
-        imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
-        imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+        if(ui->checkBox_hardNoiseClipping_deleteWhite->isChecked()) // если нужно удалять черный цвет
+        {
+           imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+        }
+        if(ui->checkBox_hardNoiseClipping_deleteBlack->isChecked()) // если нкжно удалять белый цвет
+        {
+            imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+        }
+
         qDebug() << "Удаление выполнено!";
     }
 
 //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
     imageCorrector.clipNoise();    // простое удаление шума
     imageCorrector.enchanceBlackColor();    // усиление черного цвета
+
+    if(ui->checkBox_medianFilter->isChecked())
+    {
+        int radius = ui->spinBox_medianFilter_radius->value();  // радиус медианного фильтра
+        imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
+    }
+    if(ui->checkBox_averageFilter->isChecked())
+    {
+        int radius = ui->spinBox_averageFilter_radiusValue->value();  // радиус среднеарифметического фильтра
+        imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
+    }
 
     if(ui->checkBox_aliasing->isChecked())
     {
@@ -337,10 +356,7 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
     }
 
-    if(ui->checkBox_medianFilter->isChecked())
-    {
-        imageCorrector.medianRadiusFilter(2);
-    }
+
 
 
 //    if(ui->checkBox_medianFilter->isChecked())
@@ -381,6 +397,31 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 
         delete painter;
         delete pen;
+    }
+}
+
+void MainWindow::saveImageToFileWithDialog(QImage *image)
+{
+    if(image == nullptr)
+    {
+        QMessageBox::warning(this, "Ошибка", "Изображение пустое");
+        return;
+    }
+    if(image->width() == 0 || image->height() == 0)
+    {
+        QMessageBox::warning(this, "Ошибка", "Изображение содержит 0 высоту или ширину");
+        return;
+    }
+    QString imageDir = QFileDialog::getSaveFileName(this, "Сохранить как", "", "Images (*.jpg)");
+    if(imageDir == "")
+    {
+        QMessageBox::warning(this, "Ошибка", "Вы не выбрали файл!");
+        return;
+    }
+    if(!image->save(imageDir))
+    {
+        QMessageBox::warning(this, "Ошибка", "Не удалось сохранить изображение!");
+        return;
     }
 }
 
@@ -764,5 +805,23 @@ void MainWindow::on_horizontalSlider_aliasing_blackBorder_valueChanged(int value
 void MainWindow::on_horizontalSlider_aliasing_whiteBorder_valueChanged(int value)
 {
     ui->label_aliasing_whiteBorder_value->setText(QString::number(value) + "%");
+}
+
+
+void MainWindow::on_toolButton_saveOriginalImage_clicked()
+{
+    saveImageToFileWithDialog(&imageOriginal);
+}
+
+
+void MainWindow::on_toolButton_saveObjectImage_clicked()
+{
+    saveImageToFileWithDialog(&imageObject);
+}
+
+
+void MainWindow::on_toolButton_saveResultImage_clicked()
+{
+    saveImageToFileWithDialog(&resultImage);
 }
 

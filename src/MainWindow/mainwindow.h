@@ -83,6 +83,9 @@ public:
     void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);
 
 private:
+    void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора
+
+private:
     // экраны
     QStringList getScreensList();   // получить список мониторов
 
@@ -93,6 +96,7 @@ private:
     QCameraViewfinder *viewfinder = nullptr;  // обработчик камеры
     QCameraImageCapture *imageCapture = nullptr;  // обработчик снимков камеры
     QList<QCameraInfo> cameras; // список доступных камер
+
 //    int *gmas = nullptr;
 //    QTime frameTime;
 //    FiltersManager filtersManager;  // управление фильтрами
@@ -118,6 +122,12 @@ private slots:
     void on_horizontalSlider_aliasing_blackBorder_valueChanged(int value);
 
     void on_horizontalSlider_aliasing_whiteBorder_valueChanged(int value);
+
+    void on_toolButton_saveOriginalImage_clicked();
+
+    void on_toolButton_saveObjectImage_clicked();
+
+    void on_toolButton_saveResultImage_clicked();
 
 private:
     Ui::MainWindow *ui;
