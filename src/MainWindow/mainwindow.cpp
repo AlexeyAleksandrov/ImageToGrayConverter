@@ -831,30 +831,31 @@ void MainWindow::on_toolButton_saveResultImage_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3.jpg");
-    QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_4.jpg");
+    QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_1.jpg");
+    QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_2.jpg");
 
-    QImage *img3 = new QImage(img1.size(), img1.format());
+//    QImage *img3 = new QImage(img1.size(), img1.format());
 
     for(int i=0; i<img1.width(); i++)
     {
         for(int j=0; j<img1.height(); j++)
         {
-            if(img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() < 100)
+            if((img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() <= 100)
+                    || (img1.pixelColor(i, j).black() <= 100 && img2.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
             {
-                img3->setPixelColor(i, j, Qt::black);
+//                img3->setPixelColor(i, j, Qt::black);
                 img1.setPixelColor(i, j, Qt::white);
             }
-            else
-            {
-                img3->setPixelColor(i, j, Qt::white);
-            }
+//            else
+//            {
+//                img3->setPixelColor(i, j, Qt::white);
+//            }
         }
     }
 
 //    setImageToOutputLabel(*img3);
     setImageToOutputLabel(img1);
-    img1.save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_5.jpg");
+    img1.save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3_2.jpg");
 
 }
 
