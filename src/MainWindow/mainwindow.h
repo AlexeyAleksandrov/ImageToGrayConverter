@@ -80,7 +80,8 @@ private slots:
 public:
     void setImageToOutputLabel(QImage image);  // вывести картинку
     void updateLabelImageSize();    // перерасчитать азмеры label с изображением
-    void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);
+    void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);  // функция рассчёта фильтров
+    QImage* colliseImages(QImage &imageDown, QImage &imageUpper);  // коллизия 2х изображений
 
 private:
     void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора

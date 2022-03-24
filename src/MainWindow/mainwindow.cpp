@@ -97,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->spinBox_aliasingRadius);
     uiDataSaver.add(ui->spinBox_medianFilter_radius);
     uiDataSaver.add(ui->spinBox_averageFilter_radiusValue);
+    uiDataSaver.add(ui->spinBox_collisionRepeatCount);
 
     uiDataSaver.loadPresets();
 
@@ -295,13 +296,6 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     imageCorrector.setImageOriginal(imageOriginal);
     imageCorrector.setImageObject(imageObject);
 
-//    filtersManager.updateCurrentFilterFunctionsList();
-//    auto funcs = filtersManager.getCurrentFiltersFunctionsList();
-//    for(auto func : funcs)
-//    {
-//        func();
-//    }
-
     int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
     int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
@@ -311,73 +305,75 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
     imageCorrector.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
 
-    imageCorrector.substractObjectImage();    // вычитаем изображение
-//    imageCorrector.clipNoise();    // простое удаление шума
-//    imageCorrector.enchanceBlackColor();    // усиление черного цвета
+    int repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
 
-    if(ui->checkBox_deleteNoise->isChecked())
+    for(int offset=0; offset<=repeatOffset; offset++)
     {
-        int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
-        int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-        ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+        imageCorrector.substractObjectImage();    // вычитаем изображение
+    //    imageCorrector.clipNoise();    // простое удаление шума
+    //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
 
-        if(ui->checkBox_hardNoiseClipping_deleteWhite->isChecked()) // если нужно удалять черный цвет
+        if(ui->checkBox_deleteNoise->isChecked())
         {
-           imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+            int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
+            int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
+            ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+
+            if(ui->checkBox_hardNoiseClipping_deleteWhite->isChecked()) // если нужно удалять черный цвет
+            {
+               imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+            }
+            if(ui->checkBox_hardNoiseClipping_deleteBlack->isChecked()) // если нкжно удалять белый цвет
+            {
+                imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+            }
+
+            qDebug() << "Удаление выполнено!";
         }
-        if(ui->checkBox_hardNoiseClipping_deleteBlack->isChecked()) // если нкжно удалять белый цвет
+
+    //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
+        imageCorrector.clipNoise();    // простое удаление шума
+        imageCorrector.enchanceBlackColor();    // усиление черного цвета
+
+        if(ui->checkBox_medianFilter->isChecked())
         {
-            imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+            int radius = ui->spinBox_medianFilter_radius->value() + offset;  // радиус медианного фильтра
+            imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
+        }
+        if(ui->checkBox_averageFilter->isChecked())
+        {
+            int radius = ui->spinBox_averageFilter_radiusValue->value() + offset;  // радиус среднеарифметического фильтра
+            imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
         }
 
-        qDebug() << "Удаление выполнено!";
+        if(ui->checkBox_aliasing->isChecked())
+        {
+            int aliasingRadius = ui->spinBox_aliasingRadius->value() + offset;
+    //        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
+            int aliasingBorder = 126; // 255/2
+            int blackBorder = 100 - ui->horizontalSlider_aliasing_blackBorder->value();
+            int whiteBorder = 100 - ui->horizontalSlider_aliasing_whiteBorder->value();
+            imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
+    //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
+        }
+
+        QImage result = imageCorrector.getResultImage();   // получаем обработанное изображение
+
+        if(ui->checkBox_colorInversion->isChecked())
+        {
+           result.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+        }
+
+        if(offset > 0)  // если есть предыдущее изображение
+        {
+            resultImage = *colliseImages(resultImage, result);  // объединяем методом Исключающего ИЛИ
+        }
+        else    // иначе, если это первая итерация, то просто сохраняем
+        {
+            resultImage = result;
+        }
     }
 
-//    imageCorrector.enchanceBlackColor();    // усиление черного цвета
-    imageCorrector.clipNoise();    // простое удаление шума
-    imageCorrector.enchanceBlackColor();    // усиление черного цвета
-
-    if(ui->checkBox_medianFilter->isChecked())
-    {
-        int radius = ui->spinBox_medianFilter_radius->value();  // радиус медианного фильтра
-        imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
-    }
-    if(ui->checkBox_averageFilter->isChecked())
-    {
-        int radius = ui->spinBox_averageFilter_radiusValue->value();  // радиус среднеарифметического фильтра
-        imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
-    }
-
-    if(ui->checkBox_aliasing->isChecked())
-    {
-        int aliasingRadius = ui->spinBox_aliasingRadius->value();
-//        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
-        int aliasingBorder = 126; // 255/2
-        int blackBorder = 100 - ui->horizontalSlider_aliasing_blackBorder->value();
-        int whiteBorder = 100 - ui->horizontalSlider_aliasing_whiteBorder->value();
-        imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
-//        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
-    }
-
-
-
-
-//    if(ui->checkBox_medianFilter->isChecked())
-//    {
-//        imageCorrector.medianFilter();
-//    }
-
-//    if(ui->checkBox_colorInversion->isChecked())
-//    {
-//       imageCorrector.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
-//    }
-
-    resultImage = imageCorrector.getResultImage();   // получаем обработанное изображение
-
-    if(ui->checkBox_colorInversion->isChecked())
-    {
-       resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
-    }
 
     if(ui->checkBox_aliasingVisualisation->isChecked())
     {
@@ -401,6 +397,25 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
         delete painter;
         delete pen;
     }
+}
+
+QImage *MainWindow::colliseImages(QImage &imageDown, QImage &imageUpper)
+{
+    QImage *imageOut = new QImage(imageDown);    // создаем изображение, идентичное по параметрам входному
+
+    for(int i=0; i<imageDown.width(); i++)
+    {
+        for(int j=0; j<imageDown.height(); j++)
+        {
+            if((imageDown.pixelColor(i, j).black() > 100 && imageUpper.pixelColor(i, j).black() <= 100)
+                    || (imageDown.pixelColor(i, j).black() <= 100 && imageUpper.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
+            {
+                imageOut->setPixelColor(i, j, Qt::white);
+            }
+        }
+    }
+
+    return imageOut;
 }
 
 void MainWindow::saveImageToFileWithDialog(QImage *image)
@@ -834,20 +849,22 @@ void MainWindow::on_pushButton_clicked()
     QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_1.jpg");
     QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_2.jpg");
 
-    for(int i=0; i<img1.width(); i++)
-    {
-        for(int j=0; j<img1.height(); j++)
-        {
-            if((img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() <= 100)
-                    || (img1.pixelColor(i, j).black() <= 100 && img2.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
-            {
-                img1.setPixelColor(i, j, Qt::white);
-            }
-        }
-    }
+//    for(int i=0; i<img1.width(); i++)
+//    {
+//        for(int j=0; j<img1.height(); j++)
+//        {
+//            if((img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() <= 100)
+//                    || (img1.pixelColor(i, j).black() <= 100 && img2.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
+//            {
+//                img1.setPixelColor(i, j, Qt::white);
+//            }
+//        }
+//    }
 
-    setImageToOutputLabel(img1);
-    img1.save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3_2.jpg");
+    QImage *img = colliseImages(img1, img2);
+
+    setImageToOutputLabel(*img);
+    img->save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3_2.jpg");
 
 }
 
