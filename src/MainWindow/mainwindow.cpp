@@ -293,7 +293,20 @@ void MainWindow::updateLabelImageSize()
 
 void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage)
 {
-    imageCorrector.setImageOriginal(imageOriginal);
+    QImage tempOriginalImage;
+    if(ui->checkBox_substractObject->isChecked())
+    {
+        imageCorrector.setImageOriginal(imageOriginal);
+    }
+    else
+    {
+//        QImage *image = new QImage(imageObject.size(), imageObject.format());
+//        image->fill(Qt::white);  // заполняем белым цветом
+        tempOriginalImage = QImage(imageObject.size(), imageObject.format());
+        tempOriginalImage.fill(Qt::white);  // заполняем белым цветом
+        imageCorrector.setImageOriginal(tempOriginalImage);
+    }
+//    imageCorrector.setImageOriginal(imageOriginal);
     imageCorrector.setImageObject(imageObject);
 
     int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
@@ -309,9 +322,10 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 
     for(int offset=0; offset<=repeatOffset; offset++)
     {
-        imageCorrector.substractObjectImage();    // вычитаем изображение
-    //    imageCorrector.clipNoise();    // простое удаление шума
-    //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
+        if(ui->checkBox_substractObject->isChecked())
+        {
+            imageCorrector.substractObjectImage();    // вычитаем изображение
+        }
 
         if(ui->checkBox_deleteNoise->isChecked())
         {
@@ -489,7 +503,7 @@ void MainWindow::cameraImageCaptured(int id, const QImage &preview)
     {
         setImageToOutputLabel(preview.convertToFormat(QImage::Format_Grayscale16));
     }
-    else if(ui->radioButton_result->isChecked())    // если нужн опоказать полученное изображение
+    else if(ui->radioButton_result->isChecked())    // если нужно показать полученное изображение
     {
     //    setImageToOutputLabel(preview);
         imageObject = preview;
@@ -648,15 +662,20 @@ void MainWindow::on_pushButton_runVideo_clicked()
     {
         QString imageOriginalDir = ui->lineEdit_imageOriginal_video->text();    // получаем изображение фона
 
-        if(imageOriginalDir == "" || imageOriginal.width() == 0 || imageOriginal.height() == 0)
+        if((imageOriginalDir == "" || imageOriginal.width() == 0 || imageOriginal.height() == 0) && ui->checkBox_substractObject->isChecked())
         {
             QMessageBox::warning(this, "Ошибка", "Выберите изображение оригинала!");
             return;
         }
 
-        imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
+        if(ui->checkBox_substractObject->isChecked())
+        {
+            imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
+        }
+//        imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
 
-        resultImage = imageOriginal;
+//        resultImage = imageOriginal;
+        resultImage = imageObject;
 
         ui->pushButton_runVideo->setText("Stop Video");
 

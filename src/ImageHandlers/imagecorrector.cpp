@@ -42,7 +42,7 @@ void ImageCorrector::clipNoise(int clippingNoiseValue)
 
         imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
     };
-    distributeToThreads(0, imageOriginal.getWidth(), 0, imageOriginal.getHeight(), function);
+    distributeToThreads(0, resultImage.getWidth(), 0, resultImage.getHeight(), function);
 
 //    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
 //    {
@@ -78,7 +78,7 @@ void ImageCorrector::enchanceBlackColor(int blackEnchancement)
         imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
     };
 
-    distributeToThreads(0, imageOriginal.getWidth(), 0, imageOriginal.getHeight(), function);   // распределяем по потокам
+    distributeToThreads(0, resultImage.getWidth(), 0, resultImage.getHeight(), function);   // распределяем по потокам
 
 //    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
 //    {
@@ -182,7 +182,7 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
         }
     };
 
-    distributeToThreads(1, imageOriginal.getWidth()-1, 1, imageOriginal.getHeight()-1, function);   // распределяем по потокам
+    distributeToThreads(1, resultImage.getWidth()-1, 1, resultImage.getHeight()-1, function);   // распределяем по потокам
 
 //    for (int i=1; i<imageOriginal.getWidth()-1; i++) // проходим по ширине
 //    {
@@ -298,9 +298,9 @@ void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, in
 //    auto imageObjectMatrix = imageObject.getGrayScaleMatrix();  // матрица пикселей изображения объекта
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    for (int i=radius; i<imageOriginal.getWidth()-radius; i += radius*2) // проходим по ширине
+    for (int i=radius; i<resultImage.getWidth()-radius; i += radius*2) // проходим по ширине
     {
-        for (int j=radius; j<imageOriginal.getHeight()-radius; j += radius*2)    // проходим по высоте
+        for (int j=radius; j<resultImage.getHeight()-radius; j += radius*2)    // проходим по высоте
         {
             if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
             {
@@ -351,17 +351,17 @@ void ImageCorrector::medianRadiusFilter(int radius)
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
     int i_start = radius;
-    int i_end = imageOriginal.getWidth()-radius;
+    int i_end = resultImage.getWidth()-radius;
     int i_step = 1;
 
     int j_start = radius;
-    int j_end = imageOriginal.getHeight()-radius;
+    int j_end = resultImage.getHeight()-radius;
     int j_step = 1;
 
-    int **pixelsNewMas = new int* [imageOriginal.getWidth()];
-    for(int i = 0; i<imageOriginal.getWidth(); i++)
+    int **pixelsNewMas = new int* [resultImage.getWidth()];
+    for(int i = 0; i<resultImage.getWidth(); i++)
     {
-        pixelsNewMas[i] = new int [imageOriginal.getHeight()];
+        pixelsNewMas[i] = new int [resultImage.getHeight()];
     }
 
 //    for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
@@ -415,7 +415,7 @@ void ImageCorrector::medianRadiusFilter(int radius)
         imageResultMatrix[i][j] = pixelsNewMas[i][j];
     });
 
-    for(int i=0; i<imageOriginal.getWidth(); i++)
+    for(int i=0; i<resultImage.getWidth(); i++)
     {
         delete [] pixelsNewMas [i];
     }
@@ -427,17 +427,17 @@ void ImageCorrector::averageFilter(int radius)
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
     int i_start = radius;
-    int i_end = imageOriginal.getWidth()-radius;
+    int i_end = resultImage.getWidth()-radius;
     int i_step = 1;
 
     int j_start = radius;
-    int j_end = imageOriginal.getHeight()-radius;
+    int j_end = resultImage.getHeight()-radius;
     int j_step = 1;
 
-    int **pixelsNewMas = new int* [imageOriginal.getWidth()];
-    for(int i = 0; i<imageOriginal.getWidth(); i++)
+    int **pixelsNewMas = new int* [resultImage.getWidth()];
+    for(int i = 0; i<resultImage.getWidth(); i++)
     {
-        pixelsNewMas[i] = new int [imageOriginal.getHeight()];
+        pixelsNewMas[i] = new int [resultImage.getHeight()];
     }
 
 //    for (int i=i_start; i<i_end; i += i_step) // проходим по ширине
@@ -503,7 +503,7 @@ void ImageCorrector::averageFilter(int radius)
         imageResultMatrix[i][j] = pixelsNewMas[i][j];
     });
 
-    for(int i=0; i<imageOriginal.getWidth(); i++)
+    for(int i=0; i<resultImage.getWidth(); i++)
     {
         delete [] pixelsNewMas [i];
     }
@@ -741,10 +741,11 @@ QImage ImageCorrector::getResultImage() const
 void ImageCorrector::setImageObject(const QImage &value)
 {
     imageObject.setImage(value);
+    resultImage.setImage(value);
 }
 
 void ImageCorrector::setImageOriginal(const QImage &value)
 {
     imageOriginal.setImage(value);
-    resultImage.setImage(value);
+//    resultImage.setImage(value);
 }

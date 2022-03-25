@@ -520,13 +520,20 @@
           <item row="3" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_invertPixels">
             <property name="title">
-             <string>Инверсия цветов изображения</string>
+             <string>Действия над изображением</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_17">
-             <item row="0" column="0">
+             <item row="1" column="0">
               <widget class="QCheckBox" name="checkBox_colorInversion">
                <property name="text">
                 <string>Инверсия цветов на выходе</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBox_substractObject">
+               <property name="text">
+                <string>Вычитание изображения</string>
                </property>
               </widget>
              </item>
