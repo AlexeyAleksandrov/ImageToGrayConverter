@@ -20,8 +20,8 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="2">
-     <spacer name="horizontalSpacer_3">
+    <item row="4" column="1">
+     <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -33,140 +33,7 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="1" rowspan="2" colspan="2">
-     <widget class="QGroupBox" name="groupBox_imageDemo">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>Изображение</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="2">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="1">
-        <widget class="QTableWidget" name="tableWidget_image">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <attribute name="horizontalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QGroupBox" name="groupBox_imageTypes">
-         <property name="title">
-          <string>Отображение:</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="4">
-           <widget class="QRadioButton" name="radioButton_object">
-            <property name="text">
-             <string>Объект</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="8">
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="6">
-           <widget class="QRadioButton" name="radioButton_result">
-            <property name="text">
-             <string>Результат</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QRadioButton" name="radioButton_original">
-            <property name="text">
-             <string>Оригинал</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QToolButton" name="toolButton_saveResultImage">
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normalon>:/icons/resources/icon-save.png</normalon>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QToolButton" name="toolButton_saveOriginalImage">
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normalon>:/icons/resources/icon-save.png</normalon>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="toolButton_saveObjectImage">
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normalon>:/icons/resources/icon-save.png</normalon>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="0" rowspan="2">
+    <item row="1" column="0" rowspan="2">
      <widget class="QGroupBox" name="groupBox_settings">
       <property name="title">
        <string>Настройки</string>
@@ -346,29 +213,8 @@
           <string>Пресеты</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="5" column="0" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_presets_name"/>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLabel" name="label_preset_chose">
-            <property name="text">
-             <string>Выбор пресета</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_presets_name">
-            <property name="text">
-             <string>Название:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QPushButton" name="pushButton_presets_accept">
-            <property name="text">
-             <string>Применить</string>
-            </property>
-           </widget>
+          <item row="1" column="0" colspan="2">
+           <widget class="QComboBox" name="comboBox_presets"/>
           </item>
           <item row="7" column="0" colspan="2">
            <widget class="QPushButton" name="pushButton_presets_updateCurrent">
@@ -376,30 +222,6 @@
              <string>Обновить текущий</string>
             </property>
            </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QPushButton" name="pushButton_presets_addNew">
-            <property name="text">
-             <string>Добавить новый</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QPushButton" name="pushButton_presets_deleteChosed">
-            <property name="text">
-             <string>Удалить выбранный</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QComboBox" name="comboBox_presets"/>
           </item>
           <item row="8" column="0">
            <spacer name="verticalSpacer_2">
@@ -414,308 +236,63 @@
             </property>
            </spacer>
           </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLabel" name="label_preset_chose">
+            <property name="text">
+             <string>Выбор пресета</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QPushButton" name="pushButton_presets_deleteChosed">
+            <property name="text">
+             <string>Удалить выбранный</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_presets_name">
+            <property name="text">
+             <string>Название:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QPushButton" name="pushButton_presets_addNew">
+            <property name="text">
+             <string>Добавить новый</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QPushButton" name="pushButton_presets_accept">
+            <property name="text">
+             <string>Применить</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="2">
+           <widget class="QLineEdit" name="lineEdit_presets_name"/>
+          </item>
          </layout>
         </widget>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="2" column="1">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="3" rowspan="2">
+    <item row="1" column="3" colspan="2">
      <widget class="QGroupBox" name="groupBox_imageCorrectorParams">
       <property name="title">
        <string>Параметры обработки изображения</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_7">
-       <item row="0" column="0">
-        <widget class="QGroupBox" name="groupBox_standartFilters">
-         <property name="title">
-          <string>Стандартные фильтры</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_blackEnchancement">
-            <property name="title">
-             <string>Усиление чёрного:</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_16">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_blackEnchancement">
-               <property name="text">
-                <string>Усиление чёрного:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_blackEnchancementValue">
-               <property name="text">
-                <string>255</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QSlider" name="horizontalSlider_blackEnchancementValue">
-               <property name="maximum">
-                <number>255</number>
-               </property>
-               <property name="value">
-                <number>0</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="invertedControls">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QGroupBox" name="groupBox_noiseDeleing">
-            <property name="title">
-             <string>Отсечение шумов:</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_15">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_clippingNoiseValue">
-               <property name="text">
-                <string>0</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_clippingNoise">
-               <property name="text">
-                <string>Отсечение шумов:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QSlider" name="horizontalSlider_clippingNoiseValue">
-               <property name="maximum">
-                <number>255</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="2">
-           <widget class="QGroupBox" name="groupBox_invertPixels">
-            <property name="title">
-             <string>Действия над изображением</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_17">
-             <item row="1" column="0">
-              <widget class="QCheckBox" name="checkBox_colorInversion">
-               <property name="text">
-                <string>Инверсия цветов на выходе</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="checkBox_substractObject">
-               <property name="text">
-                <string>Вычитание изображения</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QGroupBox" name="groupBox_hardNoiseDeleting">
-            <property name="title">
-             <string>Удаление шума</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_18">
-             <item row="1" column="0">
-              <widget class="QGroupBox" name="groupBox_hardNoiseDeletingParams">
-               <property name="title">
-                <string>Параметры удаления шума</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_19">
-                <item row="2" column="1">
-                 <widget class="QLabel" name="label_deleteNoise_value">
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_hardNoiseClippingValueText">
-                  <property name="text">
-                   <string>Порог цвета:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0" colspan="2">
-                 <widget class="QSlider" name="horizontalSlider_deleteNoise">
-                  <property name="maximum">
-                   <number>255</number>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" colspan="2">
-                 <widget class="QLabel" name="label_hardNoiseClippingTypeText">
-                  <property name="text">
-                   <string>Тип удаления:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QComboBox" name="comboBox_deleteType">
-                  <item>
-                   <property name="text">
-                    <string>Лёгкий</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Средний</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Сильный</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="checkBox_deleteNoise">
-               <property name="text">
-                <string>Удаление шума</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QCheckBox" name="checkBox_hardNoiseClipping_deleteWhite">
-               <property name="text">
-                <string>Удаление белого цвета</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QCheckBox" name="checkBox_hardNoiseClipping_deleteBlack">
-               <property name="text">
-                <string>Удаление черного цвета</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QGroupBox" name="groupBox_calcaulateImage">
-         <property name="title">
-          <string>Расчёт изображения</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_8">
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_saveResult">
-            <property name="text">
-             <string>Сохранить результат</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QPushButton" name="pushButton_calculate">
-            <property name="text">
-             <string>Расчёт</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_threadsCount">
-            <property name="text">
-             <string>Количество потоков:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_screen">
-            <property name="text">
-             <string>Screen</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pushButton_runVideo">
-            <property name="text">
-             <string>RunVideo</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_threadsCount"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0">
+       <item row="0" column="1" rowspan="2" colspan="2">
         <widget class="QGroupBox" name="groupBox_professionalFilters">
          <property name="title">
           <string>Продвинутые фильтры</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox">
-            <property name="title">
-             <string>Медианный фильтр</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_21">
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_medianFilter_radius">
-               <property name="text">
-                <string>Радиус</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QSpinBox" name="spinBox_medianFilter_radius">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="3">
-              <widget class="QCheckBox" name="checkBox_medianFilter">
-               <property name="text">
-                <string>Медианный фильтр</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="1" column="1">
+          <item row="3" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_averageFilter">
             <property name="title">
              <string>Ср. ариф. фильтр</string>
@@ -745,7 +322,60 @@
             </layout>
            </widget>
           </item>
-          <item row="0" column="0" colspan="2">
+          <item row="2" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Медианный фильтр</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_21">
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_medianFilter_radius">
+               <property name="text">
+                <string>Радиус</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QSpinBox" name="spinBox_medianFilter_radius">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="3">
+              <widget class="QCheckBox" name="checkBox_medianFilter">
+               <property name="text">
+                <string>Медианный фильтр</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_collision">
+            <property name="title">
+             <string>Исключающее ИЛИ</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_23">
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="spinBox_collisionRepeatCount">
+               <property name="maximum">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_collisionRepeatCount">
+               <property name="text">
+                <string>Количество повторов</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_aliasing">
             <property name="title">
              <string>Повышение резкости</string>
@@ -839,23 +469,23 @@
             </layout>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QGroupBox" name="groupBox_collision">
+          <item row="0" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_invertPixels">
             <property name="title">
-             <string>Исключающее ИЛИ</string>
+             <string>Действия над изображением</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_23">
-             <item row="0" column="1">
-              <widget class="QSpinBox" name="spinBox_collisionRepeatCount">
-               <property name="maximum">
-                <number>10</number>
+            <layout class="QGridLayout" name="gridLayout_17">
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="checkBox_colorInversion">
+               <property name="text">
+                <string>Инверсия цветов на выходе</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QLabel" name="label_collisionRepeatCount">
+              <widget class="QCheckBox" name="checkBox_substractObject">
                <property name="text">
-                <string>Количество повторов</string>
+                <string>Вычитание изображения</string>
                </property>
               </widget>
              </item>
@@ -865,7 +495,422 @@
          </layout>
         </widget>
        </item>
+       <item row="2" column="0">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="1">
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="0">
+        <widget class="QGroupBox" name="groupBox_calcaulateImage">
+         <property name="title">
+          <string>Расчёт изображения</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="3" column="1">
+           <widget class="QPushButton" name="pushButton_saveResult">
+            <property name="text">
+             <string>Сохранить результат</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="pushButton_calculate">
+            <property name="text">
+             <string>Расчёт</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_threadsCount">
+            <property name="text">
+             <string>Количество потоков:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QPushButton" name="pushButton_screen">
+            <property name="text">
+             <string>Screen</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QPushButton" name="pushButton_runVideo">
+            <property name="text">
+             <string>RunVideo</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="comboBox_threadsCount"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0" rowspan="2">
+        <widget class="QGroupBox" name="groupBox_standartFilters">
+         <property name="title">
+          <string>Стандартные фильтры</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="1" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_blackEnchancement">
+            <property name="title">
+             <string>Усиление чёрного:</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_16">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_blackEnchancement">
+               <property name="text">
+                <string>Усиление чёрного:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_blackEnchancementValue">
+               <property name="text">
+                <string>255</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QSlider" name="horizontalSlider_blackEnchancementValue">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="invertedControls">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_noiseDeleing">
+            <property name="title">
+             <string>Отсечение шумов:</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_15">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_clippingNoiseValue">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_clippingNoise">
+               <property name="text">
+                <string>Отсечение шумов:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QSlider" name="horizontalSlider_clippingNoiseValue">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QGroupBox" name="groupBox_hardNoiseDeleting">
+            <property name="title">
+             <string>Удаление шума</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_18">
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="checkBox_hardNoiseClipping_deleteBlack">
+               <property name="text">
+                <string>Удаление черного цвета</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QCheckBox" name="checkBox_hardNoiseClipping_deleteWhite">
+               <property name="text">
+                <string>Удаление белого цвета</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBox_deleteNoise">
+               <property name="text">
+                <string>Удаление шума</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QGroupBox" name="groupBox_hardNoiseDeletingParams">
+               <property name="title">
+                <string>Параметры удаления шума</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_19">
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_deleteNoise_value">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_hardNoiseClippingValueText">
+                  <property name="text">
+                   <string>Порог цвета:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QSlider" name="horizontalSlider_deleteNoise">
+                  <property name="maximum">
+                   <number>255</number>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="2">
+                 <widget class="QLabel" name="label_hardNoiseClippingTypeText">
+                  <property name="text">
+                   <string>Тип удаления:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QComboBox" name="comboBox_deleteType">
+                  <item>
+                   <property name="text">
+                    <string>Лёгкий</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Средний</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Сильный</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QPushButton" name="pushButton_showFilters">
+      <property name="maximumSize">
+       <size>
+        <width>28</width>
+        <height>28</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>=</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" rowspan="3" colspan="2">
+     <widget class="QGroupBox" name="groupBox_imageDemo">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Изображение</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="1">
+        <widget class="QTableWidget" name="tableWidget_image">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <attribute name="horizontalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QGroupBox" name="groupBox_imageTypes">
+         <property name="title">
+          <string>Отображение:</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="4">
+           <widget class="QRadioButton" name="radioButton_object">
+            <property name="text">
+             <string>Объект</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="6">
+           <widget class="QRadioButton" name="radioButton_result">
+            <property name="text">
+             <string>Результат</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="radioButton_original">
+            <property name="text">
+             <string>Оригинал</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QToolButton" name="toolButton_saveResultImage">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normalon>:/icons/resources/icon-save.png</normalon>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="toolButton_saveOriginalImage">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normalon>:/icons/resources/icon-save.png</normalon>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="toolButton_saveObjectImage">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normalon>:/icons/resources/icon-save.png</normalon>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="pushButton_showSettingsBlock">
+      <property name="maximumSize">
+       <size>
+        <width>28</width>
+        <height>28</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>=</string>
+      </property>
      </widget>
     </item>
    </layout>

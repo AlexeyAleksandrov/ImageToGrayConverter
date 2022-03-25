@@ -90,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->checkBox_aliasingVisualisation);
     uiDataSaver.add(ui->checkBox_medianFilter);
     uiDataSaver.add(ui->checkBox_averageFilter);
+    uiDataSaver.add(ui->checkBox_substractObject);
 
     uiDataSaver.add(ui->comboBox_deleteType);
     uiDataSaver.add(ui->comboBox_presets);
@@ -863,27 +864,41 @@ void MainWindow::on_toolButton_saveResultImage_clicked()
 }
 
 
-void MainWindow::on_pushButton_clicked()
+//void MainWindow::on_pushButton_clicked()
+//{
+//    QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_1.jpg");
+//    QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_2.jpg");
+
+////    for(int i=0; i<img1.width(); i++)
+////    {
+////        for(int j=0; j<img1.height(); j++)
+////        {
+////            if((img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() <= 100)
+////                    || (img1.pixelColor(i, j).black() <= 100 && img2.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
+////            {
+////                img1.setPixelColor(i, j, Qt::white);
+////            }
+////        }
+////    }
+
+//    QImage *img = colliseImages(img1, img2);
+
+//    setImageToOutputLabel(*img);
+//    img->save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3_2.jpg");
+
+//}
+
+
+void MainWindow::on_pushButton_showFilters_clicked()
 {
-    QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_1.jpg");
-    QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_2.jpg");
+    isShowingFiltersBlock = !isShowingFiltersBlock;
+    ui->groupBox_imageCorrectorParams->setVisible(isShowingFiltersBlock);
+}
 
-//    for(int i=0; i<img1.width(); i++)
-//    {
-//        for(int j=0; j<img1.height(); j++)
-//        {
-//            if((img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() <= 100)
-//                    || (img1.pixelColor(i, j).black() <= 100 && img2.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
-//            {
-//                img1.setPixelColor(i, j, Qt::white);
-//            }
-//        }
-//    }
 
-    QImage *img = colliseImages(img1, img2);
-
-    setImageToOutputLabel(*img);
-    img->save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3_2.jpg");
-
+void MainWindow::on_pushButton_showSettingsBlock_clicked()
+{
+    isShowingSettingsBlock = !isShowingSettingsBlock;
+    ui->groupBox_settings->setVisible(isShowingSettingsBlock);
 }
 

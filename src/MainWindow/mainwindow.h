@@ -130,7 +130,11 @@ private slots:
 
     void on_toolButton_saveResultImage_clicked();
 
-    void on_pushButton_clicked();
+//    void on_pushButton_clicked();
+
+    void on_pushButton_showFilters_clicked();
+
+    void on_pushButton_showSettingsBlock_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -148,6 +152,8 @@ private:
     QScreen *screen = nullptr;  // экран, с которого мы будем брать изображение
     bool isRunning = false;
     bool isScreening = false;
+    bool isShowingFiltersBlock = true;  // флаг показа блока фильтров
+    bool isShowingSettingsBlock = true; // флаг показа блока настроек
 
     void closeEvent(QCloseEvent *event)
     {
