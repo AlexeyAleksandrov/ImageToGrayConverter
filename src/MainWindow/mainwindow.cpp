@@ -292,10 +292,134 @@ void MainWindow::updateLabelImageSize()
     }
 }
 
+//void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage)
+//{
+//    QImage tempOriginalImage;
+//    if(ui->checkBox_substractObject->isChecked())
+//    {
+//        imageCorrector.setImageOriginal(imageOriginal);
+//    }
+//    else
+//    {
+////        QImage *image = new QImage(imageObject.size(), imageObject.format());
+////        image->fill(Qt::white);  // заполняем белым цветом
+//        tempOriginalImage = QImage(imageObject.size(), imageObject.format());
+//        tempOriginalImage.fill(Qt::white);  // заполняем белым цветом
+//        imageCorrector.setImageOriginal(tempOriginalImage);
+//    }
+////    imageCorrector.setImageOriginal(imageOriginal);
+//    imageCorrector.setImageObject(imageObject);
+
+//    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
+//    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
+
+//    imageCorrector.setClippingNoiseValue(clippingNoiseValue);
+//    imageCorrector.setBlackEnchancement(blackEnchancement);
+
+//    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
+//    imageCorrector.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
+
+//    int repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
+
+//    for(int offset=0; offset<=repeatOffset; offset++)
+//    {
+//        if(ui->checkBox_substractObject->isChecked())
+//        {
+//            imageCorrector.substractObjectImage();    // вычитаем изображение
+//        }
+
+//        if(ui->checkBox_deleteNoise->isChecked())
+//        {
+//            int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
+//            int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
+//            ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+
+//            if(ui->checkBox_hardNoiseClipping_deleteWhite->isChecked()) // если нужно удалять черный цвет
+//            {
+//               imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+//            }
+//            if(ui->checkBox_hardNoiseClipping_deleteBlack->isChecked()) // если нкжно удалять белый цвет
+//            {
+//                imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+//            }
+
+//            qDebug() << "Удаление выполнено!";
+//        }
+
+//    //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
+//        imageCorrector.clipNoise();    // простое удаление шума
+//        imageCorrector.enchanceBlackColor();    // усиление черного цвета
+
+//        if(ui->checkBox_medianFilter->isChecked())
+//        {
+//            int radius = ui->spinBox_medianFilter_radius->value() + offset;  // радиус медианного фильтра
+//            imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
+//        }
+//        if(ui->checkBox_averageFilter->isChecked())
+//        {
+//            int radius = ui->spinBox_averageFilter_radiusValue->value() + offset;  // радиус среднеарифметического фильтра
+//            imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
+//        }
+
+//        if(ui->checkBox_aliasing->isChecked())
+//        {
+//            int aliasingRadius = ui->spinBox_aliasingRadius->value() + offset;
+//    //        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
+//            int aliasingBorder = 126; // 255/2
+//            int blackBorder = 100 - ui->horizontalSlider_aliasing_blackBorder->value();
+//            int whiteBorder = 100 - ui->horizontalSlider_aliasing_whiteBorder->value();
+//            imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
+//    //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
+//        }
+
+//        QImage result = imageCorrector.getResultImage();   // получаем обработанное изображение
+
+//        if(ui->checkBox_colorInversion->isChecked())
+//        {
+//           result.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
+//        }
+
+//        if(offset > 0)  // если есть предыдущее изображение
+//        {
+//            resultImage = *colliseImages(resultImage, result);  // объединяем методом Исключающего ИЛИ
+//        }
+//        else    // иначе, если это первая итерация, то просто сохраняем
+//        {
+//            resultImage = result;
+//        }
+//    }
+
+
+//    if(ui->checkBox_aliasingVisualisation->isChecked())
+//    {
+//        QPainter *painter = new QPainter(&resultImage);
+//        QPen *pen = new QPen;
+//        pen->setWidth(1);
+//        pen->setColor(Qt::red);
+//        painter->setPen(*pen);
+
+//        int radius = ui->spinBox_aliasingRadius->value();
+//        for (int i=radius*2; i<resultImage.width()-radius; i += radius*2) // проходим по ширине
+//        {
+//            painter->drawLine(i, radius, i, resultImage.height()-radius);
+//        }
+
+//        for (int j=radius*2; j<resultImage.height()-radius; j += radius*2)    // проходим по высоте
+//        {
+//            painter->drawLine(radius, j, resultImage.width()-radius, j);
+//        }
+
+//        delete painter;
+//        delete pen;
+//    }
+//}
+
 void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage)
 {
+    ImageCorrectrFilterParams filter = createFilterParams();  // получаем параметры фильтров
+
     QImage tempOriginalImage;
-    if(ui->checkBox_substractObject->isChecked())
+    if(filter.needSubstructImage)
     {
         imageCorrector.setImageOriginal(imageOriginal);
     }
@@ -310,37 +434,38 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 //    imageCorrector.setImageOriginal(imageOriginal);
     imageCorrector.setImageObject(imageObject);
 
-    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
-    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
+//    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
+//    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
-    imageCorrector.setClippingNoiseValue(clippingNoiseValue);
-    imageCorrector.setBlackEnchancement(blackEnchancement);
+    imageCorrector.setClippingNoiseValue(filter.clippingNoiseValue);
+    imageCorrector.setBlackEnchancement(255 - filter.blackEnchancement);
 
-    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
-    imageCorrector.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
+//    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
+    imageCorrector.setThreadsCount(filter.threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
 
-    int repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
+//    int repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
+    int repeatOffset = filter.repeatOffset;
 
     for(int offset=0; offset<=repeatOffset; offset++)
     {
-        if(ui->checkBox_substractObject->isChecked())
+        if(filter.needSubstructImage)
         {
             imageCorrector.substractObjectImage();    // вычитаем изображение
         }
 
-        if(ui->checkBox_deleteNoise->isChecked())
+        if(filter.needHardDeleteNoise)
         {
-            int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
-            int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-            ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+//            int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
+//            int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
+//            ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
 
-            if(ui->checkBox_hardNoiseClipping_deleteWhite->isChecked()) // если нужно удалять черный цвет
+            if(filter.needHardDeleteWhiteColor) // если нужно удалять черный цвет
             {
-               imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+               imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
             }
-            if(ui->checkBox_hardNoiseClipping_deleteBlack->isChecked()) // если нкжно удалять белый цвет
+            if(filter.needHardDeleteBlackColor) // если нкжно удалять белый цвет
             {
-                imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+                imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
             }
 
             qDebug() << "Удаление выполнено!";
@@ -350,31 +475,31 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
         imageCorrector.clipNoise();    // простое удаление шума
         imageCorrector.enchanceBlackColor();    // усиление черного цвета
 
-        if(ui->checkBox_medianFilter->isChecked())
+        if(filter.needMedianFilter)
         {
-            int radius = ui->spinBox_medianFilter_radius->value() + offset;  // радиус медианного фильтра
+            int radius = filter.medianFilter_radius + offset;  // радиус медианного фильтра
             imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
         }
-        if(ui->checkBox_averageFilter->isChecked())
+        if(filter.needAverageFilter)
         {
-            int radius = ui->spinBox_averageFilter_radiusValue->value() + offset;  // радиус среднеарифметического фильтра
+            int radius = filter.averageFilter_radius + offset;  // радиус среднеарифметического фильтра
             imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
         }
 
-        if(ui->checkBox_aliasing->isChecked())
+        if(filter.needAliasing)
         {
-            int aliasingRadius = ui->spinBox_aliasingRadius->value() + offset;
+            int aliasingRadius = filter.aliasingRadius + offset;
     //        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
             int aliasingBorder = 126; // 255/2
-            int blackBorder = 100 - ui->horizontalSlider_aliasing_blackBorder->value();
-            int whiteBorder = 100 - ui->horizontalSlider_aliasing_whiteBorder->value();
+            int blackBorder = 100 - filter.aliasingBlackBorder;
+            int whiteBorder = 100 - filter.aliasingWhiteBorder;
             imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
     //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
         }
 
         QImage result = imageCorrector.getResultImage();   // получаем обработанное изображение
 
-        if(ui->checkBox_colorInversion->isChecked())
+        if(filter.needColorInversion)
         {
            result.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
         }
@@ -390,7 +515,7 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     }
 
 
-    if(ui->checkBox_aliasingVisualisation->isChecked())
+    if(filter.needAliasingVisualisation)
     {
         QPainter *painter = new QPainter(&resultImage);
         QPen *pen = new QPen;
@@ -431,6 +556,41 @@ QImage *MainWindow::colliseImages(QImage &imageDown, QImage &imageUpper)
     }
 
     return imageOut;
+}
+
+ImageCorrectrFilterParams MainWindow::createFilterParams()
+{
+    ImageCorrectrFilterParams params;   // создаем объект параметров
+
+    // обрабатываем флаги
+    params.needSubstructImage = ui->checkBox_substractObject->isChecked();
+    params.needHardDeleteNoise = ui->checkBox_deleteNoise->isChecked();
+    params.needHardDeleteWhiteColor = ui->checkBox_hardNoiseClipping_deleteWhite->isChecked();
+    params.needHardDeleteBlackColor = ui->checkBox_hardNoiseClipping_deleteBlack->isChecked();
+    params.needMedianFilter = ui->checkBox_medianFilter->isChecked();
+    params.needAverageFilter = ui->checkBox_averageFilter->isChecked();
+    params.needAliasing = ui->checkBox_aliasing->isChecked();
+    params.needColorInversion = ui->checkBox_colorInversion->isChecked();
+    params.needAliasingVisualisation = ui->checkBox_aliasingVisualisation->isChecked();
+
+    // обрабатываем параметры
+    params.clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
+    params.blackEnchancement = ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
+    params.threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
+    params.repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
+    params.hardDeleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
+
+    int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
+    params.hardDeleteNoiseDeleteType = ImageCorrector::NoiseDeleteTypes(deleteType);
+
+    params.medianFilter_radius = ui->spinBox_medianFilter_radius->value();  // радиус медианного фильтра
+    params.averageFilter_radius = ui->spinBox_averageFilter_radiusValue->value();  // радиус среднеарифметического фильтра
+    params.aliasingRadius = ui->spinBox_aliasingRadius->value();
+    params.aliasingBorder = 126; // 255/2
+    params.aliasingBlackBorder = ui->horizontalSlider_aliasing_blackBorder->value();
+    params.aliasingWhiteBorder = ui->horizontalSlider_aliasing_whiteBorder->value();
+
+    return params;
 }
 
 void MainWindow::saveImageToFileWithDialog(QImage *image)

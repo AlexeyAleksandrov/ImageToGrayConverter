@@ -20,11 +20,7 @@
 #include "src/UiHandlers/uidatasaver.h"
 #include "src/ImageHandlers/imagecorrector.h"
 #include "src/ImageHandlers/imagetransformer.h"
-//#include "src/FiltersManager/filtersmanager.h"
-//#include "src/FiltersManager/FiltersEntities/clipnoisefilter.h"
-//#include "src/FiltersManager/FiltersEntities/enchanceblackcolorfilter.h"
-//#include "src/FiltersManager/FiltersEntities/hardclipnoisefilter.h"
-//#include "src/FiltersManager/FiltersEntities/substructimagefilter.h"
+#include "src/ImageFilters/imagecorrectrfilterparams.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -82,6 +78,8 @@ public:
     void updateLabelImageSize();    // перерасчитать азмеры label с изображением
     void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);  // функция рассчёта фильтров
     QImage* colliseImages(QImage &imageDown, QImage &imageUpper);  // коллизия 2х изображений
+
+    ImageCorrectrFilterParams createFilterParams(); // создать набор параметров на основе данных на интерфейсе
 
 private:
     void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора
