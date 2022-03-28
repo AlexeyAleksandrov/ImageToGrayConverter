@@ -1053,6 +1053,8 @@ void MainWindow::on_pushButton_showFilters_clicked()
 {
     isShowingFiltersBlock = !isShowingFiltersBlock;
     ui->groupBox_imageCorrectorParams->setVisible(isShowingFiltersBlock);
+    QApplication::processEvents();
+    updateLabelImageSize();
 }
 
 
@@ -1060,5 +1062,7 @@ void MainWindow::on_pushButton_showSettingsBlock_clicked()
 {
     isShowingSettingsBlock = !isShowingSettingsBlock;
     ui->groupBox_settings->setVisible(isShowingSettingsBlock);
+    QApplication::processEvents();
+    updateLabelImageSize();
 }
 
