@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     src/ImageHandlers/imagecorrector.cpp \
+    src/ImageHandlers/imagecorrectorenums.cpp \
     src/ImageHandlers/imagedata.cpp \
     src/ImageHandlers/imagedataexception.cpp \
     src/ImageHandlers/imagetransformer.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 
 HEADERS += \
     src/ImageHandlers/imagecorrector.h \
+    src/ImageHandlers/imagecorrectorenums.h \
     src/ImageHandlers/imagedata.h \
     src/ImageHandlers/imagedataexception.h \
     src/ImageHandlers/imagetransformer.h \

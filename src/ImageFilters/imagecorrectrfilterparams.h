@@ -1,7 +1,7 @@
 #ifndef IMAGECORRECTRFILTERPARAMS_H
 #define IMAGECORRECTRFILTERPARAMS_H
 
-#include <src/ImageHandlers/imagecorrector.h>
+#include <src/ImageHandlers/imagecorrectorenums.h>
 #include <src/ImageHandlers/imagedata.h>
 
 // класс хранит параметры фильтров для обработки участка изображения
@@ -39,7 +39,7 @@ public:
     int blackEnchancement = -1; // значение усиления чёрного
 
     int hardDeleteNoiseBorder = 1;  // граница для усиленного удаления шума
-    ImageCorrector::NoiseDeleteTypes hardDeleteNoiseDeleteType; // тип усиленного удаления шума
+    ImageCorrectorEnums::NoiseDeleteTypes hardDeleteNoiseDeleteType; // тип усиленного удаления шума
 
     int medianFilter_radius = 1;    // радиус медианного фильтра
     int averageFilter_radius = 1;   // радиус среднеарифметического фильтра

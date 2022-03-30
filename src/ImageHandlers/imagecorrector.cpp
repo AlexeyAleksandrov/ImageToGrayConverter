@@ -102,7 +102,7 @@ void ImageCorrector::invertPixels()
     resultImage.setImage(img);
 }
 
-void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType)
+void ImageCorrector::hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteTypes type, ImageCorrectorEnums::NoiseDeleteColors colorType)
 {
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
@@ -114,7 +114,7 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
         {
             bool (*copmarator)(int comparedValue, int borderValue) = nullptr;   // функция сравнения значения с границей
             int replasePixelColorGrayLevel = 0; // цвет, на который будет заменён цвет пикселя в случае сглаживания
-            if(colorType == WHITE)  // условие для белового цвета
+            if(colorType == ImageCorrectorEnums::WHITE)  // условие для белового цвета
             {
                 copmarator = [](int comparedValue, int borderValue)
                 {
@@ -135,7 +135,7 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
             auto correctMatrix = getCorrectDataAroundPixels(imageResultMatrix, i, j, border, copmarator);   // получаем матрицу коорректности
 
             // слабое удаление (8 пикселей, белый)
-            if(type == LOW)
+            if(type == ImageCorrectorEnums::LOW)
             {
                 if(correctMatrix[0][0] && correctMatrix[0][1] && correctMatrix[0][2]
                          && correctMatrix[1][0]  && correctMatrix[1][2]
@@ -146,7 +146,7 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
             }
 
             // среднее удаление (4 пикселя, белый)
-            if(type == MEDIUM)
+            if(type == ImageCorrectorEnums::MEDIUM)
             {
                 // крестом
                 if(correctMatrix[0][0] && correctMatrix[0][2]
@@ -164,7 +164,7 @@ void ImageCorrector::hardClipNoise(int border, NoiseDeleteTypes type, NoiseDelet
             }
 
             // сильное удаление (2 пикселя, белый)
-            if(type == HIGH)
+            if(type == ImageCorrectorEnums::HIGH)
             {
                 // горизонталь
                 if(correctMatrix[1][0] && correctMatrix[1][2])  // если под условия подходят все значения, расположенные слева и справа
@@ -629,6 +629,13 @@ bool **ImageCorrector::getMatrixAroundPixel(int **grayScaleMatrix, int i, int j)
         }
     }
     return matrix;
+}
+
+void ImageCorrector::setFilter(const ImageCorrectrFilterParams &newFilter)
+{
+    filter = newFilter;
+    // прописать значения всех сеттеров
+    // прикрутить ограничение по высоте и ширине
 }
 
 void ImageCorrector::setBlackEnchancement(int newBlackEnchancement)

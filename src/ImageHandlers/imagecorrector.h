@@ -6,6 +6,8 @@
 #include <QDebug>
 #include "imagedata.h"
 #include "thread"
+#include "src/ImageFilters/imagecorrectrfilterparams.h"
+#include "imagecorrectorenums.h"
 
 #define BLACK_GRAY_LEVEL 0
 #define WHITE_GRAY_LEVEL 255
@@ -15,20 +17,8 @@ class ImageCorrector : public QObject
     Q_OBJECT
 public:
     explicit ImageCorrector(QObject *parent = nullptr);
+//    void setFilter(ImageCorrectrFilterParams filter);   // задать фильтр, по которому будет выполнена обработка изображения
 
-public:
-    enum NoiseDeleteTypes
-    {
-        LOW,
-        MEDIUM,
-        HIGH
-    };
-
-    enum NoiseDeleteColors
-    {
-        WHITE,
-        BLACK
-    };
 
 public:
 
@@ -36,7 +26,7 @@ public:
     void clipNoise(int clippingNoiseValue = -1);     // простое удаление шума
     void enchanceBlackColor(int blackEnchancement = -1);     // усилить чёрный цвет
     void invertPixels();    // инвертировать цвет пикселей выходного изобраения
-    void hardClipNoise(int border, NoiseDeleteTypes type, NoiseDeleteColors colorType);   // усиленное удаление шума
+    void hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteTypes type, ImageCorrectorEnums::NoiseDeleteColors colorType);   // усиленное удаление шума
 //    void medianFilter();    // медианный фильтр по соседним пикселям
     void aliasing(int radius, int border, int blackBorderPercent = 50, int whiteBorderPercent = 50);  // выравнивание цветов по квадратам
     void medianRadiusFilter(int radius);  // медианный фильтр, основанный на радиусах
@@ -51,6 +41,8 @@ public:
     void setClippingNoiseValue(int newClippingNoiseValue);
 
     void setBlackEnchancement(int newBlackEnchancement);
+
+    void setFilter(const ImageCorrectrFilterParams &newFilter);
 
 private:
     void setPixelColor(QImage &image, int i, int j, QColor color);     // установить цвет пикселя для выходного изображения
@@ -67,6 +59,7 @@ private:    // изображения
     ImageData imageOriginal; // изображение без фона
     ImageData imageObject; // изображение с объектом
     ImageData resultImage; // результирующее изображение
+    ImageCorrectrFilterParams filter;   // фильтр, по которому будет выполнена обработка изображения
 
 private:    // работа с потоками
 //    QThread *threads = nullptr; // потоки для обработки данных в многопотоном режиме

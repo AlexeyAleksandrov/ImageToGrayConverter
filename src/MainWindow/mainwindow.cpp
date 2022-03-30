@@ -428,26 +428,18 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     }
     else
     {
-//        QImage *image = new QImage(imageObject.size(), imageObject.format());
-//        image->fill(Qt::white);  // заполняем белым цветом
         tempOriginalImage = QImage(imageObject.size(), imageObject.format());
         tempOriginalImage.fill(Qt::white);  // заполняем белым цветом
         imageCorrector.setImageOriginal(tempOriginalImage);
     }
-//    imageCorrector.setImageOriginal(imageOriginal);
     imageCorrector.setImageObject(imageObject);
-
-//    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
-//    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
 
     imageCorrector.setClippingNoiseValue(filter.clippingNoiseValue);
     imageCorrector.setBlackEnchancement(255 - filter.blackEnchancement);
 
-//    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
     imageCorrector.setThreadsCount(filter.threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
 
-//    int repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
-    int repeatOffset = filter.repeatOffset;
+    int repeatOffset = filter.repeatOffset; // смещение для радиуса при применении фильтра несколько раз
 
     for(int offset=0; offset<=repeatOffset; offset++)
     {
@@ -592,6 +584,12 @@ ImageCorrectrFilterParams MainWindow::createFilterParams()
     params.aliasingBorder = 126; // 255/2
     params.aliasingBlackBorder = ui->horizontalSlider_aliasing_blackBorder->value();
     params.aliasingWhiteBorder = ui->horizontalSlider_aliasing_whiteBorder->value();
+
+    // обрабатываем параметры изображения
+    params.heightStart = 0;
+    params.widthStart = 0;
+    params.heightEnd = imageObject.height();
+    params.widthEnd = imageObject.width();
 
     return params;
 }
