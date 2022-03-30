@@ -244,8 +244,10 @@ void MainWindow::setImageToOutputLabel(QImage image)
 //    int labelWidht = ui->label_image->width();
 //    int labelHeight = ui->label_image->height();
 
-    int labelWidht = imageLabel->width();
-    int labelHeight = imageLabel->height();
+//    int labelWidht = imageLabel->width();
+//    int labelHeight = imageLabel->height();
+    int labelWidht = ui->tableWidget_image->columnWidth(0);
+    int labelHeight = ui->tableWidget_image->rowHeight(0);
 
     double imgWidht = image.width();
     double imgHeight = image.height();
@@ -272,6 +274,7 @@ void MainWindow::setImageToOutputLabel(QImage image)
 
 void MainWindow::updateLabelImageSize()
 {
+    QApplication::processEvents();
     // подгоняем размеры item
     QRect tableGeometry = ui->tableWidget_image->geometry();
     ui->tableWidget_image->setColumnWidth(0, tableGeometry.width());
@@ -1053,7 +1056,6 @@ void MainWindow::on_pushButton_showFilters_clicked()
 {
     isShowingFiltersBlock = !isShowingFiltersBlock;
     ui->groupBox_imageCorrectorParams->setVisible(isShowingFiltersBlock);
-    QApplication::processEvents();
     updateLabelImageSize();
 }
 
@@ -1062,7 +1064,6 @@ void MainWindow::on_pushButton_showSettingsBlock_clicked()
 {
     isShowingSettingsBlock = !isShowingSettingsBlock;
     ui->groupBox_settings->setVisible(isShowingSettingsBlock);
-    QApplication::processEvents();
     updateLabelImageSize();
 }
 
