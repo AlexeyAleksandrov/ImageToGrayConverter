@@ -28,8 +28,10 @@ void ImageCorrector::clipNoise(int clippingNoiseValue)
 {
     if(clippingNoiseValue == -1)
     {
-        clippingNoiseValue = this->clippingNoiseValue;
+//        clippingNoiseValue = this->clippingNoiseValue;
+        clippingNoiseValue = filter.clippingNoiseValue;
     }
+    qDebug() << "Удаление шума: " << clippingNoiseValue;
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
     std::function<void(int i, int j)> function = [&](int i, int j)
@@ -63,8 +65,10 @@ void ImageCorrector::enchanceBlackColor(int blackEnchancement)
 {
     if(blackEnchancement == -1)
     {
-        blackEnchancement = this->blackEnchancement;
+//        blackEnchancement = this->blackEnchancement;
+        blackEnchancement = 255 - filter.blackEnchancement;
     }
+    qDebug() << "Усиление чёного: " << blackEnchancement;
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
     std::function<void(int i, int j)> function = [&](int i, int j)
@@ -638,25 +642,27 @@ void ImageCorrector::setFilter(const ImageCorrectrFilterParams &newFilter)
     // прикрутить ограничение по высоте и ширине
 }
 
-void ImageCorrector::setBlackEnchancement(int newBlackEnchancement)
-{
-    blackEnchancement = newBlackEnchancement;
-}
+//void ImageCorrector::setBlackEnchancement(int newBlackEnchancement)
+//{
+//    blackEnchancement = newBlackEnchancement;
+//}
 
-void ImageCorrector::setClippingNoiseValue(int newClippingNoiseValue)
-{
-    clippingNoiseValue = newClippingNoiseValue;
-}
+//void ImageCorrector::setClippingNoiseValue(int newClippingNoiseValue)
+//{
+//    clippingNoiseValue = newClippingNoiseValue;
+//}
 
-void ImageCorrector::setThreadsCount(int newThreadsCount)
-{
-    threadsCount = newThreadsCount;
-}
+//void ImageCorrector::setThreadsCount(int newThreadsCount)
+//{
+//    threadsCount = newThreadsCount;
+//}
 
 void ImageCorrector::distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int, int)> function, int stepI, int stepJ)
 {
     int countI = endI - startI; // считаем кол-во значений для i, если начальное значение не 0
     int countJ = endJ - startJ; // считаем кол-во значений для j, если начальное значение не 0
+
+    int threadsCount = filter.threadsCount;
 
     if(threadsCount <= 1 || countI < threadsCount || countJ < threadsCount)   // если требуется всего 1 поток
     {

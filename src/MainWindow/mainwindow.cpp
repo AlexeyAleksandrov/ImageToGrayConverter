@@ -5,6 +5,8 @@
 #include <QTime>
 #include "thread"
 
+// осталось убрать все входные параметры у функций-фильтров
+// добавить привязку обработки к области действия фильтра
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -151,6 +153,7 @@ void MainWindow::on_pushButton_choseImageObject_clicked()
 
 void MainWindow::on_pushButton_calculate_clicked()
 {
+    qDebug() << "Нажата кнопка рассчёта";
     QString imageOriginalDir = ui->lineEdit_imageOriginal->text();
     QString imageObjectDir = ui->lineEdit_imageObject->text();
 
@@ -421,6 +424,15 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 {
     ImageCorrectrFilterParams filter = createFilterParams();  // получаем параметры фильтров
 
+    filter.widthStart = 0;
+    filter.widthEnd = imageObject.width();
+    filter.heightStart = 0;
+    filter.heightEnd = imageObject.height();
+
+    imageCorrector.setFilter(filter);   // задаем фильтр
+
+    qDebug() << "Необходимость вычита изображения: " << filter.needSubstructImage << filter.clippingNoiseValue << filter.blackEnchancement << filter.threadsCount;
+
     QImage tempOriginalImage;
     if(filter.needSubstructImage)
     {
@@ -434,10 +446,10 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
     }
     imageCorrector.setImageObject(imageObject);
 
-    imageCorrector.setClippingNoiseValue(filter.clippingNoiseValue);
-    imageCorrector.setBlackEnchancement(255 - filter.blackEnchancement);
+//    imageCorrector.setClippingNoiseValue(filter.clippingNoiseValue);
+//    imageCorrector.setBlackEnchancement(255 - filter.blackEnchancement);
 
-    imageCorrector.setThreadsCount(filter.threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
+//    imageCorrector.setThreadsCount(filter.threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
 
     int repeatOffset = filter.repeatOffset; // смещение для радиуса при применении фильтра несколько раз
 
@@ -456,11 +468,11 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 
             if(filter.needHardDeleteWhiteColor) // если нужно удалять черный цвет
             {
-               imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
+               imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrectorEnums::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
             }
             if(filter.needHardDeleteBlackColor) // если нкжно удалять белый цвет
             {
-                imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
+                imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrectorEnums::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
             }
 
             qDebug() << "Удаление выполнено!";
@@ -576,7 +588,7 @@ ImageCorrectrFilterParams MainWindow::createFilterParams()
     params.hardDeleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
 
     int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-    params.hardDeleteNoiseDeleteType = ImageCorrector::NoiseDeleteTypes(deleteType);
+    params.hardDeleteNoiseDeleteType = ImageCorrectorEnums::NoiseDeleteTypes(deleteType);
 
     params.medianFilter_radius = ui->spinBox_medianFilter_radius->value();  // радиус медианного фильтра
     params.averageFilter_radius = ui->spinBox_averageFilter_radiusValue->value();  // радиус среднеарифметического фильтра

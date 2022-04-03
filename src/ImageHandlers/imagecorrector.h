@@ -36,11 +36,11 @@ public:
     void setImageObject(const QImage &value);   // задать изображение объекта
     QImage getResultImage() const;  // получить результирующее изображение
 
-    void setThreadsCount(int newThreadsCount);  // установить кол-во потоков
+//    void setThreadsCount(int newThreadsCount);  // установить кол-во потоков
 
-    void setClippingNoiseValue(int newClippingNoiseValue);
+//    void setClippingNoiseValue(int newClippingNoiseValue);
 
-    void setBlackEnchancement(int newBlackEnchancement);
+//    void setBlackEnchancement(int newBlackEnchancement);
 
     void setFilter(const ImageCorrectrFilterParams &newFilter);
 
@@ -63,9 +63,9 @@ private:    // изображения
 
 private:    // работа с потоками
 //    QThread *threads = nullptr; // потоки для обработки данных в многопотоном режиме
-    int threadsCount = 1;   // кол-во задействованных потоков
-    int clippingNoiseValue = -1;    // значение удаления шумов
-    int blackEnchancement = -1; // значение усиления чёрного
+//    int threadsCount = 1;   // кол-во задействованных потоков
+//    int clippingNoiseValue = -1;    // значение удаления шумов
+//    int blackEnchancement = -1; // значение усиления чёрного
 
     void distributeToThreads(int startI, int endI, int startJ, int endJ, std::function<void(int i, int j)> function, int stepI = 1, int stepJ = 1);
     template<typename T>
