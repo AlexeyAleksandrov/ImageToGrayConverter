@@ -44,7 +44,8 @@ void ImageCorrector::clipNoise(int clippingNoiseValue)
 
         imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
     };
-    distributeToThreads(0, resultImage.getWidth(), 0, resultImage.getHeight(), function);
+//    distributeToThreads(0, resultImage.getWidth(), 0, resultImage.getHeight(), function);
+    distributeToThreads(image_min_x, image_max_x, image_min_y, image_max_y, function);
 
 //    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
 //    {
@@ -82,7 +83,8 @@ void ImageCorrector::enchanceBlackColor(int blackEnchancement)
         imageResultMatrix[i][j] = black;    // устанавливаем цвет пикселя
     };
 
-    distributeToThreads(0, resultImage.getWidth(), 0, resultImage.getHeight(), function);   // распределяем по потокам
+//    distributeToThreads(0, resultImage.getWidth(), 0, resultImage.getHeight(), function);   // распределяем по потокам
+    distributeToThreads(image_min_x, image_max_x, image_min_y, image_max_y, function);
 
 //    for (int i=0; i<imageOriginal.getWidth(); i++) // проходим по ширине
 //    {
@@ -186,7 +188,8 @@ void ImageCorrector::hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteT
         }
     };
 
-    distributeToThreads(1, resultImage.getWidth()-1, 1, resultImage.getHeight()-1, function);   // распределяем по потокам
+//    distributeToThreads(1, resultImage.getWidth()-1, 1, resultImage.getHeight()-1, function);   // распределяем по потокам
+    distributeToThreads(image_min_x + 1, image_max_x - 1, image_min_y - 1, image_max_y - 1, function);
 
 //    for (int i=1; i<imageOriginal.getWidth()-1; i++) // проходим по ширине
 //    {
@@ -302,64 +305,118 @@ void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, in
 //    auto imageObjectMatrix = imageObject.getGrayScaleMatrix();  // матрица пикселей изображения объекта
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    for (int i=radius; i<resultImage.getWidth()-radius; i += radius*2) // проходим по ширине
-    {
-        for (int j=radius; j<resultImage.getHeight()-radius; j += radius*2)    // проходим по высоте
-        {
-            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
-            {
-                int countBiggerBorder = 0;
+//    for (int i=radius; i<resultImage.getWidth()-radius; i += radius*2) // проходим по ширине
+//    {
+//        for (int j=radius; j<resultImage.getHeight()-radius; j += radius*2)    // проходим по высоте
+//        {
+//            if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+//            {
+//                int countBiggerBorder = 0;
 
+//                for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+//                {
+//                    for(int g=j-radius; g<j+radius; g++)
+//                    {
+//                        if(imageResultMatrix[k][g] >= border)   // если значение пикселя больше, чем граница
+//                        {
+//                            countBiggerBorder++;
+//                        }
+//                    }
+//                }
+
+//                double maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
+//                double blackPercent = (((double)countBiggerBorder) / maxPixels) * 100.0;   // считаем процент пикселей
+//                double whitePercent = 100.0 - blackPercent; // процент белых пикселей
+//                if(blackPercent < (double)whiteBorderPercent)   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+//                {
+//                    for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+//                    {
+//                        for(int g=j-radius; g<j+radius; g++)
+//                        {
+//                            imageResultMatrix[k][g] = BLACK_GRAY_LEVEL;
+//                        }
+//                    }
+//                }
+//                /*else */
+//                if (whitePercent < (double)blackBorderPercent)
+//                {
+//                    for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+//                    {
+//                        for(int g=j-radius; g<j+radius; g++)
+//                        {
+//                            imageResultMatrix[k][g] = WHITE_GRAY_LEVEL;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+    auto function = [&](int i, int j)
+    {
+        if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
+        {
+            int countBiggerBorder = 0;
+
+            for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+            {
+                for(int g=j-radius; g<j+radius; g++)
+                {
+                    if(imageResultMatrix[k][g] >= border)   // если значение пикселя больше, чем граница
+                    {
+                        countBiggerBorder++;
+                    }
+                }
+            }
+
+            double maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
+            double blackPercent = (((double)countBiggerBorder) / maxPixels) * 100.0;   // считаем процент пикселей
+            double whitePercent = 100.0 - blackPercent; // процент белых пикселей
+            if(blackPercent < (double)whiteBorderPercent)   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+            {
                 for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                 {
                     for(int g=j-radius; g<j+radius; g++)
                     {
-                        if(imageResultMatrix[k][g] >= border)   // если значение пикселя больше, чем граница
-                        {
-                            countBiggerBorder++;
-                        }
+                        imageResultMatrix[k][g] = BLACK_GRAY_LEVEL;
                     }
                 }
-
-                double maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
-                double blackPercent = (((double)countBiggerBorder) / maxPixels) * 100.0;   // считаем процент пикселей
-                double whitePercent = 100.0 - blackPercent; // процент белых пикселей
-                if(blackPercent < (double)whiteBorderPercent)   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+            }
+            /*else */
+            if (whitePercent < (double)blackBorderPercent)
+            {
+                for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                 {
-                    for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
+                    for(int g=j-radius; g<j+radius; g++)
                     {
-                        for(int g=j-radius; g<j+radius; g++)
-                        {
-                            imageResultMatrix[k][g] = BLACK_GRAY_LEVEL;
-                        }
-                    }
-                }
-                /*else */
-                if (whitePercent < (double)blackBorderPercent)
-                {
-                    for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
-                    {
-                        for(int g=j-radius; g<j+radius; g++)
-                        {
-                            imageResultMatrix[k][g] = WHITE_GRAY_LEVEL;
-                        }
+                        imageResultMatrix[k][g] = WHITE_GRAY_LEVEL;
                     }
                 }
             }
         }
-    }
+    };
+
+    distributeToThreads(image_min_x + radius, image_max_x - radius, image_min_y + radius, image_max_y - radius, function, radius * 2, radius * 2);
 }
 
 void ImageCorrector::medianRadiusFilter(int radius)
 {
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    int i_start = radius;
-    int i_end = resultImage.getWidth()-radius;
+//    int i_start = radius;
+//    int i_end = resultImage.getWidth()-radius;
+//    int i_step = 1;
+
+//    int j_start = radius;
+//    int j_end = resultImage.getHeight()-radius;
+//    int j_step = 1;
+
+    int i_start = image_min_x + radius;
+    int i_end = image_max_x - radius;
     int i_step = 1;
 
-    int j_start = radius;
-    int j_end = resultImage.getHeight()-radius;
+    int j_start = image_min_y + radius;
+    int j_end = image_max_y - radius;
     int j_step = 1;
 
     int **pixelsNewMas = new int* [resultImage.getWidth()];
@@ -430,12 +487,20 @@ void ImageCorrector::averageFilter(int radius)
 {
     auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
 
-    int i_start = radius;
-    int i_end = resultImage.getWidth()-radius;
+//    int i_start = radius;
+//    int i_end = resultImage.getWidth()-radius;
+//    int i_step = 1;
+
+//    int j_start = radius;
+//    int j_end = resultImage.getHeight()-radius;
+//    int j_step = 1;
+
+    int i_start = image_min_x + radius;
+    int i_end = image_max_x - radius;
     int i_step = 1;
 
-    int j_start = radius;
-    int j_end = resultImage.getHeight()-radius;
+    int j_start = image_min_y + radius;
+    int j_end = image_max_y - radius;
     int j_step = 1;
 
     int **pixelsNewMas = new int* [resultImage.getWidth()];
@@ -635,11 +700,35 @@ bool **ImageCorrector::getMatrixAroundPixel(int **grayScaleMatrix, int i, int j)
     return matrix;
 }
 
+void ImageCorrector::setImage_max_y(int newImage_max_y)
+{
+    image_max_y = newImage_max_y;
+}
+
+void ImageCorrector::setImage_max_x(int newImage_max_x)
+{
+    image_max_x = newImage_max_x;
+}
+
+void ImageCorrector::setImage_min_y(int newImage_min_y)
+{
+    image_min_y = newImage_min_y;
+}
+
+void ImageCorrector::setImage_min_x(int newImage_min_x)
+{
+    image_min_x = newImage_min_x;
+}
+
 void ImageCorrector::setFilter(const ImageCorrectrFilterParams &newFilter)
 {
     filter = newFilter;
     // прописать значения всех сеттеров
     // прикрутить ограничение по высоте и ширине
+    image_min_x = filter.widthStart;
+    image_max_x = filter.widthEnd;
+    image_min_y = filter.heightStart;
+    image_max_y = filter.heightEnd;
 }
 
 //void ImageCorrector::setBlackEnchancement(int newBlackEnchancement)

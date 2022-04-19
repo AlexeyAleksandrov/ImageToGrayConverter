@@ -44,6 +44,11 @@ public:
 
     void setFilter(const ImageCorrectrFilterParams &newFilter);
 
+    void setImage_min_x(int newImage_min_x);
+    void setImage_min_y(int newImage_min_y);
+    void setImage_max_x(int newImage_max_x);
+    void setImage_max_y(int newImage_max_y);
+
 private:
     void setPixelColor(QImage &image, int i, int j, QColor color);     // установить цвет пикселя для выходного изображения
     int getPixelBlackValue(QImage &image, int i, int j); // получить составляющую черного цвета пискселя
@@ -60,6 +65,11 @@ private:    // изображения
     ImageData imageObject; // изображение с объектом
     ImageData resultImage; // результирующее изображение
     ImageCorrectrFilterParams filter;   // фильтр, по которому будет выполнена обработка изображения
+
+    int image_min_x = 0;
+    int image_min_y = 0;
+    int image_max_x = 0;
+    int image_max_y = 0;
 
 private:    // работа с потоками
 //    QThread *threads = nullptr; // потоки для обработки данных в многопотоном режиме

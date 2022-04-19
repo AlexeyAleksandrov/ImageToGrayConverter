@@ -174,12 +174,13 @@ void MainWindow::on_pushButton_calculate_clicked()
     imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
     imageObject.convertTo(QImage::Format_Grayscale16);  // конвертируем в ч/б изображение
 
-    resultImage = imageOriginal;
+    originalResultImage = imageOriginal;
 
-    processImageFilters(imageOriginal, imageObject, resultImage);   // применяем фильтры
+    processImageFilters(imageOriginal, imageObject, originalResultImage);   // применяем фильтры
 
     // выводим картинку
-    setImageToOutputLabel(resultImage);
+//    setImageToOutputLabel(resultImage);
+    setImageResultToOutputLabel();
 
     // переводим radioButton
     ui->radioButton_result->setChecked(true);
@@ -207,10 +208,11 @@ void MainWindow::on_radioButton_object_clicked()
 
 void MainWindow::on_radioButton_result_clicked()
 {
-    if(!resultImage.isNull())
+    if(!originalResultImage.isNull())
     {
 //        ui->label_image->setPixmap(QPixmap::fromImage(QImage(resultImage)));
-        setImageToOutputLabel(resultImage);
+//        setImageToOutputLabel(resultImage);
+        setImageResultToOutputLabel();
     }
 }
 
@@ -220,7 +222,7 @@ void MainWindow::on_pushButton_saveResult_clicked()
     QString saveDir = QFileDialog::getSaveFileName(this, "Сохранить как", "", "Images (*.jpg)");
     if(saveDir != "")
     {
-        resultImage.save(saveDir);
+        originalResultImage.save(saveDir);
     }
 }
 
@@ -275,6 +277,18 @@ void MainWindow::setImageToOutputLabel(QImage image)
     imageLabel->setPixmap(QPixmap::fromImage(image));
 }
 
+void MainWindow::setImageResultToOutputLabel()
+{
+    if(resultImageWithDrawFilter.width() != 0 && resultImageWithDrawFilter.height() != 0)
+    {
+        setImageToOutputLabel(resultImageWithDrawFilter);
+    }
+    else
+    {
+        setImageToOutputLabel(originalResultImage);
+    }
+}
+
 void MainWindow::updateLabelImageSize()
 {
     QApplication::processEvents();
@@ -294,7 +308,8 @@ void MainWindow::updateLabelImageSize()
     }
     else if(ui->radioButton_result->isChecked())
     {
-        setImageToOutputLabel(resultImage);
+//        setImageToOutputLabel(resultImage);
+        setImageResultToOutputLabel();
     }
 }
 
@@ -424,10 +439,10 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
 {
     ImageCorrectrFilterParams filter = createFilterParams();  // получаем параметры фильтров
 
-    filter.widthStart = 0;
-    filter.widthEnd = imageObject.width();
-    filter.heightStart = 0;
-    filter.heightEnd = imageObject.height();
+//    filter.widthStart = 0;
+//    filter.widthEnd = imageObject.width();
+//    filter.heightStart = 0;
+//    filter.heightEnd = imageObject.height();
 
     imageCorrector.setFilter(filter);   // задаем фильтр
 
@@ -544,6 +559,15 @@ void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject,
         delete painter;
         delete pen;
     }
+
+//    double min_x_percent = ui->horizontalSlider_filter_min_x
+
+    ui->horizontalSlider_filter_min_x->setMaximum(resultImage.width());
+    ui->horizontalSlider_filter_max_x->setMaximum(resultImage.width());
+    ui->verticalSlider_filter_min_y->setMaximum(resultImage.height());
+    ui->verticalSlider_filter_max_y->setMaximum(resultImage.height());
+
+    redrawImageFilterRect();
 }
 
 QImage *MainWindow::colliseImages(QImage &imageDown, QImage &imageUpper)
@@ -598,10 +622,10 @@ ImageCorrectrFilterParams MainWindow::createFilterParams()
     params.aliasingWhiteBorder = ui->horizontalSlider_aliasing_whiteBorder->value();
 
     // обрабатываем параметры изображения
-    params.heightStart = 0;
-    params.widthStart = 0;
-    params.heightEnd = imageObject.height();
-    params.widthEnd = imageObject.width();
+    params.heightStart = ui->verticalSlider_filter_min_y->value();
+    params.widthStart = ui->horizontalSlider_filter_min_x->value();
+    params.heightEnd = ui->verticalSlider_filter_max_y->value();
+    params.widthEnd = ui->horizontalSlider_filter_max_x->value();
 
     return params;
 }
@@ -629,6 +653,43 @@ void MainWindow::saveImageToFileWithDialog(QImage *image)
         QMessageBox::warning(this, "Ошибка", "Не удалось сохранить изображение!");
         return;
     }
+}
+
+void MainWindow::redrawImageFilterRect()
+{
+    int max_x = ui->horizontalSlider_filter_max_x->value();
+    int max_y = ui->verticalSlider_filter_max_y->value();
+
+    ui->horizontalSlider_filter_min_x->setMaximum(max_x);
+    ui->verticalSlider_filter_min_y->setMaximum(max_y);
+
+    int min_x = ui->horizontalSlider_filter_min_x->value();
+    int min_y = ui->verticalSlider_filter_min_y->value();
+
+    ui->horizontalSlider_filter_max_x->setMinimum(min_x);
+    ui->verticalSlider_filter_max_y->setMinimum(min_y);
+
+    if(originalResultImage.width() != 0 && originalResultImage.height() != 0)
+    {
+        resultImageWithDrawFilter = QImage(originalResultImage);
+        QPainter *painter = new QPainter(&resultImageWithDrawFilter);
+        QPen *pen = new QPen;
+        pen->setWidth(1);
+        pen->setColor(Qt::red);
+        painter->setPen(*pen);
+
+        painter->drawRect(min_x, min_y, max_x - min_x, max_y - min_y);
+
+        delete painter;
+        delete pen;
+
+        if(ui->radioButton_result->isChecked())
+        {
+            setImageResultToOutputLabel();
+        }
+    }
+
+    qDebug() << "x_min = " << min_x << "x_max = " << max_x << "y_min = " << min_y << "y_max" << max_y;
 }
 
 QStringList MainWindow::getScreensList()
@@ -681,10 +742,11 @@ void MainWindow::cameraImageCaptured(int id, const QImage &preview)
     {
     //    setImageToOutputLabel(preview);
         imageObject = preview;
-        processImageFilters(imageOriginal, imageObject, resultImage);
+        processImageFilters(imageOriginal, imageObject, originalResultImage);
 
         // выводим полученный снимок
-        setImageToOutputLabel(resultImage);
+//        setImageToOutputLabel(resultImage);
+        setImageResultToOutputLabel();
     }
 
     QApplication::processEvents();
@@ -849,7 +911,7 @@ void MainWindow::on_pushButton_runVideo_clicked()
 //        imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
 
 //        resultImage = imageOriginal;
-        resultImage = imageObject;
+        originalResultImage = imageObject;
 
         ui->pushButton_runVideo->setText("Stop Video");
 
@@ -868,10 +930,11 @@ void MainWindow::on_pushButton_runVideo_clicked()
                 imageObject = pixmap.toImage(); // переводим в картинку
                 imageObject.convertTo(QImage::Format_Grayscale16);  // конвертируем в ч/б изображение
 
-                processImageFilters(imageOriginal, imageObject, resultImage);   // применяем фильтры
+                processImageFilters(imageOriginal, imageObject, originalResultImage);   // применяем фильтры
 
                 // выводим картинку
-                setImageToOutputLabel(resultImage);
+//                setImageToOutputLabel(resultImage);
+                setImageResultToOutputLabel();
 
                 // обработка интерфейса
                 QApplication::processEvents();
@@ -1033,7 +1096,7 @@ void MainWindow::on_toolButton_saveObjectImage_clicked()
 
 void MainWindow::on_toolButton_saveResultImage_clicked()
 {
-    saveImageToFileWithDialog(&resultImage);
+    saveImageToFileWithDialog(&originalResultImage);
 }
 
 
@@ -1075,5 +1138,33 @@ void MainWindow::on_pushButton_showSettingsBlock_clicked()
     isShowingSettingsBlock = !isShowingSettingsBlock;
     ui->groupBox_settings->setVisible(isShowingSettingsBlock);
     updateLabelImageSize();
+}
+
+
+void MainWindow::on_verticalSlider_filter_min_y_valueChanged(int value)
+{
+    redrawImageFilterRect();
+    Q_UNUSED(value);
+}
+
+
+void MainWindow::on_horizontalSlider_filter_min_x_valueChanged(int value)
+{
+    redrawImageFilterRect();
+    Q_UNUSED(value);
+}
+
+
+void MainWindow::on_verticalSlider_filter_max_y_valueChanged(int value)
+{
+    redrawImageFilterRect();
+    Q_UNUSED(value);
+}
+
+
+void MainWindow::on_horizontalSlider_filter_max_x_valueChanged(int value)
+{
+    redrawImageFilterRect();
+    Q_UNUSED(value);
 }
 

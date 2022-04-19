@@ -75,6 +75,7 @@ private slots:
 
 public:
     void setImageToOutputLabel(QImage image);  // вывести картинку
+    void setImageResultToOutputLabel();     // вывести результирующее изображение
     void updateLabelImageSize();    // перерасчитать азмеры label с изображением
     void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);  // функция рассчёта фильтров
     QImage* colliseImages(QImage &imageDown, QImage &imageUpper);  // коллизия 2х изображений
@@ -83,6 +84,7 @@ public:
 
 private:
     void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора
+    void redrawImageFilterRect(); // перерисовать линии грницы фильтра для изображения
 
 private:
     // экраны
@@ -134,12 +136,21 @@ private slots:
 
     void on_pushButton_showSettingsBlock_clicked();
 
+    void on_verticalSlider_filter_min_y_valueChanged(int value);
+
+    void on_horizontalSlider_filter_min_x_valueChanged(int value);
+
+    void on_verticalSlider_filter_max_y_valueChanged(int value);
+
+    void on_horizontalSlider_filter_max_x_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 
     QImage imageOriginal;
     QImage imageObject;
-    QImage resultImage;
+    QImage originalResultImage;
+    QImage resultImageWithDrawFilter;
 
     QLabel *imageLabel= nullptr;    // label, в который будет выводиться изображение
 
