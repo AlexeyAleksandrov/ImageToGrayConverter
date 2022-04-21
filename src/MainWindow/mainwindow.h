@@ -77,10 +77,11 @@ public:
     void setImageToOutputLabel(QImage image);  // вывести картинку
     void setImageResultToOutputLabel();     // вывести результирующее изображение
     void updateLabelImageSize();    // перерасчитать азмеры label с изображением
-    void processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage);  // функция рассчёта фильтров
+    void processImageFilters(QImage imageOriginal, QImage imageObject, QImage &resultImage);  // функция рассчёта фильтров
     QImage* colliseImages(QImage &imageDown, QImage &imageUpper);  // коллизия 2х изображений
 
     ImageCorrectrFilterParams createFilterParams(); // создать набор параметров на основе данных на интерфейсе
+    void applyFilterParams(ImageCorrectrFilterParams filterParams); // установить на интерфейс выбранный фильтр
 
 private:
     void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора
@@ -144,6 +145,16 @@ private slots:
 
     void on_horizontalSlider_filter_max_x_valueChanged(int value);
 
+    void on_pushButton_addFilterLayer_clicked();
+
+    void on_pushButton_removeFilterLayer_clicked();
+
+    void on_comboBox_layers_currentIndexChanged(int index);
+
+    void on_checkBox_drawFilterRect_stateChanged(int arg1);
+
+    void on_toolButton_updateLayerConfiguration_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -163,6 +174,9 @@ private:
     bool isScreening = false;
     bool isShowingFiltersBlock = true;  // флаг показа блока фильтров
     bool isShowingSettingsBlock = true; // флаг показа блока настроек
+
+    QList<ImageCorrectrFilterParams> filterLayers;  // список слоёв фильтров
+    int lastComboBoxFilterLayersIndex = 0;  // последний выбранный индекс в comboBox
 
     void closeEvent(QCloseEvent *event)
     {

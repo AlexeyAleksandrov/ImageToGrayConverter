@@ -33,7 +33,7 @@ public:
     void averageFilter(int radius); // среднеарифметический фильтр
 
     void setImageOriginal(const QImage &value); // задать изображение фона
-    void setImageObject(const QImage &value);   // задать изображение объекта
+    void setImageObject(const QImage value);   // задать изображение объекта
     QImage getResultImage() const;  // получить результирующее изображение
 
 //    void setThreadsCount(int newThreadsCount);  // установить кол-во потоков

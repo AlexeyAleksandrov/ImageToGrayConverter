@@ -840,7 +840,7 @@ QImage ImageCorrector::getResultImage() const
     return resultImage.getImage();
 }
 
-void ImageCorrector::setImageObject(const QImage &value)
+void ImageCorrector::setImageObject(const QImage value)
 {
     imageObject.setImage(value);
     resultImage.setImage(value);

@@ -59,7 +59,7 @@ const QImage ImageData::getImage() const
     {
         for(int j=0; j<height; j++)
         {
-            image.setPixelColor(i, j, blackColor(grayScaleMatrix[i][j]));
+            image.setPixelColor(i, j, blackColor(255 - grayScaleMatrix[i][j]));
         }
     }
     return image;
