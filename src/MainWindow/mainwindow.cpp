@@ -75,32 +75,32 @@ MainWindow::MainWindow(QWidget *parent)
     uiDataSaver.add(ui->radioButton_captureDevice_monitor);
     uiDataSaver.add(ui->radioButton_captureDevice_camera);
 
-    uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
-    uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
-    uiDataSaver.add(ui->horizontalSlider_deleteNoise);
-//    uiDataSaver.add(ui->horizontalSlider_aliasingBorder);
-    uiDataSaver.add(ui->horizontalSlider_aliasing_blackBorder);
-    uiDataSaver.add(ui->horizontalSlider_aliasing_whiteBorder);
+//    uiDataSaver.add(ui->horizontalSlider_blackEnchancementValue);
+//    uiDataSaver.add(ui->horizontalSlider_clippingNoiseValue);
+//    uiDataSaver.add(ui->horizontalSlider_deleteNoise);
+//    uiDataSaver.add(ui->horizontalSlider_aliasing_blackBorder);
+//    uiDataSaver.add(ui->horizontalSlider_aliasing_whiteBorder);
 
     uiDataSaver.add(ui->radioButton_original);
     uiDataSaver.add(ui->radioButton_object);
     uiDataSaver.add(ui->radioButton_result);
 
-    uiDataSaver.add(ui->checkBox_colorInversion);
-    uiDataSaver.add(ui->checkBox_deleteNoise);
-    uiDataSaver.add(ui->checkBox_aliasing);
-    uiDataSaver.add(ui->checkBox_aliasingVisualisation);
-    uiDataSaver.add(ui->checkBox_medianFilter);
-    uiDataSaver.add(ui->checkBox_averageFilter);
-    uiDataSaver.add(ui->checkBox_substractObject);
+//    uiDataSaver.add(ui->checkBox_colorInversion);
+//    uiDataSaver.add(ui->checkBox_deleteNoise);
+//    uiDataSaver.add(ui->checkBox_aliasing);
+//    uiDataSaver.add(ui->checkBox_aliasingVisualisation);
+//    uiDataSaver.add(ui->checkBox_medianFilter);
+//    uiDataSaver.add(ui->checkBox_averageFilter);
+//    uiDataSaver.add(ui->checkBox_substractObject);
+    uiDataSaver.add(ui->checkBox_drawFilterRect);
 
-    uiDataSaver.add(ui->comboBox_deleteType);
+//    uiDataSaver.add(ui->comboBox_deleteType);
     uiDataSaver.add(ui->comboBox_presets);
 
-    uiDataSaver.add(ui->spinBox_aliasingRadius);
-    uiDataSaver.add(ui->spinBox_medianFilter_radius);
-    uiDataSaver.add(ui->spinBox_averageFilter_radiusValue);
-    uiDataSaver.add(ui->spinBox_collisionRepeatCount);
+//    uiDataSaver.add(ui->spinBox_aliasingRadius);
+//    uiDataSaver.add(ui->spinBox_medianFilter_radius);
+//    uiDataSaver.add(ui->spinBox_averageFilter_radiusValue);
+//    uiDataSaver.add(ui->spinBox_collisionRepeatCount);
 
     uiDataSaver.loadPresets();
 
@@ -128,13 +128,30 @@ MainWindow::MainWindow(QWidget *parent)
 //    ui->groupBox_medianFilter->setVisible(false);   // отключаем отображение медианного фильтра
 
     uiDataSaver.loadProgramData();
+    loadFilterLayers();
 
-    on_pushButton_addFilterLayer_clicked(); // добавляем фильтр главного слоя
+    qDebug() << "Выводим фильтры: " << filterLayers.size();
+    for(int i=0; i<filterLayers.size(); i++)
+    {
+        qDebug() << filterLayers.at(i).filterName;
+    }
+
+    if(filterLayers.size() == 0)    // если не были загружены фильтры, добавляем фильтр по умолчанию
+    {
+        on_pushButton_addFilterLayer_clicked(); // добавляем фильтр главного слоя
+    }
+
+    qDebug() << "Выводим фильтры: " << filterLayers.size();
+    for(int i=0; i<filterLayers.size(); i++)
+    {
+        qDebug() << filterLayers.at(i).filterName;
+    }
+
+    ui->lineEdit_layerName->clear();
 }
 
 MainWindow::~MainWindow()
 {
-
     delete ui;
 
 }
@@ -639,9 +656,11 @@ QImage *MainWindow::colliseImages(QImage &imageDown, QImage &imageUpper)
     return imageOut;
 }
 
-ImageCorrectrFilterParams MainWindow::createFilterParams()
+ImageCorrectrFilterParams MainWindow::createFilterParams(QString filterName)
 {
     ImageCorrectrFilterParams params;   // создаем объект параметров
+
+    params.filterName = filterName;
 
     // обрабатываем флаги
     params.needSubstructImage = ui->checkBox_substractObject->isChecked();
@@ -677,11 +696,15 @@ ImageCorrectrFilterParams MainWindow::createFilterParams()
     params.heightEnd = ui->verticalSlider_filter_max_y->value();
     params.widthEnd = ui->horizontalSlider_filter_max_x->value();
 
+    qDebug() << "Сохранение настроек фильтра: " << params.filterName << params.widthStart << params.widthEnd << params.heightStart << params.heightEnd;
+
     return params;
 }
 
 void MainWindow::applyFilterParams(ImageCorrectrFilterParams filterParams)
 {
+//    ui->lineEdit_layerName->setText(filterParams.filterName);
+
     // обрабатываем флаги
     ui->checkBox_substractObject->setChecked(filterParams.needSubstructImage);
     ui->checkBox_deleteNoise->setChecked(filterParams.needHardDeleteNoise);
@@ -714,10 +737,77 @@ void MainWindow::applyFilterParams(ImageCorrectrFilterParams filterParams)
     ui->horizontalSlider_aliasing_whiteBorder->setValue(filterParams.aliasingWhiteBorder);
 
     // обрабатываем параметры изображения
-    ui->verticalSlider_filter_min_y->setValue(filterParams.heightStart);
-    ui->horizontalSlider_filter_min_x->setValue(filterParams.widthStart);
     ui->verticalSlider_filter_max_y->setValue(filterParams.heightEnd);
     ui->horizontalSlider_filter_max_x->setValue(filterParams.widthEnd);
+
+    ui->verticalSlider_filter_min_y->setValue(filterParams.heightStart);
+    ui->horizontalSlider_filter_min_x->setValue(filterParams.widthStart);
+
+    ui->verticalSlider_filter_max_y->setValue(filterParams.heightEnd);  // двойной вызов необходим для корректной установки значений мин и макс для соответсвующих слайдеров
+    ui->horizontalSlider_filter_max_x->setValue(filterParams.widthEnd);
+
+
+    qDebug() << "Применение настроек фильтра: " << filterParams.filterName << filterParams.widthStart << filterParams.widthEnd << filterParams.heightStart << filterParams.heightEnd;
+}
+
+void MainWindow::loadFilterLayers()
+{
+    QFile file("filterlayers.json");
+    if(!file.exists())
+    {
+        return;
+    }
+    file.open(QIODevice::ReadOnly);
+    QByteArray fileText = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(fileText);  // поулчаем JSON
+    QJsonArray jsonArray = doc.array(); // конвертируем его в массив
+
+    ui->comboBox_layers->blockSignals(true);    // блокируем все сигналы для ComboBox
+
+    if(jsonArray.size() > 0 && filterLayers.size() > 0)
+    {
+        filterLayers.clear();
+        ui->comboBox_layers->clear();
+    }
+
+    for(int i=0; i<jsonArray.size(); i++)
+    {
+        QJsonObject json = jsonArray[i].toObject(); // получаем объект слоя
+        ImageCorrectrFilterParams filter;   // создаём фильтр
+        filter.setFilterParamsFromJsonObject(json); // задаём ему параметры из JSON
+        filterLayers.append(filter);
+        ui->comboBox_layers->addItem(filter.filterName);
+    }
+
+    ui->comboBox_layers->setCurrentIndex(0);    // устанавливаем исходный индекс на начальный
+
+    ui->comboBox_layers->blockSignals(false);   // разблокируем все сигналы для ComboBox
+
+    applyFilterParams(filterLayers.first());    // применяем сохранённый фильтр
+}
+
+void MainWindow::saveFiterLayers()
+{
+    QJsonDocument doc;
+    QJsonArray jsonArray;
+
+    for (int i=0; i<filterLayers.size(); i++)
+    {
+        QJsonObject json = filterLayers[i].getFilterJsonObject();   // получаем JSON представление фильтра
+        jsonArray.append(json);
+        qDebug() << "Добавляю " << filterLayers[i].filterName << json["filterName"].toString();
+    }
+
+    doc.setArray(jsonArray);
+
+    QFile file("filterlayers.json");
+    file.open(QIODevice::WriteOnly);
+    file.write(doc.toJson());
+    file.close();
+//    qDebug() << "JSON:";
+//    qDebug() << doc.toJson();
 }
 
 void MainWindow::saveImageToFileWithDialog(QImage *image)
@@ -750,14 +840,20 @@ void MainWindow::redrawImageFilterRect()
     int max_x = ui->horizontalSlider_filter_max_x->value();
     int max_y = ui->verticalSlider_filter_max_y->value();
 
-    ui->horizontalSlider_filter_min_x->setMaximum(max_x);
-    ui->verticalSlider_filter_min_y->setMaximum(max_y);
-
     int min_x = ui->horizontalSlider_filter_min_x->value();
     int min_y = ui->verticalSlider_filter_min_y->value();
 
+    ui->horizontalSlider_filter_min_x->setMaximum(max_x);
+    ui->verticalSlider_filter_min_y->setMaximum(max_y);
+
     ui->horizontalSlider_filter_max_x->setMinimum(min_x);
     ui->verticalSlider_filter_max_y->setMinimum(min_y);
+
+    ui->horizontalSlider_filter_min_x->setValue(min_x);
+    ui->verticalSlider_filter_min_y->setValue(min_y);
+
+    ui->horizontalSlider_filter_max_x->setValue(max_x);
+    ui->verticalSlider_filter_max_y->setValue(max_y);
 
     if(originalResultImage.width() != 0 && originalResultImage.height() != 0)
     {
@@ -1133,6 +1229,9 @@ void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked(bool checked)
 void MainWindow::onExit()
 {
     qDebug() << "exit";
+    ui->comboBox_layers->setCurrentIndex(0);
+    on_comboBox_layers_currentIndexChanged(0);  // переключаем на нулевой слой
+    saveFiterLayers();
     uiDataSaver.saveProgramData();
     if(camera != nullptr)
     {
@@ -1262,16 +1361,20 @@ void MainWindow::on_horizontalSlider_filter_max_x_valueChanged(int value)
 
 void MainWindow::on_pushButton_addFilterLayer_clicked()
 {
-    ImageCorrectrFilterParams filter = createFilterParams();    // получаем текущие настройки
-    filterLayers.append(filter);    // добавлем фильтр в список
-    int currentIndex = ui->comboBox_layers->currentIndex(); // текущий выбранный номер слоя
-
     QString layerName = ui->lineEdit_layerName->text(); // название слоя
     if(layerName == "")
     {
         int count = ui->comboBox_layers->count();   // получаем кол-во слоёв
         layerName = "Слой #" + QString::number(count);
     }
+
+    ui->lineEdit_layerName->setText(layerName);
+
+    ImageCorrectrFilterParams filter = createFilterParams(layerName);    // получаем текущие настройки
+    int currentIndex = ui->comboBox_layers->currentIndex(); // текущий выбранный номер слоя
+
+    filterLayers.append(filter);    // добавлем фильтр в список
+    qDebug() << "Добавлен фильтр: " << filter.filterName << layerName << filterLayers.last().filterName;
 
     ui->comboBox_layers->insertItem(currentIndex+1, layerName); // добавляем название слоя в список
     ui->comboBox_layers->setCurrentIndex(currentIndex+1);    // устанавливаем текущий элемент
@@ -1289,17 +1392,23 @@ void MainWindow::on_pushButton_removeFilterLayer_clicked()
     }
 
     filterLayers.removeAt(currentIndex);    // удалем слой из списка
+    noUpdateLayersParams = true;    // временно блокируем обновление параметров
     ui->comboBox_layers->removeItem(currentIndex);  // удаляем слой из выпадающего списка
+    noUpdateLayersParams = false;
 }
 
 
 void MainWindow::on_comboBox_layers_currentIndexChanged(int index)
 {
-    // обновляем настройки предыдущего слоя
-    ImageCorrectrFilterParams filter = createFilterParams();    // получаем текущие настройки
-    filterLayers.replace(lastComboBoxFilterLayersIndex, filter);    // заменяем старые настройки на новые
+    if(!noUpdateLayersParams)   // если нет запрета на обновление старых настроек
+    {
+        // обновляем настройки предыдущего слоя
+        QString lastFilterLayerName = ui->comboBox_layers->itemText(lastComboBoxFilterLayersIndex); // название обновляемого фильтра
+        ImageCorrectrFilterParams filter = createFilterParams(lastFilterLayerName);    // получаем текущие настройки
+        filterLayers.replace(lastComboBoxFilterLayersIndex, filter);    // заменяем старые настройки на новые
+    }
 
-    // получаем настрйоки нового слоя
+    // получаем настройки нового слоя
     ImageCorrectrFilterParams currentFilter = filterLayers.at(index);   // получаем текущий фильтр
     applyFilterParams(currentFilter);   // применяем выбранный фильтр
 
@@ -1330,9 +1439,22 @@ void MainWindow::on_checkBox_drawFilterRect_stateChanged(int arg1)
 void MainWindow::on_toolButton_updateLayerConfiguration_clicked()
 {
     int currentIndex = ui->comboBox_layers->currentIndex(); // текущий выбранный номер слоя
+    QString layerName = ui->lineEdit_layerName->text(); // получаем название слоя
+    if(layerName == "")
+    {
+        layerName = ui->comboBox_layers->currentText(); // иначе получаем текущее название
+    }
+    else
+    {
+        // если название не пустое
+//        ui->comboBox_layers->setCurrentText(layerName); // задаём новое название слою
+        ui->comboBox_layers->setItemText(currentIndex, layerName);
+        ui->lineEdit_layerName->clear();
+    }
 
     // обновляем настройки слоя
-    ImageCorrectrFilterParams filter = createFilterParams();    // получаем текущие настройки
+    ImageCorrectrFilterParams filter = createFilterParams(layerName);    // получаем текущие настройки
     filterLayers.replace(currentIndex, filter);    // заменяем старые настройки на новые
+    qDebug() << "Начало Х: " << filter.widthStart;
 }
 

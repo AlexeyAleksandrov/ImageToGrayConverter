@@ -22,6 +22,9 @@
 #include "src/ImageHandlers/imagetransformer.h"
 #include "src/ImageFilters/imagecorrectrfilterparams.h"
 
+#include <QJsonDocument>
+#include <QJsonArray>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -80,8 +83,11 @@ public:
     void processImageFilters(QImage imageOriginal, QImage imageObject, QImage &resultImage);  // функция рассчёта фильтров
     QImage* colliseImages(QImage &imageDown, QImage &imageUpper);  // коллизия 2х изображений
 
-    ImageCorrectrFilterParams createFilterParams(); // создать набор параметров на основе данных на интерфейсе
+    ImageCorrectrFilterParams createFilterParams(QString filterName); // создать набор параметров на основе данных на интерфейсе
     void applyFilterParams(ImageCorrectrFilterParams filterParams); // установить на интерфейс выбранный фильтр
+
+    void loadFilterLayers();    // загрузка списка фильтров из файла
+    void saveFiterLayers();     // сохранение списка слоёв в файл
 
 private:
     void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора
@@ -177,6 +183,7 @@ private:
 
     QList<ImageCorrectrFilterParams> filterLayers;  // список слоёв фильтров
     int lastComboBoxFilterLayersIndex = 0;  // последний выбранный индекс в comboBox
+    bool noUpdateLayersParams = false;
 
     void closeEvent(QCloseEvent *event)
     {

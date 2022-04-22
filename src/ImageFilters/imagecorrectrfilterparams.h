@@ -3,6 +3,7 @@
 
 #include <src/ImageHandlers/imagecorrectorenums.h>
 #include <src/ImageHandlers/imagedata.h>
+#include <QJsonObject>
 
 // класс хранит параметры фильтров для обработки участка изображения
 
@@ -11,7 +12,12 @@ class ImageCorrectrFilterParams
 public:
     ImageCorrectrFilterParams();
 
+    QJsonObject getFilterJsonObject();  // получить JSON представление фильтра
+    void setFilterParamsFromJsonObject(QJsonObject object); // установить значения из JSON представления
+
 public:
+    QString filterName; // название фильтра (слоя)
+
     // параметры включения и выключения фильтров
     bool needSubstructImage = false;
     bool needHardDeleteNoise = false;
