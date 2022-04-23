@@ -89,6 +89,9 @@ public:
     void loadFilterLayers();    // загрузка списка фильтров из файла
     void saveFiterLayers();     // сохранение списка слоёв в файл
 
+public slots:
+    void updateFilterLayerParams(int value); // слот обновления параметров слоя
+
 private:
     void saveImageToFileWithDialog(QImage *image);    // сохранить изображение в файл с отображением диалога выбора
     void redrawImageFilterRect(); // перерисовать линии грницы фильтра для изображения

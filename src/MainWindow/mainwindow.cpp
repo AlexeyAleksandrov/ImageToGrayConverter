@@ -148,6 +148,44 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     ui->lineEdit_layerName->clear();
+
+    // соединяем сигналы для обновления фильтров согласно изменению состояния на форме
+    connect(ui->horizontalSlider_filter_min_x, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->horizontalSlider_filter_max_x, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->verticalSlider_filter_min_y, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->verticalSlider_filter_max_y, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->horizontalSlider_clippingNoiseValue, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->horizontalSlider_blackEnchancementValue, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->horizontalSlider_deleteNoise, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->horizontalSlider_aliasing_blackBorder, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->horizontalSlider_aliasing_whiteBorder, &QSlider::valueChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->checkBox_deleteNoise, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->checkBox_hardNoiseClipping_deleteBlack, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->checkBox_hardNoiseClipping_deleteWhite, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->checkBox_colorInversion, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->checkBox_substractObject, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->checkBox_aliasing, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->checkBox_aliasingVisualisation, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->checkBox_averageFilter, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+    connect(ui->checkBox_medianFilter, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+
+//    connect(ui->checkBox_drawFilterRect, &QCheckBox::stateChanged, this, &MainWindow::updateFilterLayerParams);
+
+    connect(ui->spinBox_aliasingRadius, SIGNAL(valueChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+    connect(ui->spinBox_averageFilter_radiusValue, SIGNAL(valueChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+    connect(ui->spinBox_collisionRepeatCount, SIGNAL(valueChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+    connect(ui->spinBox_medianFilter_radius, SIGNAL(valueChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+
+    connect(ui->comboBox_deleteType, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+    connect(ui->comboBox_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+    connect(ui->comboBox_threadsCount, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFilterLayerParams(int)));
+
 }
 
 MainWindow::~MainWindow()
@@ -538,7 +576,7 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
                 imageCorrector.clipNoise();    // простое удаление шума
             }
 
-            if(filter.clippingNoiseValue > 0)
+            if(filter.blackEnchancement > 0)
             {
                 qDebug() << "Выполняется усиление чёрного цвета: " << filter.blackEnchancement;
                 imageCorrector.enchanceBlackColor();    // усиление черного цвета
@@ -807,7 +845,13 @@ void MainWindow::saveFiterLayers()
     file.write(doc.toJson());
     file.close();
 //    qDebug() << "JSON:";
-//    qDebug() << doc.toJson();
+    //    qDebug() << doc.toJson();
+}
+
+void MainWindow::updateFilterLayerParams(int value)
+{
+    Q_UNUSED(value);
+    on_toolButton_updateLayerConfiguration_clicked();   // вызываем функцию обновления информации о слое
 }
 
 void MainWindow::saveImageToFileWithDialog(QImage *image)
@@ -1373,7 +1417,7 @@ void MainWindow::on_pushButton_addFilterLayer_clicked()
     ImageCorrectrFilterParams filter = createFilterParams(layerName);    // получаем текущие настройки
     int currentIndex = ui->comboBox_layers->currentIndex(); // текущий выбранный номер слоя
 
-    filterLayers.append(filter);    // добавлем фильтр в список
+    filterLayers.insert(currentIndex+1, filter);    // добавлем фильтр в список
     qDebug() << "Добавлен фильтр: " << filter.filterName << layerName << filterLayers.last().filterName;
 
     ui->comboBox_layers->insertItem(currentIndex+1, layerName); // добавляем название слоя в список
