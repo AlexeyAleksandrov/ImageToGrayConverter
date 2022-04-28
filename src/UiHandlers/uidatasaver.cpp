@@ -432,6 +432,12 @@ void UiDataSaver::setRadioButtonState(QRadioButton *radioButton, QString state)
 template<typename T>
 QString UiDataSaver::createSaveString(QString widgetType, QList<T> &list, QString (*stateFunc)(T))
 {
+//    QJsonArray widgetsJsonArray;
+//    for (auto &&object : list)
+//    {
+//        QString objectName = object->objectName();
+//    }
+
     QString saveString; // строка, которую добавим
     for (auto &&object : list)
     {

@@ -1500,5 +1500,17 @@ void MainWindow::on_toolButton_updateLayerConfiguration_clicked()
     ImageCorrectrFilterParams filter = createFilterParams(layerName);    // получаем текущие настройки
     filterLayers.replace(currentIndex, filter);    // заменяем старые настройки на новые
     qDebug() << "Начало Х: " << filter.widthStart;
+
+    if(!isRunning && ui->checkBox_autoReCalculate->isChecked())
+    {
+        on_pushButton_calculate_clicked();
+//        processImageFilters(imageOriginal, imageObject, originalResultImage);   // применяем фильтры
+
+//        // выводим картинку
+//    //    setImageToOutputLabel(resultImage);
+//        setImageResultToOutputLabel();
+
+        QApplication::processEvents();
+    }
 }
 

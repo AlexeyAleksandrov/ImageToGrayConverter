@@ -709,28 +709,14 @@
           <string>Расчёт изображения</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_saveResult">
-            <property name="text">
-             <string>Сохранить результат</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QPushButton" name="pushButton_calculate">
             <property name="text">
              <string>Расчёт</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_threadsCount">
-            <property name="text">
-             <string>Количество потоков:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QPushButton" name="pushButton_screen">
             <property name="text">
              <string>Screen</string>
@@ -738,6 +724,13 @@
            </widget>
           </item>
           <item row="4" column="1">
+           <widget class="QPushButton" name="pushButton_saveResult">
+            <property name="text">
+             <string>Сохранить результат</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
            <widget class="QPushButton" name="pushButton_runVideo">
             <property name="text">
              <string>RunVideo</string>
@@ -746,6 +739,20 @@
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="comboBox_threadsCount"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_threadsCount">
+            <property name="text">
+             <string>Количество потоков:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkBox_autoReCalculate">
+            <property name="text">
+             <string>Автоматический перерасчёт</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
