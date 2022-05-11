@@ -494,6 +494,18 @@ void MainWindow::updateLabelImageSize()
 
 void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, QImage &resultImage)
 {
+    if(imageOriginal.isNull())
+    {
+        qDebug() << "processImageFilters: ImageOriginal is invalid!";
+        QMessageBox::critical(this, "", "ImageOriginal is invalid!");
+        return;
+    }
+    if(imageObject.isNull())
+    {
+        qDebug() << "processImageFilters: ImageObject is invalid!";
+        QMessageBox::critical(this, "", "ImageObject is invalid!");
+        return;
+    }
 //    ImageCorrectrFilterParams filter = createFilterParams();  // получаем параметры фильтров
 
 //    filter.widthStart = 0;
