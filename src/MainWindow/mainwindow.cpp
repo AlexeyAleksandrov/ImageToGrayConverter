@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     screen = QGuiApplication::primaryScreen();  // получаем указатель на главный экран
     ui->radioButton_imageEmitter_imageFromFile->setChecked(true);
     ui->radioButton_captureDevice_camera->setChecked(true);
-    on_radioButton_imageEmitter_imageFromFile_clicked();    // применяем выбор
+//    on_radioButton_imageEmitter_imageFromFile_clicked();    // применяем выбор
     on_radioButton_captureDevice_camera_clicked();  // применяем выбор на камеру
 
 //    auto screens = QGuiApplication::screens();  // поулчаем список экранов, подключенных к ПК
@@ -117,15 +117,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidget_image->setColumnCount(1);
     ui->tableWidget_image->setItem(0, 0, imageItem);    // устанавливаем item
 
-//    QRect tableGeometry = ui->tableWidget_image->geometry();
-//    ui->tableWidget_image->setColumnWidth(0, tableGeometry.width());
-//    ui->tableWidget_image->setRowHeight(0, tableGeometry.height());
-
     imageLabel = new QLabel;
     ui->tableWidget_image->setCellWidget(0, 0, imageLabel); // выводим label в tableWidget
     imageLabel->setText("Изображение");
-
-//    ui->groupBox_medianFilter->setVisible(false);   // отключаем отображение медианного фильтра
 
     uiDataSaver.loadProgramData();
     loadFilterLayers();
@@ -236,7 +230,6 @@ void MainWindow::on_pushButton_calculate_clicked()
     processImageFilters(imageOriginal, imageObject, originalResultImage);   // применяем фильтры
 
     // выводим картинку
-//    setImageToOutputLabel(resultImage);
     setImageResultToOutputLabel();
 
     // переводим radioButton
@@ -267,8 +260,6 @@ void MainWindow::on_radioButton_result_clicked()
 {
     if(!originalResultImage.isNull())
     {
-//        ui->label_image->setPixmap(QPixmap::fromImage(QImage(resultImage)));
-//        setImageToOutputLabel(resultImage);
         setImageResultToOutputLabel();
     }
 }
@@ -303,11 +294,6 @@ void MainWindow::on_horizontalSlider_deleteNoise_valueChanged(int value)
 
 void MainWindow::setImageToOutputLabel(QImage image)
 {
-//    int labelWidht = ui->label_image->width();
-//    int labelHeight = ui->label_image->height();
-
-//    int labelWidht = imageLabel->width();
-//    int labelHeight = imageLabel->height();
     int labelWidht = ui->tableWidget_image->columnWidth(0);
     int labelHeight = ui->tableWidget_image->rowHeight(0);
 
@@ -329,8 +315,6 @@ void MainWindow::setImageToOutputLabel(QImage image)
     }
 
     image = ImageTransformer::getTransformedImage(image, imgWidht, imgHeight);
-//    ui->label_image->setScaledContents(true);
-//    ui->label_image->setPixmap(QPixmap::fromImage(image));
     imageLabel->setPixmap(QPixmap::fromImage(image));
 }
 
@@ -370,148 +354,14 @@ void MainWindow::updateLabelImageSize()
     }
 }
 
-//void MainWindow::processImageFilters(QImage &imageOriginal, QImage &imageObject, QImage &resultImage)
-//{
-//    QImage tempOriginalImage;
-//    if(ui->checkBox_substractObject->isChecked())
-//    {
-//        imageCorrector.setImageOriginal(imageOriginal);
-//    }
-//    else
-//    {
-////        QImage *image = new QImage(imageObject.size(), imageObject.format());
-////        image->fill(Qt::white);  // заполняем белым цветом
-//        tempOriginalImage = QImage(imageObject.size(), imageObject.format());
-//        tempOriginalImage.fill(Qt::white);  // заполняем белым цветом
-//        imageCorrector.setImageOriginal(tempOriginalImage);
-//    }
-////    imageCorrector.setImageOriginal(imageOriginal);
-//    imageCorrector.setImageObject(imageObject);
-
-//    int clippingNoiseValue = ui->horizontalSlider_clippingNoiseValue->value();  // граница шума, уровень ниже этой границы будет отрезан ( = 0)
-//    int blackEnchancement = 255 - ui->horizontalSlider_blackEnchancementValue->value();   // усиление черного, значения выше этой границы будут увеличены до максимума ( = 255)
-
-//    imageCorrector.setClippingNoiseValue(clippingNoiseValue);
-//    imageCorrector.setBlackEnchancement(blackEnchancement);
-
-//    int threadsCount = ui->comboBox_threadsCount->currentText().toInt();    // получаем количество потоков, которое мы можем использовать
-//    imageCorrector.setThreadsCount(threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
-
-//    int repeatOffset = ui->spinBox_collisionRepeatCount->value(); // смещение для радиуса при применении фильтра несколько раз
-
-//    for(int offset=0; offset<=repeatOffset; offset++)
-//    {
-//        if(ui->checkBox_substractObject->isChecked())
-//        {
-//            imageCorrector.substractObjectImage();    // вычитаем изображение
-//        }
-
-//        if(ui->checkBox_deleteNoise->isChecked())
-//        {
-//            int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
-//            int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-//            ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
-
-//            if(ui->checkBox_hardNoiseClipping_deleteWhite->isChecked()) // если нужно удалять черный цвет
-//            {
-//               imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
-//            }
-//            if(ui->checkBox_hardNoiseClipping_deleteBlack->isChecked()) // если нкжно удалять белый цвет
-//            {
-//                imageCorrector.hardClipNoise(deleteNoiseBorder, type, ImageCorrector::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
-//            }
-
-//            qDebug() << "Удаление выполнено!";
-//        }
-
-//    //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
-//        imageCorrector.clipNoise();    // простое удаление шума
-//        imageCorrector.enchanceBlackColor();    // усиление черного цвета
-
-//        if(ui->checkBox_medianFilter->isChecked())
-//        {
-//            int radius = ui->spinBox_medianFilter_radius->value() + offset;  // радиус медианного фильтра
-//            imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
-//        }
-//        if(ui->checkBox_averageFilter->isChecked())
-//        {
-//            int radius = ui->spinBox_averageFilter_radiusValue->value() + offset;  // радиус среднеарифметического фильтра
-//            imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
-//        }
-
-//        if(ui->checkBox_aliasing->isChecked())
-//        {
-//            int aliasingRadius = ui->spinBox_aliasingRadius->value() + offset;
-//    //        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
-//            int aliasingBorder = 126; // 255/2
-//            int blackBorder = 100 - ui->horizontalSlider_aliasing_blackBorder->value();
-//            int whiteBorder = 100 - ui->horizontalSlider_aliasing_whiteBorder->value();
-//            imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
-//    //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
-//        }
-
-//        QImage result = imageCorrector.getResultImage();   // получаем обработанное изображение
-
-//        if(ui->checkBox_colorInversion->isChecked())
-//        {
-//           result.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
-//        }
-
-//        if(offset > 0)  // если есть предыдущее изображение
-//        {
-//            resultImage = *colliseImages(resultImage, result);  // объединяем методом Исключающего ИЛИ
-//        }
-//        else    // иначе, если это первая итерация, то просто сохраняем
-//        {
-//            resultImage = result;
-//        }
-//    }
-
-
-//    if(ui->checkBox_aliasingVisualisation->isChecked())
-//    {
-//        QPainter *painter = new QPainter(&resultImage);
-//        QPen *pen = new QPen;
-//        pen->setWidth(1);
-//        pen->setColor(Qt::red);
-//        painter->setPen(*pen);
-
-//        int radius = ui->spinBox_aliasingRadius->value();
-//        for (int i=radius*2; i<resultImage.width()-radius; i += radius*2) // проходим по ширине
-//        {
-//            painter->drawLine(i, radius, i, resultImage.height()-radius);
-//        }
-
-//        for (int j=radius*2; j<resultImage.height()-radius; j += radius*2)    // проходим по высоте
-//        {
-//            painter->drawLine(radius, j, resultImage.width()-radius, j);
-//        }
-
-//        delete painter;
-//        delete pen;
-//    }
-//}
-
 void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, QImage &resultImage)
 {
-    if(imageOriginal.isNull())
-    {
-        qDebug() << "processImageFilters: ImageOriginal is invalid!";
-        QMessageBox::critical(this, "", "ImageOriginal is invalid!");
-        return;
-    }
     if(imageObject.isNull())
     {
         qDebug() << "processImageFilters: ImageObject is invalid!";
         QMessageBox::critical(this, "", "ImageObject is invalid!");
         return;
     }
-//    ImageCorrectrFilterParams filter = createFilterParams();  // получаем параметры фильтров
-
-//    filter.widthStart = 0;
-//    filter.widthEnd = imageObject.width();
-//    filter.heightStart = 0;
-//    filter.heightEnd = imageObject.height();
 
     if(filterLayers.size() == 0)
     {
@@ -519,7 +369,17 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
         return;
     }
 
-    qDebug() << "Необходимость вычита изображения: " << filterLayers.at(0).needSubstructImage << filterLayers.at(0).clippingNoiseValue << filterLayers.at(0).blackEnchancement << filterLayers.at(0).threadsCount;
+//    qDebug() << "Необходимость вычита изображения: " << filterLayers.at(0).needSubstructImage << filterLayers.at(0).clippingNoiseValue << filterLayers.at(0).blackEnchancement << filterLayers.at(0).threadsCount;
+
+    if(filterLayers.at(0).needSubstructImage)
+    {
+        if(imageOriginal.isNull())
+        {
+            qDebug() << "processImageFilters: ImageOriginal is invalid!";
+            QMessageBox::critical(this, "", "ImageOriginal is invalid!");
+            return;
+        }
+    }
 
     QImage tempOriginalImage;
     if(filterLayers.at(0).needSubstructImage)
@@ -539,35 +399,23 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
         imageCorrector.substractObjectImage();    // вычитаем изображение
     }
 
-    qDebug() << "";
-    qDebug() << "=================";
+//    qDebug() << "";
+//    qDebug() << "=================";
     for(int filterNumber=0; filterNumber<filterLayers.size(); filterNumber++)
     {
-        qDebug() << "Номер фильтра: " << filterNumber+1 << " из " << filterLayers.size();
-//        if(filterNumber > 0)   // если слой не 1й
-//        {
-//            imageCorrector.setImageObject(resultImage); // в качесте опорного изображения берём предыдущее
-//        }
+//        qDebug() << "Номер фильтра: " << filterNumber+1 << " из " << filterLayers.size();
 
         ImageCorrectrFilterParams filter = filterLayers.at(filterNumber);
         imageCorrector.setFilter(filter);   // задаем фильтр
-
-        //    imageCorrector.setClippingNoiseValue(filter.clippingNoiseValue);
-        //    imageCorrector.setBlackEnchancement(255 - filter.blackEnchancement);
-
-        //    imageCorrector.setThreadsCount(filter.threadsCount);    // устанавливаем количество потоков, которое будет использовать программа
 
         int repeatOffset = filter.repeatOffset; // смещение для радиуса при применении фильтра несколько раз
 
         for(int offset=0; offset<=repeatOffset; offset++)
         {
-            qDebug() << "Повтор для смещения: " << offset+1 << " из " << repeatOffset;
+//            qDebug() << "Повтор для смещения: " << offset+1 << " из " << repeatOffset;
             if(filter.needHardDeleteNoise)
             {
-                qDebug() << "Выполняется усиленное удаление шумов";
-                //            int deleteNoiseBorder = ui->horizontalSlider_deleteNoise->value();  // граница продвинутого удаления шумов
-                //            int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-                //            ImageCorrector::NoiseDeleteTypes type = ImageCorrector::NoiseDeleteTypes(deleteType);
+//                qDebug() << "Выполняется усиленное удаление шумов";
 
                 if(filter.needHardDeleteWhiteColor) // если нужно удалять черный цвет
                 {
@@ -578,19 +426,19 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
                     imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrectorEnums::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
                 }
 
-                qDebug() << "Удаление выполнено!";
+//                qDebug() << "Удаление выполнено!";
             }
 
             //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
             if(filter.clippingNoiseValue > 0)
             {
-                qDebug() << "Выполняется простое удаление шума: " << filter.clippingNoiseValue;
+//                qDebug() << "Выполняется простое удаление шума: " << filter.clippingNoiseValue;
                 imageCorrector.clipNoise();    // простое удаление шума
             }
 
             if(filter.blackEnchancement > 0)
             {
-                qDebug() << "Выполняется усиление чёрного цвета: " << filter.blackEnchancement;
+//                qDebug() << "Выполняется усиление чёрного цвета: " << filter.blackEnchancement;
                 imageCorrector.enchanceBlackColor();    // усиление черного цвета
             }
 
@@ -598,13 +446,13 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
             {
                 int radius = filter.medianFilter_radius + offset;  // радиус медианного фильтра
                 imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
-                qDebug() << "Выполняется медианный фильтр: " << radius;
+//                qDebug() << "Выполняется медианный фильтр: " << radius;
             }
             if(filter.needAverageFilter)
             {
                 int radius = filter.averageFilter_radius + offset;  // радиус среднеарифметического фильтра
                 imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
-                qDebug() << "Выполняется среднеарифметический фильтр: " << radius;
+//                qDebug() << "Выполняется среднеарифметический фильтр: " << radius;
             }
 
             if(filter.needAliasing)
@@ -617,7 +465,7 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
                 imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
                 //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
 
-                qDebug() << "Выполняется увеличение резкости: " << aliasingRadius << aliasingBorder << blackBorder << whiteBorder;
+//                qDebug() << "Выполняется увеличение резкости: " << aliasingRadius << aliasingBorder << blackBorder << whiteBorder;
             }
 
             QImage result = imageCorrector.getResultImage();   // получаем обработанное изображение
@@ -630,12 +478,12 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
             if(offset > 0)  // если есть предыдущее изображение
             {
                 resultImage = *colliseImages(resultImage, result);  // объединяем методом Исключающего ИЛИ
-                qDebug() << "Применяется ИСключающее ИЛИ: " << offset << "/" << repeatOffset;
+//                qDebug() << "Применяется Исключающее ИЛИ: " << offset << "/" << repeatOffset;
             }
             else    // иначе, если это первая итерация, то просто сохраняем
             {
                 resultImage = result;
-                qDebug() << "Передаём изображение в результат ";
+//                qDebug() << "Передаём изображение в результат ";
             }
         }
 
@@ -663,11 +511,6 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
             delete pen;
         }
 
-//        if(filterNumber > 0)   // если слой не 1й
-//        {
-//            imageCorrector.setImageObject(resultImage); // в качесте опорного изображения берём предыдущее
-//        }
-
         imageCorrector.setImageObject(resultImage); // в качесте опорного изображения берём предыдущее
     }
 
@@ -676,8 +519,6 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
         resultImage.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
         qDebug() << "Инвертируем пиксели";
     }
-
-//    double min_x_percent = ui->horizontalSlider_filter_min_x
 
     ui->horizontalSlider_filter_min_x->setMaximum(resultImage.width());
     ui->horizontalSlider_filter_max_x->setMaximum(resultImage.width());
@@ -773,8 +614,6 @@ void MainWindow::applyFilterParams(ImageCorrectrFilterParams filterParams)
     ui->spinBox_collisionRepeatCount->setValue(filterParams.repeatOffset); // смещение для радиуса при применении фильтра несколько раз
     ui->horizontalSlider_deleteNoise->setValue(filterParams.hardDeleteNoiseBorder);  // граница продвинутого удаления шумов
 
-//    int deleteType = ui->comboBox_deleteType->currentIndex();   // выбранный тип
-//    filterParams.hardDeleteNoiseDeleteType = ImageCorrectorEnums::NoiseDeleteTypes(deleteType);
     int deleteType = filterParams.hardDeleteNoiseDeleteType;
     ui->comboBox_deleteType->setCurrentIndex(deleteType);
 
@@ -797,7 +636,7 @@ void MainWindow::applyFilterParams(ImageCorrectrFilterParams filterParams)
     ui->horizontalSlider_filter_max_x->setValue(filterParams.widthEnd);
 
 
-    qDebug() << "Применение настроек фильтра: " << filterParams.filterName << filterParams.widthStart << filterParams.widthEnd << filterParams.heightStart << filterParams.heightEnd;
+//    qDebug() << "Применение настроек фильтра: " << filterParams.filterName << filterParams.widthStart << filterParams.widthEnd << filterParams.heightStart << filterParams.heightEnd;
 }
 
 void MainWindow::loadFilterLayers()
@@ -856,8 +695,6 @@ void MainWindow::saveFiterLayers()
     file.open(QIODevice::WriteOnly);
     file.write(doc.toJson());
     file.close();
-//    qDebug() << "JSON:";
-    //    qDebug() << doc.toJson();
 }
 
 void MainWindow::updateFilterLayerParams(int value)
@@ -931,7 +768,7 @@ void MainWindow::redrawImageFilterRect()
         }
     }
 
-    qDebug() << "x_min = " << min_x << "x_max = " << max_x << "y_min = " << min_y << "y_max" << max_y;
+//    qDebug() << "x_min = " << min_x << "x_max = " << max_x << "y_min = " << min_y << "y_max" << max_y;
 }
 
 QStringList MainWindow::getScreensList()
@@ -998,13 +835,6 @@ void MainWindow::cameraReadyForCaptureChanged(bool ready)
 {
     if(ready && isRunning)  // если можно продолжать
     {
-//            qDebug() << "run";
-        // выводим счётчик FPS
-//        int times = frameTime.elapsed();    // получаем сколько прошло времени между кадрами
-//        ui->label_FpsCount->setText(QString::number(times));    // выводим, сколько времени между кадрами прошло
-//        frameTime.restart();    // перезапускаем счётчик
-//        QApplication::processEvents();
-
         // делаем снимок и ожидаем его получения
         camera->searchAndLock();
         imageCapture->capture();
@@ -1063,7 +893,6 @@ void MainWindow::on_pushButton_screen_clicked()
         QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
         int currentScreenNumber = ui->comboBox_choseScreen->currentIndex(); // получаем номер дисплея, с которого будем получать изображение
         pixmap = screen->grabWindow (currentScreenNumber); // Снимок экрана
-    //    pixmap.save("C:/Users/ASUS/Pictures/qtscreen.jpg");
         setImageToOutputLabel(pixmap.toImage());    // выводим скриншот на экран
         ui->lineEdit_imageOriginal_video->setText(QString("Сохранено ") + QTime().currentTime().hour() + ":" + QTime().currentTime().minute() + ":" + QTime().currentTime().second());
         imageOriginal = pixmap.toImage();   // сохраняем изображение как фон
@@ -1076,20 +905,6 @@ void MainWindow::on_pushButton_screen_clicked()
             return;
         }
         isScreening = true;     // указываем, что делаем скрин
-//        int currentCameraIndex = ui->comboBox_choseScreen->currentIndex();  // получаем выбранную камеру
-//        QCameraInfo cameraInfo = cameras[currentCameraIndex];   // получаем камеру, с которой будем производить снятие видео
-//        camera = new QCamera(cameraInfo);
-//        viewfinder = new QCameraViewfinder;
-//        camera->setViewfinder(viewfinder);
-//        viewfinder->show();
-
-//        imageCapture = new QCameraImageCapture(camera);
-//        imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);  // буферизируем
-//        connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &MainWindow::cameraImageCaptured);
-//        connect(imageCapture, &QCameraImageCapture::readyForCaptureChanged, this, &MainWindow::cameraReadyForCaptureChanged);
-
-//        camera->setCaptureMode(QCamera::CaptureStillImage);
-//        camera->start();
 
         // делаем снимок и ожидаем его получения
         camera->searchAndLock();
@@ -1097,37 +912,6 @@ void MainWindow::on_pushButton_screen_clicked()
         camera->unlock();
     }
 }
-
-
-void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked()
-{
-////    ui->groupBox_imageEmitter_imageFromFile->show();
-////    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
-
-//    ui->groupBox_imageEmitter_imageFromFile->setEnabled(true);
-//    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(false);
-
-//    ui->pushButton_calculate->setEnabled(true);
-//    ui->pushButton_saveResult->setEnabled(true);
-//    ui->pushButton_runVideo->setEnabled(false);
-//    ui->pushButton_screen->setEnabled(false);
-}
-
-
-void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked()
-{
-////    ui->groupBox_imageEmitter_imageFromFile->hide();
-////    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
-
-//    ui->groupBox_imageEmitter_imageFromFile->setEnabled(false);
-//    ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(true);
-
-//    ui->pushButton_calculate->setEnabled(false);
-//    ui->pushButton_saveResult->setEnabled(false);
-//    ui->pushButton_runVideo->setEnabled(true);
-//    ui->pushButton_screen->setEnabled(true);
-}
-
 
 void MainWindow::on_pushButton_runVideo_clicked()
 {
@@ -1150,9 +934,7 @@ void MainWindow::on_pushButton_runVideo_clicked()
         {
             imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
         }
-//        imageOriginal.convertTo(QImage::Format_Grayscale16);    // конвертируем в ч/б изображение
 
-//        resultImage = imageOriginal;
         originalResultImage = imageObject;
 
         ui->pushButton_runVideo->setText("Stop Video");
@@ -1166,7 +948,6 @@ void MainWindow::on_pushButton_runVideo_clicked()
                 QPixmap pixmap = QPixmap (); // Каждый раз присваиваем нулевое значение pixmap
                 int currentScreenNumber = ui->comboBox_choseScreen->currentIndex(); // получаем номер дисплея, с которого будем получать изображение
                 pixmap = screen->grabWindow(currentScreenNumber); // снимок экрана
-        //        setImageToOutputLabel(pixmap.toImage());    // выводим скриншот на экран
 
                 // обработка изображения
                 imageObject = pixmap.toImage(); // переводим в картинку
@@ -1175,7 +956,6 @@ void MainWindow::on_pushButton_runVideo_clicked()
                 processImageFilters(imageOriginal, imageObject, originalResultImage);   // применяем фильтры
 
                 // выводим картинку
-//                setImageToOutputLabel(resultImage);
                 setImageResultToOutputLabel();
 
                 // обработка интерфейса
@@ -1187,7 +967,6 @@ void MainWindow::on_pushButton_runVideo_clicked()
             connect(imageCapture, &QCameraImageCapture::readyForCaptureChanged, this, &MainWindow::cameraReadyForCaptureChanged);
 
             // делаем снимок и ожидаем его получения
-//            frameTime.restart();
             camera->searchAndLock();
             imageCapture->capture();
             camera->unlock();
@@ -1251,9 +1030,6 @@ void MainWindow::on_radioButton_imageEmitter_videoCaptureFromScreen_clicked(bool
 {
     if(checked)
     {
-        //    ui->groupBox_imageEmitter_imageFromFile->hide();
-        //    ui->groupBox_imageEmitter_videoCaptureFromScreen->show();
-
         ui->groupBox_imageEmitter_imageFromFile->setEnabled(false);
         ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(true);
 
@@ -1269,9 +1045,6 @@ void MainWindow::on_radioButton_imageEmitter_imageFromFile_clicked(bool checked)
 {
     if(checked)
     {
-        //    ui->groupBox_imageEmitter_imageFromFile->show();
-        //    ui->groupBox_imageEmitter_videoCaptureFromScreen->hide();
-
         ui->groupBox_imageEmitter_imageFromFile->setEnabled(true);
         ui->groupBox_imageEmitter_videoCaptureFromScreen->setEnabled(false);
 
@@ -1308,10 +1081,8 @@ void MainWindow::onExit()
 
 void MainWindow::on_checkBox_aliasing_stateChanged(int arg1)
 {
-//    ui->label_aliasingBorder->setEnabled(arg1);
     ui->label_aliasingRadius->setEnabled(arg1);
     ui->spinBox_aliasingRadius->setEnabled(arg1);
-//    ui->horizontalSlider_aliasingBorder->setEnabled(arg1);
 }
 
 
@@ -1343,32 +1114,6 @@ void MainWindow::on_toolButton_saveResultImage_clicked()
 {
     saveImageToFileWithDialog(&originalResultImage);
 }
-
-
-//void MainWindow::on_pushButton_clicked()
-//{
-//    QImage img1("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_1.jpg");
-//    QImage img2("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_2.jpg");
-
-////    for(int i=0; i<img1.width(); i++)
-////    {
-////        for(int j=0; j<img1.height(); j++)
-////        {
-////            if((img1.pixelColor(i, j).black() > 100 && img2.pixelColor(i, j).black() <= 100)
-////                    || (img1.pixelColor(i, j).black() <= 100 && img2.pixelColor(i, j).black() > 100))   // условие инверсности пикселей
-////            {
-////                img1.setPixelColor(i, j, Qt::white);
-////            }
-////        }
-////    }
-
-//    QImage *img = colliseImages(img1, img2);
-
-//    setImageToOutputLabel(*img);
-//    img->save("C:/Users/ASUS/Documents/ImageToGrayConverter/build-ImageToGrayConverter-Desktop_Qt_5_15_2_MinGW_64_bit-Release/test_result_3_2.jpg");
-
-//}
-
 
 void MainWindow::on_pushButton_showFilters_clicked()
 {
@@ -1412,8 +1157,6 @@ void MainWindow::on_horizontalSlider_filter_max_x_valueChanged(int value)
     redrawImageFilterRect();
     Q_UNUSED(value);
 }
-
-
 
 void MainWindow::on_pushButton_addFilterLayer_clicked()
 {
@@ -1503,7 +1246,6 @@ void MainWindow::on_toolButton_updateLayerConfiguration_clicked()
     else
     {
         // если название не пустое
-//        ui->comboBox_layers->setCurrentText(layerName); // задаём новое название слою
         ui->comboBox_layers->setItemText(currentIndex, layerName);
         ui->lineEdit_layerName->clear();
     }
@@ -1511,16 +1253,11 @@ void MainWindow::on_toolButton_updateLayerConfiguration_clicked()
     // обновляем настройки слоя
     ImageCorrectrFilterParams filter = createFilterParams(layerName);    // получаем текущие настройки
     filterLayers.replace(currentIndex, filter);    // заменяем старые настройки на новые
-    qDebug() << "Начало Х: " << filter.widthStart;
+//    qDebug() << "Начало Х: " << filter.widthStart;
 
     if(!isRunning && ui->checkBox_autoReCalculate->isChecked())
     {
         on_pushButton_calculate_clicked();
-//        processImageFilters(imageOriginal, imageObject, originalResultImage);   // применяем фильтры
-
-//        // выводим картинку
-//    //    setImageToOutputLabel(resultImage);
-//        setImageResultToOutputLabel();
 
         QApplication::processEvents();
     }

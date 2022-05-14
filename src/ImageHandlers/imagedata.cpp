@@ -79,15 +79,11 @@ void ImageData::setImage(const QImage &newImage)
 {
     int height = newImage.height();    // получаем данные изобржения
     int width = newImage.width();
-//    int height = newImage.width();    // получаем данные изобржения
-//    int width = newImage.height();
 
     if(height <= 0 || width <= 0)
     {
         throw ImageDataException(QString("Некорректное значение высоты или ширины матрицы! ") + QString::number(height) + QString::number(width));
     }
-
-//        this->image = image;    // сохраняем изображение
 
     if(grayScaleMatrix != nullptr)  // если матрица не пустая, то удалем её
     {
@@ -111,15 +107,10 @@ void ImageData::setImage(const QImage &newImage)
 
     for(int i=0; i<width; i++) // заполняем данными из изображения
     {
-//        qDebug() << "\r\n";
-//        QString debugtext = "i = " + QString::number(i) + " - ";
         for(int j=0; j<height; j++)
         {
             grayScaleMatrix[i][j] = newImage.pixelColor(i, j).black();
-//            grayScaleMatrix[i][j] = 255 - newImage.pixelColor(i, j).black();
-//            debugtext.append(QString::number(grayScaleMatrix[i][j]) + " ");
         }
-//        qDebug() << debugtext;
     }
 }
 

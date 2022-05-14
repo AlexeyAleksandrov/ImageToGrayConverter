@@ -68,10 +68,6 @@ private slots:
 
     void on_pushButton_screen_clicked();
 
-    void on_radioButton_imageEmitter_imageFromFile_clicked();
-
-    void on_radioButton_imageEmitter_videoCaptureFromScreen_clicked();
-
     void on_pushButton_runVideo_clicked();
 
     void on_pushButton_choseImageObject_video_clicked();
@@ -108,10 +104,6 @@ private:
     QCameraImageCapture *imageCapture = nullptr;  // обработчик снимков камеры
     QList<QCameraInfo> cameras; // список доступных камер
 
-//    int *gmas = nullptr;
-//    QTime frameTime;
-//    FiltersManager filtersManager;  // управление фильтрами
-
 private slots:
     void cameraImageCaptured(int id, const QImage &preview);    // получаение изображения
     void cameraReadyForCaptureChanged(bool ready); // готовы дальше получать изображения
@@ -139,8 +131,6 @@ private slots:
     void on_toolButton_saveObjectImage_clicked();
 
     void on_toolButton_saveResultImage_clicked();
-
-//    void on_pushButton_clicked();
 
     void on_pushButton_showFilters_clicked();
 
@@ -194,12 +184,10 @@ private:
         onExit();
         std::exit(EXIT_SUCCESS);
         event->accept();
-//        this->close();
     };
 
     void resizeEvent(QResizeEvent *event)
     {
-//        qDebug() << "resize";
         updateLabelImageSize();
         event->accept();
     };
