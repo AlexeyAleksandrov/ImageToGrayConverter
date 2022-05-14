@@ -170,46 +170,52 @@ void ImageCorrector::hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteT
 
 void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, int whiteBorderPercent)
 {
-    auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // матрица пикселей получаемого изображения
+    auto imageResultMatrix = resultImage.getGrayScaleMatrix();  // исходная матрица пикселей получаемого изображения
+    auto imageResultMatrixCopy = resultImage.getGrayScaleMatrixCopy();  // матрица-копия пикселей получаемого изображения
 
     auto function = [&](int i, int j)
     {
         if(i % radius == 0 && j % radius == 0)  // Если попадаем в радиус
         {
             int countBiggerBorder = 0;
+            int allCount = 0;
 
             for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
             {
                 for(int g=j-radius; g<j+radius; g++)
                 {
-                    if(imageResultMatrix[k][g] >= border)   // если значение пикселя больше, чем граница
+                    if(imageResultMatrixCopy[k][g] >= border)   // если значение пикселя больше, чем граница
                     {
                         countBiggerBorder++;
                     }
+                    allCount++;
                 }
             }
 
-            double maxPixels = radius * (radius/2);    // считаем максимальное кол-во пикселей
-            double blackPercent = (((double)countBiggerBorder) / maxPixels) * 100.0;   // считаем процент пикселей
+            double countBiggerBorderDouble = static_cast<double>(countBiggerBorder);    // конвертируем в double
+            double allCountDouble = static_cast<double>(allCount);  // конвертируем в double
+
+            double blackPercent = countBiggerBorderDouble / allCountDouble;   // считаем процент пикселей
+            blackPercent *= 100.0;  // умножаем на 100, чтобы получить проценты
             double whitePercent = 100.0 - blackPercent; // процент белых пикселей
-            if(blackPercent < (double)whiteBorderPercent)   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
+            if(blackPercent >= (double)blackBorderPercent)   // если кол-во темных пикселей больше чем половина, то весь квадрат заполняем церным цветом
             {
                 for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                 {
                     for(int g=j-radius; g<j+radius; g++)
                     {
-                        imageResultMatrix[k][g] = BLACK_GRAY_LEVEL;
+                        imageResultMatrix[k][g] = WHITE_GRAY_LEVEL; // ставим белый цвет, т.к. после инверсии он станет чёрным
                     }
                 }
             }
 
-            if (whitePercent < (double)blackBorderPercent)
+            else if (whitePercent >= (double)whiteBorderPercent)
             {
                 for(int k=i-radius; k<i+radius; k++)    // проходим по всем строкам влево и вправо
                 {
                     for(int g=j-radius; g<j+radius; g++)
                     {
-                        imageResultMatrix[k][g] = WHITE_GRAY_LEVEL;
+                        imageResultMatrix[k][g] = BLACK_GRAY_LEVEL; // ставим чёрный цвет, т.к. после инверсии он станет белым
                     }
                 }
             }
@@ -217,6 +223,13 @@ void ImageCorrector::aliasing(int radius, int border, int blackBorderPercent, in
     };
 
     distributeToThreads(image_min_x + radius, image_max_x - radius, image_min_y + radius, image_max_y - radius, function, radius * 2, radius * 2);
+
+    for(int i=0; i<resultImage.getWidth(); i++)
+    {
+        delete [] imageResultMatrixCopy[i];
+    }
+    delete [] imageResultMatrixCopy;
+    imageResultMatrixCopy = nullptr;
 }
 
 void ImageCorrector::medianRadiusFilter(int radius)

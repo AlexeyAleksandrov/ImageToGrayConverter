@@ -18,6 +18,7 @@ public:
     ~ImageData();
 
     int **getGrayScaleMatrix() const;
+    int **getGrayScaleMatrixCopy();
 
     const QImage getImage() const;
 

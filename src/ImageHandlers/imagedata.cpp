@@ -52,6 +52,30 @@ int **ImageData::getGrayScaleMatrix() const
     return grayScaleMatrix;
 }
 
+int **ImageData::getGrayScaleMatrixCopy()
+{
+    if(this->height <= 0 || this->width <= 0 || grayScaleMatrix == nullptr)
+    {
+        throw ImageDataException(QString("Некорректное значение высоты или ширины матрицы! ") + QString::number(height) + QString::number(width));
+    }
+
+    int **grayScaleMatrixCopy = new int *[width];    // выделяем память под строки
+    for(int i=0; i<width; i++)
+    {
+        grayScaleMatrixCopy[i] = new int [height];   // выделяем память под столбцы
+    }
+
+    for(int i=0; i<width; i++) // заполняем данными из изображения
+    {
+        for(int j=0; j<height; j++)
+        {
+            grayScaleMatrixCopy[i][j] = grayScaleMatrix[i][j];
+        }
+    }
+
+    return grayScaleMatrixCopy;
+}
+
 const QImage ImageData::getImage() const
 {
     QImage image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);

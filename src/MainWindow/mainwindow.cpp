@@ -460,8 +460,8 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
                 int aliasingRadius = filter.aliasingRadius + offset;
                 //        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
                 int aliasingBorder = 126; // 255/2
-                int blackBorder = 100 - filter.aliasingBlackBorder;
-                int whiteBorder = 100 - filter.aliasingWhiteBorder;
+                int blackBorder = /*100 - */filter.aliasingBlackBorder;
+                int whiteBorder = /*100 - */filter.aliasingWhiteBorder;
                 imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
                 //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
 
