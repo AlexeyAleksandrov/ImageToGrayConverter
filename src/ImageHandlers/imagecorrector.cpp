@@ -114,7 +114,7 @@ void ImageCorrector::hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteT
                          && correctMatrix[1][0]  && correctMatrix[1][2]
                          && correctMatrix[2][0] && correctMatrix[2][1] && correctMatrix[2][2])  // если под условия подходят все значения вокруг
                 {
-                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
                 }
             }
 
@@ -125,14 +125,14 @@ void ImageCorrector::hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteT
                 if(correctMatrix[0][0] && correctMatrix[0][2]
                          && correctMatrix[2][0] && correctMatrix[2][2])  // если под условия подходят все значения вокруг, расположенные по диагонале
                 {
-                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
                 }
                 // плюсом
                 if(correctMatrix[0][1]
                          && correctMatrix[1][0]  && correctMatrix[1][2]
                          && correctMatrix[2][1])  // если под условия подходят все значения вокруг, расположенные слева, справа, сверху и снизу
                 {
-                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
                 }
             }
 
@@ -142,12 +142,22 @@ void ImageCorrector::hardClipNoise(int border, ImageCorrectorEnums::NoiseDeleteT
                 // горизонталь
                 if(correctMatrix[1][0] && correctMatrix[1][2])  // если под условия подходят все значения, расположенные слева и справа
                 {
-                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
                 }
                 // вертикаль
                 if(correctMatrix[0][1] && correctMatrix[2][1])  // если под условия подходят все значения, расположенные сверху и снизу
                 {
-                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем белый цвет пикселю
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
+                }
+                // диагональ слева направо
+                if(correctMatrix[0][0] && correctMatrix[2][2])  // если под условия подходят все значения, расположенные слева и справа
+                {
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
+                }
+                // диагональ справа налево
+                if(correctMatrix[0][2] && correctMatrix[2][0])  // если под условия подходят все значения, расположенные сверху и снизу
+                {
+                    imageResultMatrix[i][j] = replasePixelColorGrayLevel;   // устанавливаем цвет пикселю
                 }
             }
 
