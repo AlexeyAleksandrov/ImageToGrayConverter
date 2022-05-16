@@ -399,12 +399,8 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
         imageCorrector.substractObjectImage();    // вычитаем изображение
     }
 
-//    qDebug() << "";
-//    qDebug() << "=================";
     for(int filterNumber=0; filterNumber<filterLayers.size(); filterNumber++)
     {
-//        qDebug() << "Номер фильтра: " << filterNumber+1 << " из " << filterLayers.size();
-
         ImageCorrectrFilterParams filter = filterLayers.at(filterNumber);
         imageCorrector.setFilter(filter);   // задаем фильтр
 
@@ -412,11 +408,8 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
 
         for(int offset=0; offset<=repeatOffset; offset++)
         {
-//            qDebug() << "Повтор для смещения: " << offset+1 << " из " << repeatOffset;
             if(filter.needHardDeleteNoise)
             {
-//                qDebug() << "Выполняется усиленное удаление шумов";
-
                 if(filter.needHardDeleteWhiteColor) // если нужно удалять черный цвет
                 {
                     imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrectorEnums::NoiseDeleteColors::BLACK); // продвинутое удаление шумов
@@ -425,20 +418,15 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
                 {
                     imageCorrector.hardClipNoise(filter.hardDeleteNoiseBorder, filter.hardDeleteNoiseDeleteType, ImageCorrectorEnums::NoiseDeleteColors::WHITE); // продвинутое удаление шумов
                 }
-
-//                qDebug() << "Удаление выполнено!";
             }
 
-            //    imageCorrector.enchanceBlackColor();    // усиление черного цвета
             if(filter.clippingNoiseValue > 0)
             {
-//                qDebug() << "Выполняется простое удаление шума: " << filter.clippingNoiseValue;
                 imageCorrector.clipNoise();    // простое удаление шума
             }
 
             if(filter.blackEnchancement > 0)
             {
-//                qDebug() << "Выполняется усиление чёрного цвета: " << filter.blackEnchancement;
                 imageCorrector.enchanceBlackColor();    // усиление черного цвета
             }
 
@@ -446,44 +434,31 @@ void MainWindow::processImageFilters(QImage imageOriginal, QImage imageObject, Q
             {
                 int radius = filter.medianFilter_radius + offset;  // радиус медианного фильтра
                 imageCorrector.medianRadiusFilter(radius);  // применяем медианный фильтр нового типа (старый вариант остался на всякий случай)
-//                qDebug() << "Выполняется медианный фильтр: " << radius;
             }
             if(filter.needAverageFilter)
             {
                 int radius = filter.averageFilter_radius + offset;  // радиус среднеарифметического фильтра
                 imageCorrector.averageFilter(radius);   // среднеарифметичсекий фильтр
-//                qDebug() << "Выполняется среднеарифметический фильтр: " << radius;
             }
 
             if(filter.needAliasing)
             {
                 int aliasingRadius = filter.aliasingRadius + offset;
-                //        int aliasingBorder = ui->horizontalSlider_aliasingBorder->value();
                 int aliasingBorder = 126; // 255/2
-                int blackBorder = /*100 - */filter.aliasingBlackBorder;
-                int whiteBorder = /*100 - */filter.aliasingWhiteBorder;
+                int blackBorder = filter.aliasingBlackBorder;
+                int whiteBorder = filter.aliasingWhiteBorder;
                 imageCorrector.aliasing(aliasingRadius, aliasingBorder, blackBorder, whiteBorder);
-                //        imageCorrector.aliasing(aliasingRadius+1, aliasingBorder);
-
-//                qDebug() << "Выполняется увеличение резкости: " << aliasingRadius << aliasingBorder << blackBorder << whiteBorder;
             }
 
             QImage result = imageCorrector.getResultImage();   // получаем обработанное изображение
 
-//            if(filterNumber == filterLayers.size()-1 && filterLayers.at(0).needColorInversion)
-//            {
-//                result.invertPixels(); // инвертируем цвет, т.к. при вычитании получается негатив
-//            }
-
             if(offset > 0)  // если есть предыдущее изображение
             {
                 resultImage = *colliseImages(resultImage, result);  // объединяем методом Исключающего ИЛИ
-//                qDebug() << "Применяется Исключающее ИЛИ: " << offset << "/" << repeatOffset;
             }
             else    // иначе, если это первая итерация, то просто сохраняем
             {
                 resultImage = result;
-//                qDebug() << "Передаём изображение в результат ";
             }
         }
 
