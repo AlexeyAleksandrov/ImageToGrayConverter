@@ -154,6 +154,8 @@ private slots:
 
     void on_toolButton_updateLayerConfiguration_clicked();
 
+    void on_toolButton_reloadCamerasList_clicked();
+
 private:
     Ui::MainWindow *ui;
 

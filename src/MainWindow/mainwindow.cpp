@@ -1238,3 +1238,24 @@ void MainWindow::on_toolButton_updateLayerConfiguration_clicked()
     }
 }
 
+
+void MainWindow::on_toolButton_reloadCamerasList_clicked()
+{
+    if(ui->radioButton_captureDevice_camera->isChecked())
+    {
+        QStringList camerasList = getCamerasList();
+        ui->comboBox_choseScreen->clear();
+        ui->comboBox_choseScreen->addItems(camerasList);
+    }
+    else if(ui->radioButton_captureDevice_monitor->isChecked())
+    {
+        QStringList screens = getScreensList();
+        ui->comboBox_choseScreen->clear();
+        ui->comboBox_choseScreen->addItems(screens);
+    }
+    else
+    {
+        return;
+    }
+}
+
