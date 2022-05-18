@@ -95,43 +95,13 @@
              <string>Захват видео</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
-             <item row="4" column="1">
-              <widget class="QPushButton" name="pushButton_choseImageObject_video">
-               <property name="text">
-                <string>Выбрать</string>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="0">
               <widget class="QComboBox" name="comboBox_choseScreen"/>
              </item>
-             <item row="0" column="0" colspan="2">
-              <widget class="QGroupBox" name="groupBox_inputType">
-               <property name="title">
-                <string>Тип захвата</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_13">
-                <item row="0" column="0">
-                 <widget class="QRadioButton" name="radioButton_captureDevice_monitor">
-                  <property name="text">
-                   <string>Монитор</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QRadioButton" name="radioButton_captureDevice_camera">
-                  <property name="text">
-                   <string>Камера</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QPushButton" name="pushButton_choseScreen">
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_imageObject_video">
                <property name="text">
-                <string>Выбрать</string>
+                <string>Изображение объекта:</string>
                </property>
               </widget>
              </item>
@@ -152,11 +122,52 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_imageObject_video">
+             <item row="4" column="1" colspan="2">
+              <widget class="QPushButton" name="pushButton_choseImageObject_video">
                <property name="text">
-                <string>Изображение объекта:</string>
+                <string>Выбрать</string>
                </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QPushButton" name="pushButton_choseScreen">
+               <property name="text">
+                <string>Выбрать</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="3">
+              <widget class="QGroupBox" name="groupBox_inputType">
+               <property name="title">
+                <string>Тип захвата</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_13">
+                <item row="0" column="1">
+                 <widget class="QRadioButton" name="radioButton_captureDevice_camera">
+                  <property name="text">
+                   <string>Камера</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QRadioButton" name="radioButton_captureDevice_monitor">
+                  <property name="text">
+                   <string>Монитор</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QToolButton" name="toolButton_reloadCamerasList">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../icons.qrc">
+                    <normaloff>:/icons/resources/reload.png</normaloff>:/icons/resources/reload.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
             </layout>
@@ -1068,6 +1079,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
